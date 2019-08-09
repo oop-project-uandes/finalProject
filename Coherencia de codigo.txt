@@ -49,7 +49,7 @@ para hacer comentarios de varias lineas
 		// Otros metodos
 	}
 
-(Separacion de dos tres saltos de linea entre cada seccion de la clase)
+(Separacion de tres saltos de linea entre cada seccion de la clase)
 
 9) Distintas clases en un mismo archivo deben estar separadas por tres saltos de linea
 
