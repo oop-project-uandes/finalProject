@@ -1,0 +1,60 @@
+1) Todas las veces que se utilicen las llaves, debe ser de la forma:
+
+	if(condicion)
+	{
+		sentencias;
+	}
+
+2) Si se escribe un metodo cuyas llaves quedan vacias, se escribe como:
+
+	public void miMetodo() {}
+
+3) Si se escribe un metodo cuyo codigo aun no se ha implementado, usar:
+
+	public void miMetodo()
+	{
+		throw new notImplementedException();
+	}
+
+4) Tabulaciones y sangrias deben ser de 4 espacios
+
+5) Variables y metodos deben estar en ingles
+
+6) Evitar hacer comentarios de una linea en la misma linea del codigo, sino antes del mismo:
+
+	int miVariable; // Variable util           => MALO
+
+	// Variable util
+	int miVariable; 			   => BUENO
+
+7) Usar 
+
+	/*
+	Varias lineas de
+	comentario
+	*/
+
+para hacer comentarios de varias lineas
+
+8) La distribucion interna de las clases debe ser:
+
+	public MiClase
+	{
+		// Atributos
+	
+		// Constructores y destructores
+
+		// Getters y setters
+
+		// Otros metodos
+	}
+
+(Separacion de dos tres saltos de linea entre cada seccion de la clase)
+
+9) Distintas clases en un mismo archivo deben estar separadas por tres saltos de linea
+
+10) Constructores, destructores, getters, setters, y otros metodos deben estar separados 2 saltos de linea entre si 
+dentro de una misma clase
+
+11) Aunque un metodo retorne void, incluir al final el return
+
