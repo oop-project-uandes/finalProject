@@ -58,3 +58,10 @@ dentro de una misma clase
 
 11) Aunque un metodo retorne void, incluir al final el return
 
+12) Aunque sea innecesario, usar siempre this.atributo para referirse a los atributos de una clase
+
+13) Antes de hacer push a cualquier commit, usar la limpieza de codigo de visual studio con los siguientes parametros:
+
+	.- Aplicar preferencias de calificacion "this"
+	.- Eliminar instrucciones Using innecesarias
+	.- Ordenar instrucciones using
