@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 
 namespace Entrega2_Equipo1
 {
@@ -13,6 +14,8 @@ namespace Entrega2_Equipo1
         // WatsonFilter's attributes
         private Scissors scissors;
         private Dictionary<string, string> LastRequest;
+        private const string APIKEY = "jL9phS26mYRAEf8iJ3yZEdnHKr1NNaZ5H97oWpJ_EtyJ";
+        private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
 
 
         // WatsonFilter's builder
