@@ -7,6 +7,7 @@ using System.Drawing;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
 using System.IO;
 using Newtonsoft.Json;
+using System.Drawing.Imaging;
 
 namespace Entrega2_Equipo1
 {
@@ -16,7 +17,6 @@ namespace Entrega2_Equipo1
         private const string APIKEY = "";
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
-        private Scissors scissors;
         private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
 
 
@@ -24,8 +24,6 @@ namespace Entrega2_Equipo1
         public WatsonFilter()
         {
             this.scissors = new Scissors();
-            this.LastFacesRequest = new Dictionary<int, Dictionary<string, object>>();
-            this.LastClassifyRequest = new Dictionary<int, Dictionary<string, double>>();
             IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
             options.IamApiKey = APIKEY;
             this._visualRecognition = new IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService(options, VERSION_DATE);
@@ -101,24 +99,30 @@ namespace Entrega2_Equipo1
          * The ints are the number of the images processed,
          * the string can be "age", "gender", "position" or "bitmap"
          * The value of "age" is an Age object, the value of "gender"
-         * is a Gender object, the value of "position" is a Position object,
-         * and the "bitmap" value is a System.Drawing.Bitmap of the face of the person*/
+         * is a Gender object, the value of "position" is a Position object*/
         public Dictionary<int,Dictionary<string, object>> FindFaces(Bitmap image)
         {
             Dictionary<int, Dictionary<string, object>> returningDic = new Dictionary<int, Dictionary<string, object>>();
-            // Primero hay que salvar el bitmap en una direccion. Dicha direccion se le pasa a ClassifyFaces,
-            // se obtiene la posicion de la cara, se recorta, y se agregan todos los valores al returningDic.
-            // Luego se elimina la imagen guardada, y se retorna. 
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\WatsonTempFiles\faces.jpg";
+            EncoderParameters encoderParameters = new EncoderParameters(1);
+            encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
+            image.Save(path);
+            returningDic = ClassifyFaces(path);
+            File.Delete(path);
             return returningDic;
         }
 
-        
 
+        /* Method to find classifiers of the image. The ints are the number
+         of images processed, and every dictionary contains what classifiers Watson found
+         in them. The string is the class, and the double the actual score*/
         public Dictionary<int, Dictionary<string, double>> FindClassifiers(Bitmap image)
         {
             Dictionary<int, Dictionary<string, double>> returningDic = new Dictionary<int, Dictionary<string, double>>();
-            //Primero hay que salvar el bitmap en una direccion, Dicha direccion se le pasa a ClassifyFaces,
-            // se obtiene el resultado, se elimina la imagen guardada, y se retorna el resultado.
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\WatsonTempFiles\classify.jpg";
+            image.Save(path);
+            returningDic = Classify(path);
+            File.Delete(path);
             return returningDic;
         }
 

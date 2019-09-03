@@ -12,6 +12,7 @@ namespace Entrega2_Equipo1
         // Scissors's builder
         public Scissors() { }
 
+
         /*Method to cut the pictures passed as parameters with the double[4]
         specifications. The values of the dictionary, double[4] {left, top, width, height), are the coordinates
         of where to cut the given picture (the key).*/
@@ -31,6 +32,21 @@ namespace Entrega2_Equipo1
                 Bitmap croppedImage = pair.Key.Clone(new Rectangle(x, y, width, height), pair.Key.PixelFormat);
                 returnValue.Add(croppedImage);
             }
+            // We return the return list
+            return returnValue;
+        }
+
+        // Same as before, but crops only one image
+        public Bitmap Crop(Bitmap image, double[] coordinates)
+        {
+
+            this.Verification(image, coordinates);
+            int x, y, width, height;
+            x = Convert.ToInt32(coordinates[0]);
+            y = Convert.ToInt32(coordinates[1]);
+            width = Convert.ToInt32(coordinates[2]);
+            height = Convert.ToInt32(coordinates[3]);
+            Bitmap returnValue = image.Clone(new Rectangle(x, y, width, height), image.PixelFormat);
             // We return the return list
             return returnValue;
         }
@@ -57,6 +73,25 @@ namespace Entrega2_Equipo1
                 }
                 counter++;
             }
+        }
+
+        // Same as before, but with only one Bitmap
+        private void Verification(Bitmap image, double[] coordinates)
+        {
+
+            int counter = 0;
+            int imageWidth = image.Width;
+            int imageHeight = image.Height;
+            // First, we verify that the length of the array is 4
+            if (coordinates.Length != 4)
+            {
+                throw new Exception($"The value of the {counter}th entry of the dictionary doesn't have 4 elements. Didn't cut anything");
+            }
+            if ((coordinates[1] + coordinates[3] > imageHeight || coordinates[0] + coordinates[2] > imageWidth) || coordinates[0] < 0 || coordinates[1] < 0 || coordinates[2] < 0 || coordinates[3] < 0)
+            {
+                throw new Exception($"The {counter}th entry of the dictionary have incorrect crop bounds. Didn't cut anything");
+            }
+            counter++;
         }
     }
 }
