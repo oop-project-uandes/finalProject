@@ -13,28 +13,15 @@ namespace Entrega2_Equipo1
         public Scissors() { }
 
         /*Method to cut the pictures passed as parameters with the double[4]
-        specifications. The values of the dictionary, double[4], are the coordinates
+        specifications. The values of the dictionary, double[4] {left, top, width, height), are the coordinates
         of where to cut the given picture (the key).*/
         public List<Bitmap> Crop(Dictionary<Bitmap, double[]> images)
         {
-            // Verify that all the Dictionary values are ok
-            int counter = 0;
-            foreach (double[] value in images.Values)
-            {
-                if (value.Length != 4)
-                {
-                    throw new Exception($"The {counter}th entry of the dictionary have an invalid value. Didn't cut anything");
-                }
-                counter++;
-            }
 
-            // Creating the return list
+            this.Verification(images);
             List<Bitmap> returnValue = new List<Bitmap>();
             int x, y, width, height;
-            
-            
             // For each pair in the Dictionary, we create a croppedImage, and add them to the return list
-            // TODO: No se si funciona este metodo
             foreach (KeyValuePair<Bitmap, double[]> pair in images)
             {
                 x = Convert.ToInt32(pair.Value[0]);
@@ -46,6 +33,30 @@ namespace Entrega2_Equipo1
             }
             // We return the return list
             return returnValue;
+        }
+
+
+        /* Method used by Crop to know if there are some problems with the data received by param
+         * Throws exceptions saying what's wrong*/
+        private void Verification(Dictionary<Bitmap, double[]> images)
+        {
+            
+            int counter = 0;
+            foreach (KeyValuePair<Bitmap, double[]> pair in images)
+            {
+                int imageWidth = pair.Key.Width;
+                int imageHeight = pair.Key.Height;
+                // First, we verify that the length of the array is 4
+                if (pair.Value.Length != 4)
+                {
+                    throw new Exception($"The value of the {counter}th entry of the dictionary doesn't have 4 elements. Didn't cut anything");
+                }
+                if ((pair.Value[1] + pair.Value[3] > imageHeight || pair.Value[0] + pair.Value[2] > imageWidth) || pair.Value[0] < 0 || pair.Value[1] < 0 || pair.Value[2] < 0 || pair.Value[3] < 0)
+                {
+                    throw new Exception($"The {counter}th entry of the dictionary have incorrect crop bounds. Didn't cut anything");
+                }
+                counter++;
+            }
         }
     }
 }

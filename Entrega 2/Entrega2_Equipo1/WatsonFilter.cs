@@ -12,21 +12,20 @@ namespace Entrega2_Equipo1
 {
     class WatsonFilter
     {
-
         // WatsonFilter's attributes
         private const string APIKEY = "";
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
         private Scissors scissors;
-        private Dictionary<int, Dictionary<string, object>> LastFacesRequest;
-        private Dictionary<int, Dictionary<string, string>> LastClassifyRequest;
         private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
+
 
         // WatsonFilter's builder
         public WatsonFilter()
         {
             this.scissors = new Scissors();
             this.LastFacesRequest = new Dictionary<int, Dictionary<string, object>>();
+            this.LastClassifyRequest = new Dictionary<int, Dictionary<string, double>>();
             IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
             options.IamApiKey = APIKEY;
             this._visualRecognition = new IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService(options, VERSION_DATE);
@@ -34,12 +33,13 @@ namespace Entrega2_Equipo1
         }
 
 
-        
-        private void ClassifyFaces(string pathtofile)
+
+        // Method to classify faces from an image
+        private Dictionary<int, Dictionary<string, object>> ClassifyFaces(string pathtofile)
         {
             FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultFaces = _visualRecognition.DetectFaces(stream);
-            Dictionary<int, Dictionary<string, object>> result = new Dictionary<int, Dictionary<string, object>>();
+            Dictionary<int, Dictionary<string, object>> dicFaces = new Dictionary<int, Dictionary<string, object>>();
             foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ImageWithFaces image in resultFaces.Images)
             {
                 int i = 1;
@@ -59,59 +59,67 @@ namespace Entrega2_Equipo1
                     auxDic.Add("age", new Age(agemin, agemax, agescore));
                     auxDic.Add("gender", new Gender(gender, genderLabel, genderScore));
                     auxDic.Add("position", new FacePosition(widthLocation, heightLocation, left, top));
-                    result.Add(i, auxDic);
+                    dicFaces.Add(i, auxDic);
                     i++;
-                    Console.WriteLine($"Age min: {agemin}Age max: {agemax}Score:{agescore}Gender: {gender}Score: {genderScore}Width: {widthLocation}Height: {heightLocation}Left: {left}Top:{top}");
                 }
             }
             stream.Close();
-            this.LastFacesRequest = result;
-            return;
+            return dicFaces;
         }
 
-        // Falta hacer la misma organizacion que se realizo con detect faces, en este caso
-        private void Classify(string pathtofile)
+
+
+        // Method to classify an image
+        private Dictionary<int, Dictionary<string, double>> Classify(string pathtofile)
         {
             FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultIdentifiers = _visualRecognition.Classify(stream);
-            Console.WriteLine(JsonConvert.SerializeObject(resultIdentifiers, Newtonsoft.Json.Formatting.Indented));
+            Dictionary<int, Dictionary<string, double>> dicClassify = new Dictionary<int, Dictionary<string, double>>();
+            foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ClassifiedImage image in resultIdentifiers.Images)
+            {
+                int i = 0;
+                foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ClassifierResult classResult in image.Classifiers)
+                {
+                    Dictionary<string, double> auxDic = new Dictionary<string, double>();
+                    foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ClassResult result in classResult.Classes)
+                    {
+                        string name = result.ClassName;
+                        double score = Convert.ToDouble(result.Score);
+                        auxDic.Add(name, score);
+                    }
+                    dicClassify.Add(i, auxDic);
+                }
+                i++;
+            }
             stream.Close();
-            return;
+            return dicClassify;
         }
 
 
-
-        public void pruebaClasificar(string pathtofile)
+        
+        /* Method to find the faces on a bitmap image.
+         * The ints are the number of the images processed,
+         * the string can be "age", "gender", "position" or "bitmap"
+         * The value of "age" is an Age object, the value of "gender"
+         * is a Gender object, the value of "position" is a Position object,
+         * and the "bitmap" value is a System.Drawing.Bitmap of the face of the person*/
+        public Dictionary<int,Dictionary<string, object>> FindFaces(Bitmap image)
         {
-            ClassifyFaces(pathtofile);
-            Classify(pathtofile);
+            Dictionary<int, Dictionary<string, object>> returningDic = new Dictionary<int, Dictionary<string, object>>();
+            // Primero hay que salvar el bitmap en una direccion. Dicha direccion se le pasa a ClassifyFaces,
+            // se obtiene la posicion de la cara, se recorta, y se agregan todos los valores al returningDic.
+            // Luego se elimina la imagen guardada, y se retorna. 
+            return returningDic;
         }
 
+        
 
-
-
-
-
-
-
-
-
-
-
-        // Methods
-
-        /*Method to apply the WatsonFilter to a System.Drawing.Bitmap. It returns a dictionary
-        with sex, age, and their probabilities of people in the picture */
-        public Dictionary<string, string> applyFilter(Bitmap image)
+        public Dictionary<int, Dictionary<string, double>> FindClassifiers(Bitmap image)
         {
-            throw new NotImplementedException("Not implemented yet");
-        }
-
-        /*Method to cut the faces of the people on the picture, based on the LastRequest made
-        to the filter*/
-        public List<Bitmap> CutFaces(Bitmap image)
-        {
-            throw new NotImplementedException("Not implemented yet");
+            Dictionary<int, Dictionary<string, double>> returningDic = new Dictionary<int, Dictionary<string, double>>();
+            //Primero hay que salvar el bitmap en una direccion, Dicha direccion se le pasa a ClassifyFaces,
+            // se obtiene el resultado, se elimina la imagen guardada, y se retorna el resultado.
+            return returningDic;
         }
 
     }
