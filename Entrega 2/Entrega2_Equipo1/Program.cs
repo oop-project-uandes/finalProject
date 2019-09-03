@@ -11,7 +11,8 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-            
+            WatsonFilter filter = new WatsonFilter();
+            filter.Classify("C:\\Users\\Gianfranco Lacasella\\Desktop\\Prueba c# watson\\descarga.jpg");
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
+using IBM.WatsonDeveloperCloud;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Entrega2_Equipo1
 {
@@ -12,14 +15,56 @@ namespace Entrega2_Equipo1
     {
 
         // WatsonFilter's attributes
-        private Scissors scissors;
-        private Dictionary<string, string> LastRequest;
         private const string APIKEY = "jL9phS26mYRAEf8iJ3yZEdnHKr1NNaZ5H97oWpJ_EtyJ";
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
+        private const string VERSION_DATE = "2018-03-19";
+        private Scissors scissors;
+        private Dictionary<string, string> LastRequest;
+        private VisualRecognitionService _visualRecognition;
+
 
 
         // WatsonFilter's builder
-        public WatsonFilter() { }
+        public WatsonFilter()
+        {
+            this.scissors = new Scissors();
+            this.LastRequest = new Dictionary<string, string>();
+            IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
+            options.IamApiKey = APIKEY;
+            this._visualRecognition = new VisualRecognitionService(options, VERSION_DATE);
+            this._visualRecognition.SetEndpoint(ENDPOINT);
+        }
+
+        // Prueba
+        public void Classify(string pathtofile)
+        {
+            FileStream stream = new FileStream(pathtofile, FileMode.Open);
+            var resultFaces = _visualRecognition.DetectFaces(stream);
+            Console.WriteLine(JsonConvert.SerializeObject(resultFaces, Newtonsoft.Json.Formatting.Indented));
+            stream.Close();
+
+            stream = new FileStream(pathtofile, FileMode.Open);
+            var resultIdentifiers = _visualRecognition.Classify(stream);
+            Console.WriteLine(JsonConvert.SerializeObject(resultIdentifiers, Newtonsoft.Json.Formatting.Indented));
+            stream.Close();
+            Console.ReadKey();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         // Methods
