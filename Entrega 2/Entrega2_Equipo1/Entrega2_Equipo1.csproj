@@ -191,6 +191,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Age.cs" />
+    <Compile Include="FacePosition.cs" />
+    <Compile Include="Gender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scissors.cs" />

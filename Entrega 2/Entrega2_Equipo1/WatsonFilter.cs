@@ -14,11 +14,12 @@ namespace Entrega2_Equipo1
     {
 
         // WatsonFilter's attributes
-        private const string APIKEY = "jL9phS26mYRAEf8iJ3yZEdnHKr1NNaZ5H97oWpJ_EtyJ";
+        private const string APIKEY = "";
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
         private Scissors scissors;
         private Dictionary<int, Dictionary<string, object>> LastFacesRequest;
+        private Dictionary<int, Dictionary<string, string>> LastClassifyRequest;
         private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
 
         // WatsonFilter's builder
@@ -33,21 +34,18 @@ namespace Entrega2_Equipo1
         }
 
 
-        // Hay que arreglar el desastre
         
-
-        private Dictionary<int, Dictionary<string,object>> ClassifyFaces(string pathtofile)
+        private void ClassifyFaces(string pathtofile)
         {
             FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultFaces = _visualRecognition.DetectFaces(stream);
-
             Dictionary<int, Dictionary<string, object>> result = new Dictionary<int, Dictionary<string, object>>();
             foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ImageWithFaces image in resultFaces.Images)
             {
                 int i = 1;
                 foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.Face face in image.Faces)
                 {
-                    
+                    Dictionary<string, object> auxDic = new Dictionary<string, object>();
                     int agemin = Convert.ToInt32(face.Age.Min);
                     int agemax = Convert.ToInt32(face.Age.Max);
                     double agescore = Convert.ToDouble(face.Age.Score);
@@ -58,32 +56,36 @@ namespace Entrega2_Equipo1
                     double heightLocation = Convert.ToDouble(face.FaceLocation.Height);
                     double left = Convert.ToDouble(face.FaceLocation.Left);
                     double top = Convert.ToDouble(face.FaceLocation.Top);
-                    Dictionary<string, object> auxDic = new Dictionary<string, object>();
                     auxDic.Add("age", new Age(agemin, agemax, agescore));
                     auxDic.Add("gender", new Gender(gender, genderLabel, genderScore));
                     auxDic.Add("position", new FacePosition(widthLocation, heightLocation, left, top));
                     result.Add(i, auxDic);
                     i++;
-                    
+                    Console.WriteLine($"Age min: {agemin}Age max: {agemax}Score:{agescore}Gender: {gender}Score: {genderScore}Width: {widthLocation}Height: {heightLocation}Left: {left}Top:{top}");
                 }
             }
             stream.Close();
-            return result;
+            this.LastFacesRequest = result;
+            return;
         }
 
         // Falta hacer la misma organizacion que se realizo con detect faces, en este caso
-        private Dictionary<int, Dictionary<string, object>> Classify(string pathtofile)
+        private void Classify(string pathtofile)
         {
             FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultIdentifiers = _visualRecognition.Classify(stream);
             Console.WriteLine(JsonConvert.SerializeObject(resultIdentifiers, Newtonsoft.Json.Formatting.Indented));
             stream.Close();
-            Console.ReadKey();
+            return;
         }
 
 
 
-
+        public void pruebaClasificar(string pathtofile)
+        {
+            ClassifyFaces(pathtofile);
+            Classify(pathtofile);
+        }
 
 
 
