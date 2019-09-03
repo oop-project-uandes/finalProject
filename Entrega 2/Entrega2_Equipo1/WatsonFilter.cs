@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
-using IBM.WatsonDeveloperCloud;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -19,38 +18,68 @@ namespace Entrega2_Equipo1
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
         private Scissors scissors;
-        private Dictionary<string, string> LastRequest;
-        private VisualRecognitionService _visualRecognition;
-
-
+        private Dictionary<int, Dictionary<string, object>> LastFacesRequest;
+        private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
 
         // WatsonFilter's builder
         public WatsonFilter()
         {
             this.scissors = new Scissors();
-            this.LastRequest = new Dictionary<string, string>();
+            this.LastFacesRequest = new Dictionary<int, Dictionary<string, object>>();
             IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
             options.IamApiKey = APIKEY;
-            this._visualRecognition = new VisualRecognitionService(options, VERSION_DATE);
+            this._visualRecognition = new IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService(options, VERSION_DATE);
             this._visualRecognition.SetEndpoint(ENDPOINT);
         }
 
-        // Prueba
-        public void Classify(string pathtofile)
+
+        // Hay que arreglar el desastre
+        
+
+        private Dictionary<int, Dictionary<string,object>> ClassifyFaces(string pathtofile)
         {
             FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultFaces = _visualRecognition.DetectFaces(stream);
-            Console.WriteLine(JsonConvert.SerializeObject(resultFaces, Newtonsoft.Json.Formatting.Indented));
-            stream.Close();
 
-            stream = new FileStream(pathtofile, FileMode.Open);
+            Dictionary<int, Dictionary<string, object>> result = new Dictionary<int, Dictionary<string, object>>();
+            foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.ImageWithFaces image in resultFaces.Images)
+            {
+                int i = 1;
+                foreach (IBM.WatsonDeveloperCloud.VisualRecognition.v3.Model.Face face in image.Faces)
+                {
+                    
+                    int agemin = Convert.ToInt32(face.Age.Min);
+                    int agemax = Convert.ToInt32(face.Age.Max);
+                    double agescore = Convert.ToDouble(face.Age.Score);
+                    string gender = face.Gender.Gender;
+                    string genderLabel = face.Gender.GenderLabel;
+                    double genderScore = Convert.ToDouble(face.Gender.Score);
+                    double widthLocation = Convert.ToDouble(face.FaceLocation.Width);
+                    double heightLocation = Convert.ToDouble(face.FaceLocation.Height);
+                    double left = Convert.ToDouble(face.FaceLocation.Left);
+                    double top = Convert.ToDouble(face.FaceLocation.Top);
+                    Dictionary<string, object> auxDic = new Dictionary<string, object>();
+                    auxDic.Add("age", new Age(agemin, agemax, agescore));
+                    auxDic.Add("gender", new Gender(gender, genderLabel, genderScore));
+                    auxDic.Add("position", new FacePosition(widthLocation, heightLocation, left, top));
+                    result.Add(i, auxDic);
+                    i++;
+                    
+                }
+            }
+            stream.Close();
+            return result;
+        }
+
+        // Falta hacer la misma organizacion que se realizo con detect faces, en este caso
+        private Dictionary<int, Dictionary<string, object>> Classify(string pathtofile)
+        {
+            FileStream stream = new FileStream(pathtofile, FileMode.Open);
             var resultIdentifiers = _visualRecognition.Classify(stream);
             Console.WriteLine(JsonConvert.SerializeObject(resultIdentifiers, Newtonsoft.Json.Formatting.Indented));
             stream.Close();
             Console.ReadKey();
         }
-
-
 
 
 

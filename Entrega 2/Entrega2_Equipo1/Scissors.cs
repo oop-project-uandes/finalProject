@@ -32,6 +32,7 @@ namespace Entrega2_Equipo1
             List<Bitmap> returnValue = new List<Bitmap>();
             int x, y, width, height;
             
+            
             // For each pair in the Dictionary, we create a croppedImage, and add them to the return list
             // TODO: No se si funciona este metodo
             foreach (KeyValuePair<Bitmap, double[]> pair in images)
