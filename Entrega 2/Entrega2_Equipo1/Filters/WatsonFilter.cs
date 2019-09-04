@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using IBM.WatsonDeveloperCloud.VisualRecognition.v3;
-using System.IO;
-using Newtonsoft.Json;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace Entrega2_Equipo1
 {
@@ -18,16 +13,17 @@ namespace Entrega2_Equipo1
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
         private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
+        private Scissors scissors;
 
 
         // WatsonFilter's builder
         public WatsonFilter()
         {
-            this.scissors = new Scissors();
             IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
             options.IamApiKey = APIKEY;
-            this._visualRecognition = new IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService(options, VERSION_DATE);
-            this._visualRecognition.SetEndpoint(ENDPOINT);
+            _visualRecognition = new IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService(options, VERSION_DATE);
+            _visualRecognition.SetEndpoint(ENDPOINT);
+            this.scissors = new Scissors();
         }
 
 
@@ -94,13 +90,13 @@ namespace Entrega2_Equipo1
         }
 
 
-        
+
         /* Method to find the faces on a bitmap image.
          * The ints are the number of the images processed,
          * the string can be "age", "gender", "position" or "bitmap"
          * The value of "age" is an Age object, the value of "gender"
          * is a Gender object, the value of "position" is a Position object*/
-        public Dictionary<int,Dictionary<string, object>> FindFaces(Bitmap image)
+        public Dictionary<int, Dictionary<string, object>> FindFaces(Bitmap image)
         {
             Dictionary<int, Dictionary<string, object>> returningDic = new Dictionary<int, Dictionary<string, object>>();
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\WatsonTempFiles\faces.jpg";
@@ -113,6 +109,8 @@ namespace Entrega2_Equipo1
         }
 
 
+
+
         /* Method to find classifiers of the image. The ints are the number
          of images processed, and every dictionary contains what classifiers Watson found
          in them. The string is the class, and the double the actual score*/
@@ -123,6 +121,22 @@ namespace Entrega2_Equipo1
             image.Save(path);
             returningDic = Classify(path);
             File.Delete(path);
+            return returningDic;
+        }
+
+
+
+
+        // TODO: NEW FUNCTION, DONT KNOW IF IT WORKS
+        public Dictionary<int, Dictionary<string, object>> FindFacesWithBmp(Bitmap image)
+        {
+            Dictionary<int, Dictionary<string, object>> returningDic = FindFaces(image);
+            foreach (KeyValuePair<int,Dictionary<string,object>> pair in returningDic)
+            {
+                FacePosition facePosition = (FacePosition)pair.Value["position"];
+                double[] croppingCoordinates = new double[] { facePosition.Left, facePosition.Top, facePosition.Width, facePosition.Height };
+                returningDic[pair.Key].Add("bitmap", scissors.Crop(image,croppingCoordinates));
+            }
             return returningDic;
         }
 

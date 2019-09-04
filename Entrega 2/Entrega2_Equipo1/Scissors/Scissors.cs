@@ -36,6 +36,7 @@ namespace Entrega2_Equipo1
             return returnValue;
         }
 
+
         // Same as before, but crops only one image
         public Bitmap Crop(Bitmap image, double[] coordinates)
         {
@@ -56,7 +57,7 @@ namespace Entrega2_Equipo1
          * Throws exceptions saying what's wrong*/
         private void Verification(Dictionary<Bitmap, double[]> images)
         {
-            
+
             int counter = 0;
             foreach (KeyValuePair<Bitmap, double[]> pair in images)
             {
@@ -78,7 +79,6 @@ namespace Entrega2_Equipo1
         // Same as before, but with only one Bitmap
         private void Verification(Bitmap image, double[] coordinates)
         {
-
             int counter = 0;
             int imageWidth = image.Width;
             int imageHeight = image.Height;
@@ -93,5 +93,7 @@ namespace Entrega2_Equipo1
             }
             counter++;
         }
+
+
     }
 }

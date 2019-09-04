@@ -191,13 +191,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Age.cs" />
-    <Compile Include="FacePosition.cs" />
-    <Compile Include="Gender.cs" />
+    <Compile Include="WatsonVisualRecognitionObjects\Age.cs" />
+    <Compile Include="WatsonVisualRecognitionObjects\FacePosition.cs" />
+    <Compile Include="WatsonVisualRecognitionObjects\Gender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scissors.cs" />
-    <Compile Include="WatsonFilter.cs" />
+    <Compile Include="Scissors\Scissors.cs" />
+    <Compile Include="Filters\WatsonFilter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
