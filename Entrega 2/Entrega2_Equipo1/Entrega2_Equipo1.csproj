@@ -191,6 +191,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\EColor.cs" />
+    <Compile Include="Enums\ENationality.cs" />
+    <Compile Include="Enums\ESexo.cs" />
+    <Compile Include="Labels\Label.cs" />
+    <Compile Include="Labels\SimpleLabel.cs" />
+    <Compile Include="Labels\SpecialLabel.cs" />
     <Compile Include="WatsonVisualRecognitionObjects\Age.cs" />
     <Compile Include="WatsonVisualRecognitionObjects\FacePosition.cs" />
     <Compile Include="WatsonVisualRecognitionObjects\Gender.cs" />
