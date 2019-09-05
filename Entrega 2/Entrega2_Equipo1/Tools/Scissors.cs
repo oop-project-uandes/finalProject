@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Entrega2_Equipo1
 {
-    public class Scissors
+    public class Scissors : Tool
     {
         // Scissors's builder
         public Scissors() { }
