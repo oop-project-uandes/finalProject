@@ -8,44 +8,31 @@ namespace Entrega2_Equipo1
 {
     public class SimpleLabel : Label
     {
-        private const int DEFAULT_MAX_LENGTH_SENTENCE = 20;
         private string sentence;
-        private int serialNumber;
+        private const string DEFAULT_SENTENCE = null;
 
-        public SimpleLabel() : base()
-        { }
+        
+        public SimpleLabel() : base(DEFAULT_SERIAL_NUMBER)
+        {
+            this.sentence = DEFAULT_SENTENCE;
+        }
 
-        public SimpleLabel(string sentence) : base()
+        public SimpleLabel(string sentence) : this(sentence, DEFAULT_SERIAL_NUMBER) {}
+
+        public SimpleLabel(string sentence, int serialNumber) : base(serialNumber)
         {
             this.sentence = sentence;
         }
 
-        public SimpleLabel(string sentence, int serialNumber) : base()
+        public SimpleLabel(int serialNumber) : base(serialNumber)
         {
-            this.sentence = sentence;
-            this.serialNumber = serialNumber;
+            this.sentence = DEFAULT_SENTENCE;
         }
 
         public string Sentence
         {
             get => this.sentence;
-            set
-            {
-                if (value.Length > DEFAULT_MAX_LENGTH_SENTENCE)
-                {
-                    throw new Exception("Sentence too long. Didn't assign the Label");
-                }
-                else
-                {
-                    this.sentence = value;
-                }
-            }
-        }
-        
-        public int SerialNumber
-        {
-            get => this.serialNumber;
-            set => this.serialNumber = value;
+            set => this.sentence = value;
         }
 
     }
