@@ -93,7 +93,5 @@ namespace Entrega2_Equipo1
             }
             counter++;
         }
-
-
     }
 }
