@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entrega2_Equipo1.Enums
+namespace Entrega2_Equipo1 
 {
-    public enum ESexo
+    public enum ESex
     {
         Hombre,
-        Mujer
+        Mujer,
+        None,
     }
 }

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entrega2_Equipo1.Enums
+namespace Entrega2_Equipo1
 {
     public enum ENationality
     {
+        None,
         Afganistán,
         Albania,
         Alemania,

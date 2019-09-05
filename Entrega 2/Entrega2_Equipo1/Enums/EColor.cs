@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entrega2_Equipo1.Enums
+namespace Entrega2_Equipo1
 {
     public enum EColor
     {
@@ -20,5 +20,6 @@ namespace Entrega2_Equipo1.Enums
         Negro,
         Gris,
         Fucsia,
+        None,
     }
 }
