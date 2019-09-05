@@ -56,3 +56,4 @@ namespace Entrega2_Equipo1.Labels
         public double[] FaceLocation { get => faceLocation; set => faceLocation = value; }
     }
 }
+

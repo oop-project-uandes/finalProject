@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1.Labels
 {
@@ -44,30 +40,30 @@ namespace Entrega2_Equipo1.Labels
         public SpecialLabel(double[] geographicLocation, string address, string photographer, string photomotive, bool selfie, int serialNumber) : base(serialNumber)
         {
             this.geographicLocation = geographicLocation;
-            this.Address = address;
-            this.Photographer = photographer;
-            this.PhotoMotive = photomotive;
-            this.Selfie = selfie;
+            Address = address;
+            Photographer = photographer;
+            PhotoMotive = photomotive;
+            Selfie = selfie;
         }
 
         public SpecialLabel(int serialNumber) : base(serialNumber)
         {
-            this.geographicLocation = DEFAULT_GEOGRAPHIC_LOCATION;
-            this.Address = DEFAULT_ADDRESS;
-            this.Photographer = DEFAULT_PHOTOGRAPHER;
-            this.PhotoMotive = DEFAULT_PHOTOMOTIVE;
-            this.Selfie = DEFAULT_SELFIE;
+            geographicLocation = DEFAULT_GEOGRAPHIC_LOCATION;
+            Address = DEFAULT_ADDRESS;
+            Photographer = DEFAULT_PHOTOGRAPHER;
+            PhotoMotive = DEFAULT_PHOTOMOTIVE;
+            Selfie = DEFAULT_SELFIE;
         }
 
-        
+
         public double[] GeographicLocation
         {
-            get => this.geographicLocation;
+            get => geographicLocation;
             set
             {
                 if ((value[0] > -90 && value[0] < 90) && (value[1] > -180 && value[1] < 180))
                 {
-                    this.geographicLocation = value;
+                    geographicLocation = value;
                 }
                 else
                 {

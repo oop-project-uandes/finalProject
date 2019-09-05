@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Entrega2_Equipo1
 {
-    class WatsonFilter
+    public class WatsonFeature
     {
         // WatsonFilter's attributes
         private const string APIKEY = "";
@@ -17,7 +17,7 @@ namespace Entrega2_Equipo1
 
 
         // WatsonFilter's builder
-        public WatsonFilter()
+        public WatsonFeature()
         {
             IBM.WatsonDeveloperCloud.Util.TokenOptions options = new IBM.WatsonDeveloperCloud.Util.TokenOptions();
             options.IamApiKey = APIKEY;
