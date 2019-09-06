@@ -192,22 +192,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\EColor.cs" />
+    <Compile Include="Enums\EColorFilterTypes.cs" />
+    <Compile Include="Enums\EFeature.cs" />
+    <Compile Include="Enums\EFilter.cs" />
     <Compile Include="Enums\ENationality.cs" />
     <Compile Include="Enums\ESex.cs" />
+    <Compile Include="Image.cs" />
     <Compile Include="Labels\Label.cs" />
     <Compile Include="Labels\PersonLabel.cs" />
     <Compile Include="Labels\SimpleLabel.cs" />
     <Compile Include="Labels\SpecialLabel.cs" />
+    <Compile Include="Tools\Features\AddTextFeature.cs" />
+    <Compile Include="Tools\Features\CensorshipFeature.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Age.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\FacePosition.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Gender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scissors\Scissors.cs" />
+    <Compile Include="Tools\Filters\ColorFilter.cs" />
+    <Compile Include="Tools\Filters\MergeImages.cs" />
+    <Compile Include="Tools\Scissors.cs" />
     <Compile Include="Tools\Features\WatsonFeature.cs" />
+    <Compile Include="Tools\Filters\AutomaticAdjustmentFilter.cs" />
     <Compile Include="Tools\Filters\BlackNWhiteFilter.cs" />
+    <Compile Include="Tools\Filters\MirrorFilter.cs" />
+    <Compile Include="Tools\Filters\OldFilmFilter.cs" />
     <Compile Include="Tools\Filters\SepiaFilter.cs" />
-    <Compile Include="Tools\IFilter.cs" />
+    <Compile Include="Tools\Filters\WindowsFilter.cs" />
     <Compile Include="Tools\Tool.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 
-namespace Entrega2_Equipo1
+namespace Entrega2_Equipo1.Enums
 {
-    class Program
+    public enum EFeature
     {
-        static void Main(string[] args)
-        {
-
-        }
+        WatsonFeature,
+        CensorshipFeature,
+        AddTextFeature
     }
 }
