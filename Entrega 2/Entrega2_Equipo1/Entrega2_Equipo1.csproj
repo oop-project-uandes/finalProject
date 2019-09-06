@@ -202,6 +202,7 @@
     <Compile Include="Labels\PersonLabel.cs" />
     <Compile Include="Labels\SimpleLabel.cs" />
     <Compile Include="Labels\SpecialLabel.cs" />
+    <Compile Include="Tools\Brush.cs" />
     <Compile Include="Tools\Features\AddTextFeature.cs" />
     <Compile Include="Tools\Features\CensorshipFeature.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Age.cs" />
