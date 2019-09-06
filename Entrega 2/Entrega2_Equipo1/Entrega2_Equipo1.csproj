@@ -203,8 +203,10 @@
     <Compile Include="Labels\SimpleLabel.cs" />
     <Compile Include="Labels\SpecialLabel.cs" />
     <Compile Include="Tools\Brush.cs" />
-    <Compile Include="Tools\Features\AddTextFeature.cs" />
-    <Compile Include="Tools\Features\CensorshipFeature.cs" />
+    <Compile Include="Tools\Features\AddImage.cs" />
+    <Compile Include="Tools\Features\AddShape.cs" />
+    <Compile Include="Tools\Features\AddText.cs" />
+    <Compile Include="Tools\Features\AddCensorship.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Age.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\FacePosition.cs" />
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Gender.cs" />
@@ -217,7 +219,7 @@
     <Compile Include="Tools\Merger.cs" />
     <Compile Include="Tools\Resizer.cs" />
     <Compile Include="Tools\Scissors.cs" />
-    <Compile Include="Tools\Features\WatsonFeature.cs" />
+    <Compile Include="Tools\Features\WatsonAnalizer.cs" />
     <Compile Include="Tools\Filters\AutomaticAdjustmentFilter.cs" />
     <Compile Include="Tools\Filters\BlackNWhiteFilter.cs" />
     <Compile Include="Tools\Filters\MirrorFilter.cs" />
