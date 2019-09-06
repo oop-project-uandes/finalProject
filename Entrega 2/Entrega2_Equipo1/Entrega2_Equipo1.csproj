@@ -209,8 +209,12 @@
     <Compile Include="Tools\Features\WatsonVisualRecognitionObjects\Gender.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\Filters\BrightnessFilter.cs" />
     <Compile Include="Tools\Filters\ColorFilter.cs" />
-    <Compile Include="Tools\Filters\MergeImages.cs" />
+    <Compile Include="Tools\Filters\InvertFilter.cs" />
+    <Compile Include="Tools\Filters\RotateFlipFilter.cs" />
+    <Compile Include="Tools\Merger.cs" />
+    <Compile Include="Tools\Resizer.cs" />
     <Compile Include="Tools\Scissors.cs" />
     <Compile Include="Tools\Features\WatsonFeature.cs" />
     <Compile Include="Tools\Filters\AutomaticAdjustmentFilter.cs" />

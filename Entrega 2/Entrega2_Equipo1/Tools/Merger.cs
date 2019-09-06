@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1
 {
-    public class MergeImages
+    public class Merger : Tool
     {
-        public MergeImages() { }
+        public Merger() { }
 
         // By default this method merges at 50% the images. p1 is the percentage of img1
         public Bitmap Merge(Bitmap img1, Bitmap img2, int p1=50)

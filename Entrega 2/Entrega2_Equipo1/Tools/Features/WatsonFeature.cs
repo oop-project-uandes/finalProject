@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Entrega2_Equipo1
 {
-    public class WatsonFeature
+    public class WatsonFeature : Tool
     {
         // WatsonFilter's attributes
         private const string APIKEY = "";

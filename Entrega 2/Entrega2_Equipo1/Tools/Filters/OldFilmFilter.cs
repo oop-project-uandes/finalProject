@@ -12,10 +12,10 @@ namespace Entrega2_Equipo1
     {
         public OldFilmFilter() { } 
 
-        public Bitmap ApplyFilter(Bitmap image, int diffusion = 60)
+        public Bitmap ApplyFilter(Bitmap image, int noise = 60)
         {
             SepiaFilter filter = new SepiaFilter();
-            MergeImages mergeTool = new MergeImages();
+            Merger mergeTool = new Merger();
             BlackNWhiteFilter blackNwhite = new BlackNWhiteFilter();
             Bitmap sepiaImage = mergeTool.Merge(blackNwhite.ApplyFilter(image), filter.ApplyFilter(image), 25);
             Random TempRandom = new Random();
@@ -31,9 +31,9 @@ namespace Entrega2_Equipo1
                         continue;
                     }
                     Color CurrentPixel = sepiaImage.GetPixel(x, y);
-                    int R = CurrentPixel.R + TempRandom.Next(-diffusion, diffusion+1);
-                    int G = CurrentPixel.G + TempRandom.Next(-diffusion, diffusion+1);
-                    int B = CurrentPixel.B + TempRandom.Next(-diffusion, diffusion+1);
+                    int R = CurrentPixel.R + TempRandom.Next(-noise, noise+1);
+                    int G = CurrentPixel.G + TempRandom.Next(-noise, noise+1);
+                    int B = CurrentPixel.B + TempRandom.Next(-noise, noise+1);
                     if (R > 255)
                     {
                         R = 255;

@@ -11,7 +11,27 @@ namespace Entrega2_Equipo1
     {
         public Bitmap ApplyFilter(Bitmap image)
         {
-            return image;
+            Bitmap copy = (Bitmap)image.Clone();
+            RotateFlipFilter filter = new RotateFlipFilter();
+            Bitmap rotated = filter.RotateFlip(copy, RotateFlipType.RotateNoneFlipX);
+            Bitmap whiteCanvas = new Bitmap(image.Width*2, image.Height);
+
+            for (int i = 0; i < image.Height; i++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    whiteCanvas.SetPixel(x, i, copy.GetPixel(x, i));
+                }
+            }
+
+            for (int i = 0; i < image.Height; i++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    whiteCanvas.SetPixel(x + image.Width, i, rotated.GetPixel(x, i));
+                }
+            }
+            return whiteCanvas;
         }
     }
 }
