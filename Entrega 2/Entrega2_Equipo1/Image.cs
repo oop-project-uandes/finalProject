@@ -19,7 +19,5 @@ namespace Entrega2_Equipo1
         private int[] aspectRatio;
         private bool hdr;
         private bool darkClear;
-
-        public string Width { get; internal set; }
     }
 }

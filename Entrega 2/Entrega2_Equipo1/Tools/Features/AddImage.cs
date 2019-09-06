@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1.Tools.Features
 {
-    public class CensorshipFeature : Tool
-    {}
+    public class AddImage : Tool
+    {
+    }
 }
