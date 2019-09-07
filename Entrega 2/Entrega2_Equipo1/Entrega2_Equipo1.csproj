@@ -226,6 +226,7 @@
     <Compile Include="Tools\Filters\OldFilmFilter.cs" />
     <Compile Include="Tools\Filters\SepiaFilter.cs" />
     <Compile Include="Tools\Filters\WindowsFilter.cs" />
+    <Compile Include="Tools\Searcher.cs" />
     <Compile Include="Tools\Tool.cs" />
     <Compile Include="Tools\Zoom.cs" />
   </ItemGroup>
