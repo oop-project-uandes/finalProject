@@ -11,20 +11,17 @@ namespace Entrega2_Equipo1
     public class WorkingArea
     {
         //Atributes
-        private Dictionary<System.Drawing.Bitmap, string> images;
-        private string sourcePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName+ @"\Files";
-        private string targetPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName+ @"\Temp";
+        private Dictionary<string, System.Drawing.Bitmap> images;
+        private string sourcePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files";
+        private string targetPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Temp";
+
         //Builder
         public WorkingArea() {
-
+            Images = new Dictionary<string, System.Drawing.Bitmap> { };
         }
         //Get set
-        public Dictionary<Bitmap, string> Images { get => images; set => images = value; }
+        public Dictionary<string, Bitmap> Images { get => images; set => images = value; }
         //Methods
-
-
-
-
 
         public bool LoadImage(List<string> imageNames) {
             for (int i = 0; i < imageNames.Count; i++)
@@ -32,39 +29,51 @@ namespace Entrega2_Equipo1
                 string sourceName = sourcePath + @"\"+imageNames[i];
                 string targetName = targetPath + @"\" + imageNames[i];
                 System.IO.File.Copy(sourceName, targetName,true);
-                //Bitmap BitmapImage = new Bitmap(targetName);
-                //images.Add(BitmapImage,imageNames[i]);
-            }
-            for (int i = 0; i < imageNames.Count; i++)
-            {   string targetName = targetPath + @"\" + imageNames[i];
                 Bitmap BitmapImage = new Bitmap(targetName);
-
+                images.Add(imageNames[i],BitmapImage);
+            }
+            Console.WriteLine(Images.Keys);
+            return true;
+        }
+        public bool SaveImage(List<string> imageName) {
+            foreach (string item in imageName)
+            {
+                Images[item].Save(item);
             }
             return true;
         }
-
-
-
-
-
-
-
-
-        public bool SaveImage() {
-            throw new Exception("exeptionsaveimage"); 
-        }
-        public bool AddImage()
+        public bool AddImage(string imageName, System.Drawing.Bitmap image)
         {
-            throw new Exception("exeption addimage");
+            images.Add(imageName, image);
+            return true;
         }
-        public bool BacktoLibrary()
+        public bool BacktoLibrary(List<string> imageNamesToSendBack)
         {
-            throw new Exception("exeptionsbacktolibrary");
+            foreach (string item in imageNamesToSendBack)
+            {
+                string sourceName = sourcePath + @"\" + item;
+                string targetName = targetPath + @"\" + item;
+                System.IO.File.Move(targetName, sourceName);
+                Images.Remove(item);
+            }
+            return true;
         }
-        public bool RemoveFromWorkingArea()
+        public bool RemoveFromListOfImages(List<string> ListOfImagesToRemove)
         {
-            throw new Exception("exeptionremovefrom");
+            for (int i = 0; i < ListOfImagesToRemove.Count; i++)
+            {
+                Images.Remove(ListOfImagesToRemove[i]);
+            }
+            return true;
         }
+        public void NukeTemp() {
+            System.IO.DirectoryInfo di = new DirectoryInfo(targetPath);
 
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            Images.Clear();
+        }
     }
 }
