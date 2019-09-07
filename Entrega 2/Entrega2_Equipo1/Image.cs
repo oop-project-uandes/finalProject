@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
+using System.Drawing.Imaging;
 
 namespace Entrega2_Equipo1
 {
@@ -17,9 +18,9 @@ namespace Entrega2_Equipo1
         private int[] resolution;
         private int[] aspectRatio;
         private double saturation;
-
-        private Dictionary<string, string> exif;
         private bool darkClear;
+        private Dictionary<string, string> exif;
+        
 
 
         public Image(string name, List<Label> labels, int calification)
@@ -31,6 +32,7 @@ namespace Entrega2_Equipo1
             this.resolution = LoadResolution();
             this.aspectRatio = LoadAspectRatio();
             this.saturation = LoadSaturation();
+            this.darkClear = LoadDarkClear();
         }
 
         private Bitmap LoadImage(string name)
@@ -93,6 +95,36 @@ namespace Entrega2_Equipo1
             return aux.Average();
         }
 
+        private bool LoadDarkClear()
+        {
+            Color color;
+            double brightness, totalBrightness = 0;
+            for (int i = 0; i < this.image.Height; i++)
+            {
+                for (int x = 0; x < this.image.Width; x++)
+                {
+                    color = this.image.GetPixel(x, i);
+                    brightness = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
+                    totalBrightness += brightness;
+                }
+            }
+
+            double result = totalBrightness / (this.image.Width * this.image.Height);
+            if (result < 0.5)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private Dictionary<string, string> LoadExif()
+        {
+            
+            
+        }
 
     }
 }
