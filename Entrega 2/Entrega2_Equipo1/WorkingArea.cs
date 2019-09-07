@@ -11,19 +11,22 @@ namespace Entrega2_Equipo1
     public class WorkingArea
     {
         //Atributes
-        private Dictionary<string, System.Drawing.Bitmap> images;
+        private Dictionary<string, Bitmap> images;
         private string sourcePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files";
         private string targetPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Temp";
 
         //Builder
-        public WorkingArea() {
+        public WorkingArea()
+        {
             Images = new Dictionary<string, System.Drawing.Bitmap> { };
         }
+
         //Get set
         public Dictionary<string, Bitmap> Images { get => images; set => images = value; }
+        
         //Methods
-
-        public bool LoadImage(List<string> imageNames) {
+        public bool LoadImage(List<string> imageNames)
+        {
             for (int i = 0; i < imageNames.Count; i++)
             {
                 string sourceName = sourcePath + @"\"+imageNames[i];
@@ -35,29 +38,34 @@ namespace Entrega2_Equipo1
             Console.WriteLine(Images.Keys);
             return true;
         }
-        public bool SaveImage(List<string> imageName) {
+
+        public bool SaveImage(List<string> imageName)
+        {
             foreach (string item in imageName)
             {
-                Images[item].Save(item);
+                Images[item].Save(targetPath + @"\" + imageName);
             }
             return true;
         }
-        public bool AddImage(string imageName, System.Drawing.Bitmap image)
+
+        public bool AddImage(string imageName, Bitmap image)
         {
             images.Add(imageName, image);
             return true;
         }
+
         public bool BacktoLibrary(List<string> imageNamesToSendBack)
         {
             foreach (string item in imageNamesToSendBack)
             {
                 string sourceName = sourcePath + @"\" + item;
                 string targetName = targetPath + @"\" + item;
-                System.IO.File.Move(targetName, sourceName);
+                File.Move(targetName, sourceName);
                 Images.Remove(item);
             }
             return true;
         }
+
         public bool RemoveFromListOfImages(List<string> ListOfImagesToRemove)
         {
             for (int i = 0; i < ListOfImagesToRemove.Count; i++)
@@ -66,9 +74,9 @@ namespace Entrega2_Equipo1
             }
             return true;
         }
-        public void NukeTemp() {
-            System.IO.DirectoryInfo di = new DirectoryInfo(targetPath);
 
+        public void NukeTemp() {
+            DirectoryInfo di = new DirectoryInfo(targetPath);
             foreach (FileInfo file in di.GetFiles())
             {
                 file.Delete();
