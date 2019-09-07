@@ -122,7 +122,7 @@ namespace Entrega2_Equipo1
 
         private Dictionary<string, string> LoadExif()
         {
-            
+            throw new NotImplementedException();
             
         }
 

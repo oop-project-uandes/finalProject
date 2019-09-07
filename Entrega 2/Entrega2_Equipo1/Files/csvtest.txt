@@ -1,0 +1,1 @@
+stock1,#5,frase,frases frases 1,awa de uwu,frase2,Frase23,#2,joaquin,(23,325,342,33),gracia,Chile,marron,marron,hombre,[1999,5,27],matias,(234,23,55,66),Rivera,Chile,azul,amarillo,hombre,[1999,8,12],{33,66},calle false,juan pepe,por la tela,true
