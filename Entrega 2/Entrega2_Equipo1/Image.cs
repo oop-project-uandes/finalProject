@@ -19,7 +19,6 @@ namespace Entrega2_Equipo1
         private double saturation;
 
         private Dictionary<string, string> exif;
-        private bool hdr;
         private bool darkClear;
 
 
