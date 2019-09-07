@@ -36,6 +36,6 @@ namespace Entrega2_Equipo1
             get => this.sentence;
             set => this.sentence = value;
         }
-        protected override string labelType { get => this.labelType; set => this.labelType = value; }
+        
     }
 }

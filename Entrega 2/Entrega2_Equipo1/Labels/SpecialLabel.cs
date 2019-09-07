@@ -79,6 +79,6 @@ namespace Entrega2_Equipo1
         public string Photographer { get => photographer; set => photographer = value; }
         public string PhotoMotive { get => photoMotive; set => photoMotive = value; }
         public bool Selfie { get => selfie; set => selfie = value; }
-        protected override string labelType { get => this.labelType; set => this.labelType = value; }
+        
     }
 }

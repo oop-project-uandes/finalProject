@@ -26,10 +26,10 @@ namespace Entrega2_Equipo1
                         List<Label> label = image.Labels;
                         List<PersonLabel> personLabel = new List<PersonLabel>();
                             foreach (Label Etiqueta in label)
-                        {
-                           if( Etiqueta.type)
                             {
-                               
+                                if(Etiqueta.labelType == "PersonLabel")
+                            {
+                                personLabel.Add((PersonLabel)Etiqueta);
                             }
                         }
                     }

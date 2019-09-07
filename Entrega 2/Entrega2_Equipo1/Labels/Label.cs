@@ -9,7 +9,7 @@ namespace Entrega2_Equipo1
 
     public abstract class Label
     {
-        protected abstract string labelType { get; set; }
+        public string labelType { get; set; }
 
         protected const int DEFAULT_SERIAL_NUMBER = 0;
         protected int serialNumber;
