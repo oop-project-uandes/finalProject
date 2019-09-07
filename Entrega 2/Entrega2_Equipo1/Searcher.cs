@@ -27,9 +27,9 @@ namespace Entrega2_Equipo1
                         List<PersonLabel> personLabel = new List<PersonLabel>();
                             foreach (Label Etiqueta in label)
                         {
-                           if( Etiqueta.GetType() == GetType(PersonLabel))
+                           if( Etiqueta.type)
                             {
-
+                               
                             }
                         }
                     }
