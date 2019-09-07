@@ -15,6 +15,7 @@ namespace Entrega2_Equipo1
         public List<Image> Search(List<Image> images, string searchDeclaration)
         {
             List<List<List<string>>> Declarations = Declaration(searchDeclaration);
+            
             foreach (List<List<string>> subDec in Declarations)
             {
 
@@ -22,7 +23,15 @@ namespace Entrega2_Equipo1
                 {
                     foreach (Image image in images)
                     {
+                        List<Label> label = image.Labels;
+                        List<PersonLabel> personLabel = new List<PersonLabel>();
+                            foreach (Label Etiqueta in label)
+                        {
+                           if( Etiqueta.GetType() == GetType(PersonLabel))
+                            {
 
+                            }
+                        }
                     }
                 }
                 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Entrega2_Equipo1.Labels
+namespace Entrega2_Equipo1
 {
     public class SpecialLabel : Label
     {

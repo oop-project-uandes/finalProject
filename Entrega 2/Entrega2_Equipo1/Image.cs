@@ -13,7 +13,7 @@ namespace Entrega2_Equipo1
     {
         private List<Label> labels;
         private string name;
-        private Bitmap image;
+        private Bitmap bitmapImage;
         private int calification;
         private int[] resolution;
         private int[] aspectRatio;
@@ -23,7 +23,7 @@ namespace Entrega2_Equipo1
 
         public List<Label> Labels { get => this.labels; set => this.labels = value; }
         public string Name { get => this.name; set => this.name = value; }
-        public Bitmap Image { get => this.image; set => this.image = value; }
+        public Bitmap BitmapImage { get => this.bitmapImage; set => this.bitmapImage = value; }
         public int Calification { get => this.calification; set => this.calification = value; }
         public int[] Resolution { get => this.resolution; set => this.resolution = value; }
         public int[] AspectRatio { get => this.aspectRatio; set => this.aspectRatio = value; }
@@ -36,7 +36,7 @@ namespace Entrega2_Equipo1
             this.Name = name;
             this.Labels = labels;
             this.Calification = calification;
-            this.Image = LoadImage(name);
+            this.bitmapImage = LoadbitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
             this.Saturation = LoadSaturation();
@@ -46,17 +46,17 @@ namespace Entrega2_Equipo1
         public Image()
         { }
 
-        private Bitmap LoadImage(string name)
+        private Bitmap LoadbitmapImage(string name)
         {
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
-            Bitmap returningImage = new Bitmap(path);
-            return returningImage;
+            Bitmap returningbitmapImage = new Bitmap(path);
+            return returningbitmapImage;
         }
 
         private int[] LoadResolution()
         {
-            int v1 = this.Image.Width;
-            int v2 = this.Image.Height;
+            int v1 = this.bitmapImage.Width;
+            int v2 = this.bitmapImage.Height;
             int[] returningArray = new int[] { v1, v2 };
             return returningArray;
         }
@@ -81,7 +81,7 @@ namespace Entrega2_Equipo1
 
         private int[] LoadAspectRatio()
         {
-            int[] returningAspect = new int[] { this.Image.Width, this.Image.Height };
+            int[] returningAspect = new int[] { this.bitmapImage.Width, this.bitmapImage.Height };
             Simplify(returningAspect);
             return returningAspect;
         }
@@ -89,14 +89,14 @@ namespace Entrega2_Equipo1
 
         private double LoadSaturation()
         {
-            double[] aux = new double[Image.Width*Image.Width];
+            double[] aux = new double[bitmapImage.Width*bitmapImage.Width];
             Color color;
             int counter = 0;
-            for (int i = 0; i < this.Image.Height; i++)
+            for (int i = 0; i < this.bitmapImage.Height; i++)
             {
-                for (int x = 0; x < this.Image.Width; x++)
+                for (int x = 0; x < this.bitmapImage.Width; x++)
                 {
-                    color = this.Image.GetPixel(x, i);
+                    color = this.bitmapImage.GetPixel(x, i);
                     double v1 = Math.Max(Math.Max(color.R, color.G), color.B);
                     double v2 = Math.Min(Math.Min(color.R, color.G), color.B);
                     aux[counter] = Math.Acos((v1 + v2) / v1);
@@ -110,17 +110,17 @@ namespace Entrega2_Equipo1
         {
             Color color;
             double brightness, totalBrightness = 0;
-            for (int i = 0; i < this.Image.Height; i++)
+            for (int i = 0; i < this.bitmapImage.Height; i++)
             {
-                for (int x = 0; x < this.Image.Width; x++)
+                for (int x = 0; x < this.bitmapImage.Width; x++)
                 {
-                    color = this.Image.GetPixel(x, i);
+                    color = this.bitmapImage.GetPixel(x, i);
                     brightness = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
                     totalBrightness += brightness;
                 }
             }
 
-            double result = totalBrightness / (this.Image.Width * this.Image.Height);
+            double result = totalBrightness / (this.bitmapImage.Width * this.bitmapImage.Height);
             if (result < 0.5)
             {
                 return false;
@@ -132,9 +132,9 @@ namespace Entrega2_Equipo1
         }
 
 
-        public void LoadExif(Bitmap image)
+        public void LoadExif(Bitmap bitmapImage)
         {
-            PropertyItem[] items = image.PropertyItems;
+            PropertyItem[] items = bitmapImage.PropertyItems;
             string id;
             string type;
             string len;
