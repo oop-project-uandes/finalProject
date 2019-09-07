@@ -14,6 +14,8 @@ namespace Entrega2_Equipo1
 
         public List<Image> Search(List<Image> images, string searchDeclaration)
         {
+            List<List<List<string>>> Declarations = Declaration(searchDeclaration);
+
             return null;
         }
 
@@ -28,7 +30,7 @@ namespace Entrega2_Equipo1
             
             if (Declaration.Contains("or"))
             {
-                foreach (string SubDeclaration0 in Declaration.Split(new string[] { "or" }, StringSplitOptions.None))
+                foreach (string SubDeclaration0 in Declaration.Split(new string[] { " or " }, StringSplitOptions.None))
                 {
                     List<List<string>> subDec = new List<List<string>>();
                     string SubDeclaration = SubDeclaration0.Replace(" ", "");
@@ -43,6 +45,7 @@ namespace Entrega2_Equipo1
                     }
                     else
                     {
+                        
                         string[] atFinal = SubDeclaration.Split(new string[] { ":" }, StringSplitOptions.None);
                         subDec.Add(new List<string> { atFinal[0], atFinal[1] });
 
