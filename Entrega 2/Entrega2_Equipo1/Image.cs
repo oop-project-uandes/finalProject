@@ -20,6 +20,7 @@ namespace Entrega2_Equipo1
         private double saturation;
         private bool darkClear;
         private Dictionary<int, Dictionary<string, string>> exif;
+        private static readonly DateTime DEFAULT_BIRTHDATE = new DateTime(1900, 1, 1);
 
         public List<Label> Labels { get => this.labels; set => this.labels = value; }
         public string Name { get => this.name; set => this.name = value; }
@@ -199,6 +200,80 @@ namespace Entrega2_Equipo1
                 }
             }
             return returningList;
+        }
+
+
+        // TODO: Falta implementar someSpecialLabelContains y someSimpleLabelContains
+        public bool SomePersonLabelContains(string attribute, string s = null, ENationality En = ENationality.None, EColor Ec = EColor.None, ESex Es = ESex.None, double[] Bd = null)
+        {
+            List<PersonLabel> internalList = selectPersonLabels();
+            if (s != null)
+            {
+                switch (attribute)
+                {
+                    case "Name":
+                        foreach (PersonLabel label in internalList)
+                        {
+                            if (label.Name == s) return true;
+                        }
+                        return false;
+                    case "Surname":
+                        foreach (PersonLabel label in internalList)
+                        {
+                            if (label.Surname == s) return true;
+                        }
+                        return false;
+                    case "Birthdate":
+                        foreach (PersonLabel label in internalList)
+                        {
+                            if (label.BirthDate == s) return true;
+                        }
+                        return false;
+                }
+            }
+            else if (En != ENationality.None)
+            {
+                foreach (PersonLabel label in internalList)
+                {
+                    if (label.Nationality == En) return true;
+                }
+                return false;
+            }
+            else if (Ec != EColor.None)
+            {
+                switch (attribute)
+                {
+                    case "EyesColor":
+                        foreach (PersonLabel label in internalList)
+                        {
+                            if (label.EyesColor == Ec) return true;
+                        }
+                        return false;
+                    case "HairColor":
+                        foreach (PersonLabel label in internalList)
+                        {
+                            if (label.HairColor == Ec) return true;
+                        }
+                        return false;
+                }
+            }
+            else if (Es != ESex.None)
+            {
+                foreach (PersonLabel label in internalList)
+                {
+                    if (label.Sex == Es) return true;
+                }
+                return false;
+            }
+            else if (Bd != null)
+            {
+                foreach (PersonLabel label in internalList)
+                {
+                    if (label.FaceLocation == Bd) return true;
+                }
+                return false;
+            }
+            throw new Exception("Wrong search parameters");
         }
 
     }

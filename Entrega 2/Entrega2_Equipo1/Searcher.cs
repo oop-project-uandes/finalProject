@@ -102,7 +102,5 @@ namespace Entrega2_Equipo1
         }
             
     }
-
-       
 }
 

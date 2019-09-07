@@ -18,8 +18,8 @@ namespace Entrega2_Equipo1
         private EColor hairColor;
         private const ESex DEFAULT_SEX = ESex.None;
         private ESex sex;
-        private static readonly DateTime DEFAULT_BIRTHDATE = new DateTime(1900, 1, 1);
-        private DateTime birthDate;
+        private const string DEFAULT_BIRTHDATE = "1900-1-1";
+        private string birthDate;
         private double[] faceLocation;
         private string type;
 
@@ -35,7 +35,7 @@ namespace Entrega2_Equipo1
 
         public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex) : this(name, faceLocation, surname, nationality, eyesColor, hairColor, sex, DEFAULT_BIRTHDATE) { }
 
-        public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex, DateTime birthDate) : base(DEFAULT_SERIAL_NUMBER)
+        public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex, string birthDate) : base(DEFAULT_SERIAL_NUMBER)
         {
             this.Name = name;
             this.FaceLocation = faceLocation;
@@ -55,7 +55,7 @@ namespace Entrega2_Equipo1
         public EColor EyesColor { get => eyesColor; set => eyesColor = value; }
         public EColor HairColor { get => hairColor; set => hairColor = value; }
         public ESex Sex { get => sex; set => sex = value; }
-        public DateTime BirthDate { get => birthDate; set => birthDate = value; }
+        public string BirthDate { get => birthDate; set => birthDate = value; }
         public double[] FaceLocation { get => faceLocation; set => faceLocation = value; }
     }
 }
