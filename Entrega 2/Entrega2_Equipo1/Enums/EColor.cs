@@ -15,7 +15,7 @@ namespace Entrega2_Equipo1
         Naranja,
         Morado,
         Rosa,
-        Marrón,
+        Marron,
         Blanco,
         Negro,
         Gris,

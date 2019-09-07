@@ -74,14 +74,16 @@ namespace Entrega2_Equipo1
             }
             return true;
         }
-
+        //El metodo delete como que no funca
         public void NukeTemp() {
-            DirectoryInfo di = new DirectoryInfo(targetPath);
-            foreach (FileInfo file in di.GetFiles())
-            {
-                file.Delete();
-            }
             Images.Clear();
+            string[] files = Directory.GetFiles(targetPath);
+            foreach (string file in files)
+            {
+                File.Delete(file);
+                Console.WriteLine($"{file} is deleted.");
+            }
+            
         }
     }
 }

@@ -136,6 +136,7 @@ namespace Entrega2_Equipo1
 
         private Dictionary<int, Dictionary<string, string>> LoadExif()
         {
+
             PropertyItem[] items = this.bitmapImage.PropertyItems;
             string id;
             string type;
