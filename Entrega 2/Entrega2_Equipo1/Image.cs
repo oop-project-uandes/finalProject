@@ -37,7 +37,6 @@ namespace Entrega2_Equipo1
             this.Labels = labels;
             this.Calification = calification;
             this.bitmapImage = LoadbitmapImage(name);
-            this.bitmapImage = LoadImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
             this.Saturation = LoadSaturation();
