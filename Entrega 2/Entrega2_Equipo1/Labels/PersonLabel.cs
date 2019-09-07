@@ -21,6 +21,7 @@ namespace Entrega2_Equipo1.Labels
         private static readonly DateTime DEFAULT_BIRTHDATE = new DateTime(1900, 1, 1);
         private DateTime birthDate;
         private double[] faceLocation;
+        private string type;
 
         public PersonLabel(string name, double[] faceLocation) : this(name, faceLocation, DEFAULT_SURNAME) { }
 
@@ -44,6 +45,7 @@ namespace Entrega2_Equipo1.Labels
             this.HairColor = DEFAULT_COLOR;
             this.Sex = DEFAULT_SEX;
             this.BirthDate = DEFAULT_BIRTHDATE;
+            this.Type = "PersonLabel";
         }
 
         
@@ -55,6 +57,7 @@ namespace Entrega2_Equipo1.Labels
         public ESex Sex { get => sex; set => sex = value; }
         public DateTime BirthDate { get => birthDate; set => birthDate = value; }
         public double[] FaceLocation { get => faceLocation; set => faceLocation = value; }
+        public string Type { get => this.type; set => this.type = value; }
     }
 }
 

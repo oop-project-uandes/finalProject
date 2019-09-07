@@ -15,6 +15,7 @@ namespace Entrega2_Equipo1.Labels
         private const string DEFAULT_PHOTOMOTIVE = null;
         private bool selfie;
         private const bool DEFAULT_SELFIE = false;
+        private string type;
 
 
         // Builders
@@ -25,6 +26,7 @@ namespace Entrega2_Equipo1.Labels
             this.Photographer = DEFAULT_PHOTOGRAPHER;
             this.PhotoMotive = DEFAULT_PHOTOMOTIVE;
             this.Selfie = DEFAULT_SELFIE;
+            this.Type = "SpecialLabel";
         }
 
         public SpecialLabel(double[] geographicLocation) : this(geographicLocation, DEFAULT_ADDRESS) { }
@@ -53,6 +55,7 @@ namespace Entrega2_Equipo1.Labels
             Photographer = DEFAULT_PHOTOGRAPHER;
             PhotoMotive = DEFAULT_PHOTOMOTIVE;
             Selfie = DEFAULT_SELFIE;
+            this.Type = "SpecialLabel";
         }
 
 
@@ -76,5 +79,6 @@ namespace Entrega2_Equipo1.Labels
         public string Photographer { get => photographer; set => photographer = value; }
         public string PhotoMotive { get => photoMotive; set => photoMotive = value; }
         public bool Selfie { get => selfie; set => selfie = value; }
+        public string Type { get => this.type; set => this.type = value; }
     }
 }
