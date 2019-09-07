@@ -46,6 +46,7 @@ namespace Entrega2_Equipo1.Labels
             this.BirthDate = DEFAULT_BIRTHDATE;
         }
 
+        
         public string Name { get => name; set => name = value; }
         public string Surname { get => surname; set => surname = value; }
         public ENationality Nationality { get => nationality; set => nationality = value; }
