@@ -15,7 +15,19 @@ namespace Entrega2_Equipo1
         public List<Image> Search(List<Image> images, string searchDeclaration)
         {
             List<List<List<string>>> Declarations = Declaration(searchDeclaration);
+            foreach (List<List<string>> subDec in Declarations)
+            {
 
+                foreach (List<string> atributes in subDec)
+                {
+                    foreach (Image image in images)
+                    {
+
+                    }
+                }
+                
+            }
+            
             return null;
         }
 
