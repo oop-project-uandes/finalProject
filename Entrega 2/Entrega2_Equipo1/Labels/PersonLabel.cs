@@ -45,7 +45,7 @@ namespace Entrega2_Equipo1
             this.HairColor = DEFAULT_COLOR;
             this.Sex = DEFAULT_SEX;
             this.BirthDate = DEFAULT_BIRTHDATE;
-            this.Type = "PersonLabel";
+            this.labelType = "PersonLabel";
         }
 
         
@@ -57,7 +57,7 @@ namespace Entrega2_Equipo1
         public ESex Sex { get => sex; set => sex = value; }
         public DateTime BirthDate { get => birthDate; set => birthDate = value; }
         public double[] FaceLocation { get => faceLocation; set => faceLocation = value; }
-        public string Type { get => this.type; set => this.type = value; }
+        protected override string labelType { get => this.labelType; set => this.labelType = value; }
     }
 }
 

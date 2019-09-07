@@ -22,13 +22,13 @@ namespace Entrega2_Equipo1
         public SimpleLabel(string sentence, int serialNumber) : base(serialNumber)
         {
             this.sentence = sentence;
-            this.Type = "SimpleLabel";
+            this.labelType = "SimpleLabel";
         }
 
         public SimpleLabel(int serialNumber) : base(serialNumber)
         {
             this.sentence = DEFAULT_SENTENCE;
-            this.Type = "SimpleLabel";
+            this.labelType = "SimpleLabel";
         }
 
         public string Sentence
@@ -36,6 +36,6 @@ namespace Entrega2_Equipo1
             get => this.sentence;
             set => this.sentence = value;
         }
-        public string Type { get => this.type; set => this.type = value; }
+        protected override string labelType { get => this.labelType; set => this.labelType = value; }
     }
 }
