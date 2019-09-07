@@ -37,7 +37,6 @@ namespace Entrega2_Equipo1
             this.Labels = labels;
             this.Calification = calification;
             this.bitmapImage = LoadbitmapImage(name);
-            this.bitmapImage = LoadbitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
             this.Saturation = LoadSaturation();
@@ -160,6 +159,47 @@ namespace Entrega2_Equipo1
             return returningDic;
         }
 
+
+        private List<PersonLabel> selectPersonLabels()
+        {
+            List <PersonLabel> returningList = new List<PersonLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "PersonLabel")
+                {
+                    returningList.Add((PersonLabel)label);
+                }
+            }
+            return returningList;
+        }
+
+
+        private List<SpecialLabel> selectSpecialLabels()
+        {
+            List<SpecialLabel> returningList = new List<SpecialLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "SpecialLabel")
+                {
+                    returningList.Add((SpecialLabel)label);
+                }
+            }
+            return returningList;
+        }
+
+
+        private List<SimpleLabel> selectSimpleLabels()
+        {
+            List<SimpleLabel> returningList = new List<SimpleLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "SimpleLabel")
+                {
+                    returningList.Add((SimpleLabel)label);
+                }
+            }
+            return returningList;
+        }
 
     }
 }
