@@ -202,6 +202,7 @@
     <Compile Include="Labels\PersonLabel.cs" />
     <Compile Include="Labels\SimpleLabel.cs" />
     <Compile Include="Labels\SpecialLabel.cs" />
+    <Compile Include="Library.cs" />
     <Compile Include="Tools\Brush.cs" />
     <Compile Include="Tools\Features\AddImage.cs" />
     <Compile Include="Tools\Features\AddShape.cs" />

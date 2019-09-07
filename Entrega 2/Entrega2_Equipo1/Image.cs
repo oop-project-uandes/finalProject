@@ -19,7 +19,7 @@ namespace Entrega2_Equipo1
         private int[] aspectRatio;
         private double saturation;
         private bool darkClear;
-        private Dictionary<string, string> exif;
+        private Dictionary<int, Dictionary<string, string>> exif;
 
         public List<Label> Labels { get => this.labels; set => this.labels = value; }
         public string Name { get => this.name; set => this.name = value; }
@@ -29,7 +29,7 @@ namespace Entrega2_Equipo1
         public int[] AspectRatio { get => this.aspectRatio; set => this.aspectRatio = value; }
         public double Saturation { get => this.saturation; set => this.saturation = value; }
         public bool DarkClear { get => this.darkClear; set => this.darkClear = value; }
-        public Dictionary<string, string> Exif { get => this.exif; set => this.exif = value; }
+        public Dictionary<int, Dictionary<string, string>> Exif { get => this.exif; set => this.exif = value; }
 
         public Image(string name, List<Label> labels, int calification)
         {
@@ -41,6 +41,7 @@ namespace Entrega2_Equipo1
             this.AspectRatio = LoadAspectRatio();
             this.Saturation = LoadSaturation();
             this.DarkClear = LoadDarkClear();
+            this.exif = LoadExif();
         }
 
         public Image()
@@ -132,25 +133,74 @@ namespace Entrega2_Equipo1
         }
 
 
-        public void LoadExif(Bitmap bitmapImage)
+        private Dictionary<int, Dictionary<string, string>> LoadExif()
         {
-            PropertyItem[] items = bitmapImage.PropertyItems;
+
+            PropertyItem[] items = this.bitmapImage.PropertyItems;
             string id;
             string type;
             string len;
             string value;
+            Dictionary<int, Dictionary<string, string>> returningDic = new Dictionary<int, Dictionary<string, string>>();
+            int count = 1;
             foreach (PropertyItem item in items)
             {
-                ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+                ASCIIEncoding encoding = new ASCIIEncoding();
                 id = item.Id.ToString();
                 type = item.Id.ToString();
                 len = item.Len.ToString();
                 value = encoding.GetString(item.Value);
-                Console.WriteLine($"0x{id}, {type}, {len}, {value}");
-
+                returningDic[count].Add("id", id);
+                returningDic[count].Add("type", type);
+                returningDic[count].Add("len", len);
+                returningDic[count].Add("value", value);
+                count++;
             }
+
+            return returningDic;
         }
 
+
+        private List<PersonLabel> selectPersonLabels()
+        {
+            List <PersonLabel> returningList = new List<PersonLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "PersonLabel")
+                {
+                    returningList.Add((PersonLabel)label);
+                }
+            }
+            return returningList;
+        }
+
+
+        private List<SpecialLabel> selectSpecialLabels()
+        {
+            List<SpecialLabel> returningList = new List<SpecialLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "SpecialLabel")
+                {
+                    returningList.Add((SpecialLabel)label);
+                }
+            }
+            return returningList;
+        }
+
+
+        private List<SimpleLabel> selectSimpleLabels()
+        {
+            List<SimpleLabel> returningList = new List<SimpleLabel>();
+            foreach (Label label in this.labels)
+            {
+                if (label.labelType == "SimpleLabel")
+                {
+                    returningList.Add((SimpleLabel)label);
+                }
+            }
+            return returningList;
+        }
 
     }
 }
