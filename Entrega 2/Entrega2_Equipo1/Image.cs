@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
+using System.Drawing.Imaging;
 
 namespace Entrega2_Equipo1
 {
@@ -121,8 +122,8 @@ namespace Entrega2_Equipo1
 
         private Dictionary<string, string> LoadExif()
         {
-            Dictionary<string, string> returningDictionary = new Dictionary<string, string>();
-
+            
+            
         }
 
     }
