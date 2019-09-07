@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.IO;
 
 namespace Entrega2_Equipo1
 {
@@ -13,11 +14,86 @@ namespace Entrega2_Equipo1
         private string name;
         private Bitmap image;
         private int calification;
-        private Dictionary<string, string> exif;
-        private double saturation;
         private int[] resolution;
         private int[] aspectRatio;
+
+        private Dictionary<string, string> exif;
+        private double saturation;
         private bool hdr;
         private bool darkClear;
+
+
+        public Image(string name, List<Label> labels, int calification)
+        {
+            this.name = name;
+            this.labels = labels;
+            this.calification = calification;
+            this.image = LoadImage(name);
+            this.resolution = LoadResolution();
+            this.aspectRatio = LoadAspectRatio();
+            this.saturation = LoadSaturation();
+        }
+
+        private Bitmap LoadImage(string name)
+        {
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
+            Bitmap returningImage = new Bitmap(path);
+            return returningImage;
+        }
+
+        private int[] LoadResolution()
+        {
+            int v1 = this.image.Width;
+            int v2 = this.image.Height;
+            int[] returningArray = new int[] { v1, v2 };
+            return returningArray;
+        }
+
+        private int MCD(int a, int b)
+        {
+            while (b > 0)
+            {
+                int rem = a % b;
+                a = b;
+                b = rem;
+            }
+            return a;
+        }
+
+        private void Simplify(int[] numbers)
+        {
+            int mcd = this.MCD(numbers[0],numbers[1]);
+            for (int i = 0; i < numbers.Length; i++) numbers[i] /= mcd;
+            return;
+        }
+
+        private int[] LoadAspectRatio()
+        {
+            int[] returningAspect = new int[] { this.image.Width, this.image.Height };
+            Simplify(returningAspect);
+            return returningAspect;
+        }
+
+
+        private double LoadSaturation()
+        {
+            double[] aux = new double[image.Width*image.Width];
+            Color color;
+            int counter = 0;
+            for (int i = 0; i < this.image.Height; i++)
+            {
+                for (int x = 0; x < this.image.Width; x++)
+                {
+                    color = this.image.GetPixel(x, i);
+                    double v1 = Math.Max(Math.Max(color.R, color.G), color.B);
+                    double v2 = Math.Min(Math.Min(color.R, color.G), color.B);
+                    aux[counter] = Math.Acos((v1 + v2) / v1);
+                    counter++;
+                }
+            }
+            return aux.Average();
+        }
+
+
     }
 }
