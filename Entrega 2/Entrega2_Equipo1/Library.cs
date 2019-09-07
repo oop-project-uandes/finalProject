@@ -1,7 +1,6 @@
 ﻿using Entrega2_Equipo1.Labels;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -112,3 +111,7 @@ namespace Entrega2_Equipo1
         }
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4e1bd6b36c05fe0cd2e207fc5f596d5588c0995

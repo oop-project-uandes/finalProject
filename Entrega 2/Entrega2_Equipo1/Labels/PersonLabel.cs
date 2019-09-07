@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entrega2_Equipo1.Labels
+namespace Entrega2_Equipo1
 {
     public class PersonLabel : Label
     {
@@ -21,6 +21,7 @@ namespace Entrega2_Equipo1.Labels
         private static readonly DateTime DEFAULT_BIRTHDATE = new DateTime(1900, 1, 1);
         private DateTime birthDate;
         private double[] faceLocation;
+        private string type;
 
         public PersonLabel(string name, double[] faceLocation) : this(name, faceLocation, DEFAULT_SURNAME) { }
 
@@ -44,8 +45,10 @@ namespace Entrega2_Equipo1.Labels
             this.HairColor = DEFAULT_COLOR;
             this.Sex = DEFAULT_SEX;
             this.BirthDate = DEFAULT_BIRTHDATE;
+            this.labelType = "PersonLabel";
         }
 
+        
         public string Name { get => name; set => name = value; }
         public string Surname { get => surname; set => surname = value; }
         public ENationality Nationality { get => nationality; set => nationality = value; }
