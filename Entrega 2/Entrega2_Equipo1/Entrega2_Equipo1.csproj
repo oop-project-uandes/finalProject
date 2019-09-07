@@ -227,6 +227,7 @@
     <Compile Include="Tools\Filters\SepiaFilter.cs" />
     <Compile Include="Tools\Filters\WindowsFilter.cs" />
     <Compile Include="Tools\Tool.cs" />
+    <Compile Include="Tools\Zoom.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

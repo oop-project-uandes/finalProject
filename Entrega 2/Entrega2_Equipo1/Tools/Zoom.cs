@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1
 {
-    public class AddTextFeature : Tool
+    public class Zoom
     {
+        public Zoom() { }
 
+        
     }
 }

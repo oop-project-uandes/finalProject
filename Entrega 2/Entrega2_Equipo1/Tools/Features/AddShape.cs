@@ -8,5 +8,6 @@ namespace Entrega2_Equipo1.Tools.Features
 {
     public class AddShape : Tool
     {
+
     }
 }
