@@ -16,9 +16,9 @@ namespace Entrega2_Equipo1
         private int calification;
         private int[] resolution;
         private int[] aspectRatio;
+        private double saturation;
 
         private Dictionary<string, string> exif;
-        private double saturation;
         private bool hdr;
         private bool darkClear;
 

@@ -1,0 +1,14 @@
+Nombre, #nLS , infLS1, infLS2,..., #nPL, infPL1, infPL2,..., #nSL , infSL1, infSL2 .....
+
+
+
+
+
+
+
+
+
+
+
+
+#
