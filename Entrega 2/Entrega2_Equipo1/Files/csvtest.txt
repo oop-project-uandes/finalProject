@@ -1,5 +1,13 @@
-<<<<<<< HEAD
-stock1,5,frase,frases frases 1,awa de uwu,frase2,Frase23,2,joaquin,(23.325.342.33),gracia,Chile,Marron,Marron,Hombre,[1999-5-27],matias,(234.23.55.66),Rivera,Chile,Azul,Amarillo,Hombre,[1999-8-12],5,{33.66},calle false,juan pepe,por la tela,true
-=======
-stock1,#5,frase,frases frases 1,awa de uwu,frase2,Frase23,#2,joaquin,(23,325,342,33),gracia,Chile,marron,marron,hombre,[1999,5,27],matias,(234,23,55,66),Rivera,Chile,azul,amarillo,hombre,[1999,8,12],{33,66},calle false,juan pepe,por la tela,true
->>>>>>> b4e1bd6b36c05fe0cd2e207fc5f596d5588c0995
+stock1,5,frase,frases frases 1,awa de uwu,frase2,Frase23,2,joaquin,(23.325.342.33),gracia,Chile,Marron,Marron,Hombre,[1999-5-27],matias,(234.23.55.66),Rivera,Chile,Azul,Amarillo,Hombre,[1999-8-12],1,{33.66},calle,juan pepe,por la tela,true,112,5
+stock2,2,hola,bebe,3,mari,(22.33.44.55),lopez,Venezuela,Morado,Azul,Mujer,[2018-4-11],jesus,(44.154.251.33),diaz,Canada,Verde,Rojo,Hombre,[1458-2-25],genesis,(42.11.25.42),japa,Bolivia,Negro,Blanco,Mujer,[1999-2-14],2,{44.22},ma,jdue,por la vida,false,11,{24.25},meme,jaja,la mano,true,214,2
+stock3,7,jefe,jose,lucas,alfonso,bernardo,gummy,lo,1,jose,(21.44.36.22),perez,Argentina,Marron,Amarillo,Hombre,[1026-1-10],2,{12.33},calle,jo,porque,false,114,{14.22},calle2,jo2,porquesi,true,199,3
+
+
+
+
+
+
+
+
+
+
