@@ -31,6 +31,7 @@ namespace Entrega2_Equipo1
                             {
                                 personLabel.Add((PersonLabel)Etiqueta);
                             }
+                                
                         }
                     }
                 }
@@ -102,7 +103,5 @@ namespace Entrega2_Equipo1
         }
             
     }
-
-       
 }
 

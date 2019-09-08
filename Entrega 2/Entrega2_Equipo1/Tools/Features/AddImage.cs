@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1.Tools.Features
 {
+    // TODO: IMPLEMENTAR
     public class AddImage : Tool
     {
 
