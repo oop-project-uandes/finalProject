@@ -12,8 +12,6 @@ namespace Entrega2_Equipo1
         private List<Image> imagens;
         private Dictionary <string, List<Image>> smartList;  //string es un patron
 
-
-        
         public Library() //List<Image> images, Dictionary<string, List<Image>> smartList
         { 
             this.Imagens = new List<Image>();
