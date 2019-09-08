@@ -20,7 +20,7 @@ namespace Entrega2_Equipo1
         private double saturation;
         private bool darkClear;
         private Dictionary<int, Dictionary<string, string>> exif;
-        private static readonly DateTime DEFAULT_BIRTHDATE = new DateTime(1900, 1, 1);
+        
 
         public List<Label> Labels { get => this.labels; set => this.labels = value; }
         public string Name { get => this.name; set => this.name = value; }
@@ -45,8 +45,6 @@ namespace Entrega2_Equipo1
             this.exif = LoadExif();
         }
 
-        public Image()
-        { }
 
         private Bitmap LoadbitmapImage(string name)
         {
@@ -55,6 +53,7 @@ namespace Entrega2_Equipo1
             return returningbitmapImage;
         }
 
+
         private int[] LoadResolution()
         {
             int v1 = this.bitmapImage.Width;
@@ -62,6 +61,7 @@ namespace Entrega2_Equipo1
             int[] returningArray = new int[] { v1, v2 };
             return returningArray;
         }
+
 
         private int MCD(int a, int b)
         {
@@ -74,12 +74,14 @@ namespace Entrega2_Equipo1
             return a;
         }
 
+
         private void Simplify(int[] numbers)
         {
             int mcd = this.MCD(numbers[0],numbers[1]);
             for (int i = 0; i < numbers.Length; i++) numbers[i] /= mcd;
             return;
         }
+
 
         private int[] LoadAspectRatio()
         {
@@ -91,7 +93,10 @@ namespace Entrega2_Equipo1
 
         private double LoadSaturation()
         {
-            double[] aux = new double[bitmapImage.Width*bitmapImage.Width];
+            throw new NotImplementedException();
+            /*
+             * NOT WORKING CODE
+            double[] aux = new double[bitmapImage.Width*bitmapImage.Height];
             Color color;
             int counter = 0;
             for (int i = 0; i < this.bitmapImage.Height; i++)
@@ -103,26 +108,33 @@ namespace Entrega2_Equipo1
                     double v2 = Math.Min(Math.Min(color.R, color.G), color.B);
                     aux[counter] = Math.Acos((v1 + v2) / v1);
                     counter++;
+                    Console.WriteLine(aux[counter]);
                 }
             }
             return aux.Average();
+            */
         }
+
 
         private bool LoadDarkClear()
         {
             Color color;
-            double brightness, totalBrightness = 0;
+            double[] brightnessArray = new double[this.bitmapImage.Width * this.bitmapImage.Height];
+            int count = 0;
             for (int i = 0; i < this.bitmapImage.Height; i++)
             {
                 for (int x = 0; x < this.bitmapImage.Width; x++)
                 {
                     color = this.bitmapImage.GetPixel(x, i);
-                    brightness = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
-                    totalBrightness += brightness;
+                    double brightness = color.GetBrightness();
+                    //brightness = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
+                    brightnessArray[count] = brightness;
+                    count++;
                 }
             }
 
-            double result = totalBrightness / (this.bitmapImage.Width * this.bitmapImage.Height);
+
+            double result = brightnessArray.Average();
             if (result < 0.5)
             {
                 return false;
@@ -151,6 +163,7 @@ namespace Entrega2_Equipo1
                 type = item.Id.ToString();
                 len = item.Len.ToString();
                 value = encoding.GetString(item.Value);
+                returningDic.Add(count, new Dictionary<string, string>());
                 returningDic[count].Add("id", id);
                 returningDic[count].Add("type", type);
                 returningDic[count].Add("len", len);
@@ -202,6 +215,7 @@ namespace Entrega2_Equipo1
             }
             return returningList;
         }
+
 
         public bool SomePersonLabelContains(string attribute, string s = null, ENationality En = ENationality.None, EColor Ec = EColor.None, ESex Es = ESex.None, double[] Bd = null)
         {
@@ -275,7 +289,8 @@ namespace Entrega2_Equipo1
             throw new Exception("Wrong search parameters");
         }
 
-        public bool SomeSpecialLabelContains(string attribute, double[] geographicLocation = null, string address = null, string photographer = null, string photomotive = null, bool selfie = false)
+
+        public bool SomeSpecialLabelContains(string attribute, double[] geographicLocation = null, string s = null, bool selfie = false)
         {
             List<SpecialLabel> internalList = SelectSpecialLabel();
             if (geographicLocation != null)
@@ -287,29 +302,29 @@ namespace Entrega2_Equipo1
                 return false;
                 
             }
-            else if (address != null)
+            else if (s != null)
             {
-                foreach (SpecialLabel label in internalList)
+                switch (attribute)
                 {
-                    if (label.Address == address) return true;
+                    case "Address":
+                        foreach (SpecialLabel label in internalList)
+                        {
+                            if (label.Address == s) return true;
+                        }
+                        return false;
+                    case "Photographer":
+                        foreach (SpecialLabel label in internalList)
+                        {
+                            if (label.Photographer == s) return true;
+                        }
+                        return false;
+                    case "Photomotive":
+                        foreach (SpecialLabel label in internalList)
+                        {
+                            if (label.PhotoMotive == s) return true;
+                        }
+                        return false;
                 }
-                return false;
-            }
-            else if (photographer != null)
-            {
-                foreach (SpecialLabel label in internalList)
-                {
-                    if (label.Photographer == photographer) return true;
-                }
-                return false;
-            }
-            else if (photomotive != null)
-            {
-                foreach (SpecialLabel label in internalList)
-                {
-                    if (label.PhotoMotive == photomotive) return true;
-                }
-                return false;
             }
             else 
             {
@@ -321,6 +336,7 @@ namespace Entrega2_Equipo1
             }
             throw new Exception("Wrong search parameters");
         }
+
 
         public bool SomeSimpleLabelContains(string attribute, string sentence)
         {
