@@ -162,7 +162,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<PersonLabel> selectPersonLabels()
+        private List<PersonLabel> SelectPersonLabels()
         {
             List <PersonLabel> returningList = new List<PersonLabel>();
             foreach (Label label in this.labels)
@@ -176,7 +176,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<SpecialLabel> selectSpecialLabels()
+        private List<SpecialLabel> SelectSpecialLabel()
         {
             List<SpecialLabel> returningList = new List<SpecialLabel>();
             foreach (Label label in this.labels)
@@ -190,7 +190,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<SimpleLabel> selectSimpleLabels()
+        private List<SimpleLabel> SelectSimpleLabels()
         {
             List<SimpleLabel> returningList = new List<SimpleLabel>();
             foreach (Label label in this.labels)
@@ -203,11 +203,9 @@ namespace Entrega2_Equipo1
             return returningList;
         }
 
-
-        // TODO: Falta implementar someSpecialLabelContains y someSimpleLabelContains
         public bool SomePersonLabelContains(string attribute, string s = null, ENationality En = ENationality.None, EColor Ec = EColor.None, ESex Es = ESex.None, double[] Bd = null)
         {
-            List<PersonLabel> internalList = selectPersonLabels();
+            List<PersonLabel> internalList = SelectPersonLabels();
             if (s != null)
             {
                 switch (attribute)
@@ -279,7 +277,7 @@ namespace Entrega2_Equipo1
 
         public bool SomeSpecialLabelContains(string attribute, double[] geographicLocation = null, string address = null, string photographer = null, string photomotive = null, bool selfie = false)
         {
-            List<SpecialLabel> internalList = selectSpecialLabels();
+            List<SpecialLabel> internalList = SelectSpecialLabel();
             if (geographicLocation != null)
             {
                 foreach (SpecialLabel label in internalList)
@@ -324,6 +322,14 @@ namespace Entrega2_Equipo1
             throw new Exception("Wrong search parameters");
         }
 
-    }
+        public bool SomeSimpleLabelContains(string attribute, string sentence)
+        {
+            List<SimpleLabel> internalList = SelectSimpleLabels();
+            foreach (SimpleLabel label in internalList)
+            {
+                if (label.Sentence == sentence) return true;
+            }
+            return false;
+        }
     }
 }
