@@ -8,38 +8,84 @@ namespace Entrega2_Equipo1
 {
     public class Searcher
     {
-        private Scissors scissors;
+		private Scissors scissors;
 
         public Searcher() { }
 
         public List<Image> Search(List<Image> images, string searchDeclaration)
         {
-            List<List<List<string>>> Declarations = Declaration(searchDeclaration);
-            
-            foreach (List<List<string>> subDec in Declarations)
-            {
 
-                foreach (List<string> atributes in subDec)
+            List<List<List<string>>> Declarations = Declaration(searchDeclaration);
+
+			List<List<Image>> Total = new List<List<Image>>();
+			List<Image> Final = new List<Image>();
+			foreach (List<List<string>> subDec in Declarations)
+            {
+				List<Image> temp = new List<Image>();
+				foreach (List<string> atributes in subDec)
                 {
                     foreach (Image image in images)
                     {
-                        List<Label> label = image.Labels;
-                        List<PersonLabel> personLabel = new List<PersonLabel>();
-                            foreach (Label Etiqueta in label)
-                            {
-                                if(Etiqueta.labelType == "PersonLabel")
-                            {
-                                personLabel.Add((PersonLabel)Etiqueta);
-                            }
-                                
-                        }
+						switch (atributes[0])
+						{
+							case "HairColor":
+								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
+								{
+									temp.Add(image);
+								}
+								break;
+							case "EyeColor":
+								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
+								{
+									temp.Add(image);
+								}
+								break;
+							case "Sex":
+								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, (ESex)Enum.Parse(typeof(ESex), atributes[1])))
+								{
+									temp.Add(image);
+								}
+								break;
+							case "Name":
+								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
+								{
+									temp.Add(image);
+								}
+								break;
+							case "SurName":
+								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
+								{
+									temp.Add(image);
+								}
+								break;
+							case "Birthdate":
+								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
+								{
+									temp.Add(image);
+								}
+								break;
+							/*
+							case "FaceLocation:
+								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, Convert.ToDouble(atributes[1])))
+								{
+									temp.Add(image);
+								}
+							*/
+							case "Nationality":
+								if (image.SomePersonLabelContains(atributes[0], null, (ENationality)Enum.Parse(typeof(ENationality), atributes[1])))
+								{
+									temp.Add(image);
+								}
+								break;
+						}               
                     }
                 }
-                
             }
+			return Final;
+		}
             
-            return null;
-        }
+
+        
 
         public List<System.Drawing.Bitmap> FaceSearcher(string PersonName, List<Image> images)
         {
