@@ -40,7 +40,7 @@ namespace Entrega2_Equipo1
             this.bitmapImage = LoadbitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
-            this.Saturation = LoadSaturation();
+            //this.Saturation = LoadSaturation();
             this.DarkClear = LoadDarkClear();
             this.exif = LoadExif();
         }
