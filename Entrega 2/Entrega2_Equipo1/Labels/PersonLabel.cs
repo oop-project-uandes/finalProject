@@ -35,7 +35,10 @@ namespace Entrega2_Equipo1
 
         public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex) : this(name, faceLocation, surname, nationality, eyesColor, hairColor, sex, DEFAULT_BIRTHDATE) { }
 
-        public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex, string birthDate) : base(DEFAULT_SERIAL_NUMBER)
+        public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex, string birthDate) : this(name, faceLocation, surname, nationality, eyesColor, hairColor, sex, birthDate, DEFAULT_SERIAL_NUMBER)
+        {}
+
+        public PersonLabel(string name, double[] faceLocation, string surname, ENationality nationality, EColor eyesColor, EColor hairColor, ESex sex, string birthDate, int serialNumber) : base(serialNumber)
         {
             this.Name = name;
             this.FaceLocation = faceLocation;
@@ -47,7 +50,7 @@ namespace Entrega2_Equipo1
             this.BirthDate = DEFAULT_BIRTHDATE;
             this.labelType = "PersonLabel";
         }
-
+            
         
         public string Name { get => name; set => name = value; }
         public string Surname { get => surname; set => surname = value; }

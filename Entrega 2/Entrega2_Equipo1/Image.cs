@@ -40,7 +40,7 @@ namespace Entrega2_Equipo1
             this.bitmapImage = LoadbitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
-            this.Saturation = LoadSaturation();
+            //this.Saturation = LoadSaturation();
             this.DarkClear = LoadDarkClear();
             this.exif = LoadExif();
         }
@@ -127,7 +127,6 @@ namespace Entrega2_Equipo1
                 {
                     color = this.bitmapImage.GetPixel(x, i);
                     double brightness = color.GetBrightness();
-                    //brightness = (color.R * 299 + color.G * 587 + color.B * 114) / 1000;
                     brightnessArray[count] = brightness;
                     count++;
                 }
@@ -162,7 +161,8 @@ namespace Entrega2_Equipo1
                 id = item.Id.ToString();
                 type = item.Id.ToString();
                 len = item.Len.ToString();
-                value = encoding.GetString(item.Value);
+                if (item.Value != null) value = encoding.GetString(item.Value);
+                else value = "Not found";
                 returningDic.Add(count, new Dictionary<string, string>());
                 returningDic[count].Add("id", id);
                 returningDic[count].Add("type", type);
