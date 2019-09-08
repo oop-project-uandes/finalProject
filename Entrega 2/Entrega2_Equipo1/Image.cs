@@ -277,5 +277,53 @@ namespace Entrega2_Equipo1
             throw new Exception("Wrong search parameters");
         }
 
+        public bool SomeSpecialLabelContains(string attribute, double[] geographicLocation = null, string address = null, string photographer = null, string photomotive = null, bool selfie = false)
+        {
+            List<SpecialLabel> internalList = selectSpecialLabels();
+            if (geographicLocation != null)
+            {
+                foreach (SpecialLabel label in internalList)
+                {
+                    if (label.GeographicLocation != geographicLocation) return true;
+                }
+                return false;
+                
+            }
+            else if (address != null)
+            {
+                foreach (SpecialLabel label in internalList)
+                {
+                    if (label.Address == address) return true;
+                }
+                return false;
+            }
+            else if (photographer != null)
+            {
+                foreach (SpecialLabel label in internalList)
+                {
+                    if (label.Photographer == photographer) return true;
+                }
+                return false;
+            }
+            else if (photomotive != null)
+            {
+                foreach (SpecialLabel label in internalList)
+                {
+                    if (label.PhotoMotive == photomotive) return true;
+                }
+                return false;
+            }
+            else 
+            {
+                foreach (SpecialLabel label in internalList)
+                {
+                    if (label.Selfie == selfie) return true;
+                }
+                return false;
+            }
+            throw new Exception("Wrong search parameters");
+        }
+
+    }
     }
 }
