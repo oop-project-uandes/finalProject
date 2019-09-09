@@ -242,16 +242,8 @@ namespace Entrega2_Equipo1
 
 
                             break;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                        
+                        }  
                     }
-                }
-                else
-                {
                 }
             }
         }  
