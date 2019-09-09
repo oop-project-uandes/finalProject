@@ -95,18 +95,127 @@ namespace Entrega2_Equipo1
             st.Close();
 
 
-        }   
+        }      //Listo
 
         public void UpdateLibrary()
         {
             throw new Exception("falta");
         }
 
-        public void AddLabel(string nameImage, Label label)
+        public void AddLabel(string nameImage, Label m)
         {
-            //TENER UN METODO QUE SEA RANDOM Y VEA SI EXISTE UN NUMERO QUE NO ESTE OCUPADO POR SERIAL NUMBER
+            string pathproperties = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\csvtest.txt";
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\repositorio.txt";
+            StreamReader text = new StreamReader(pathproperties);
+            StreamWriter re = new StreamWriter(path);
+            Console.WriteLine("hola");
+            foreach (Image image in imagens)
+            {
+                Console.WriteLine("aqui");
+                if (image.Name == nameImage)
+                {
+                    Image val = new Image(image.Name, image.Labels, image.Calification);
+                    val.Labels.Add(m);
+                    while (!text.EndOfStream)
+                    {
+                        string line = text.ReadLine();
+                        string[] lin = line.Split(',');
+                        Console.WriteLine("m");
+                        if (lin[0] == nameImage)
+                        {
+                            switch (m.labelType)
+                            {
+
+                                case "SimpleLabel":
+                                    Console.WriteLine("s");
+                                    re.Write(lin[0] + ",");
+                                    re.Write(Convert.ToString(Convert.ToInt32(lin[1]) + 1) + ",");
+                                    re.Write("20,");
+                                    re.Write(m + ",");        //ver como le pongo la sentencia
+                                    for (int s = 2; s < lin.Length; s++)
+                                    {
+                                        if (s == lin.Length - 1)
+                                        {
+                                            re.Write(lin[s]);
+                                        }
+                                        else
+                                        {
+                                            re.Write(lin[s] + ",");
+                                        }
+
+                                    }
+                                    re.WriteLine();
+                                    break;
+                                case "PersonLabel":
+                                    int v = Convert.ToInt32(lin[1]) * 2 + 1;
+                                    for (int i = 0; i <= v; i++)
+                                    {
+                                        re.Write(lin[i] + ",");
+                                    }
+                                    re.Write(Convert.ToString(Convert.ToInt32(lin[v + 1]) + 1 + ","));
+                                    re.Write("serial");
+                                    re.Write("cada atributo");
+                                    int numPersonalLabel = Convert.ToInt32(lin[v + 1]);
+                                    int j;
+                                    for (j = v + 2; j <= (numPersonalLabel * 9) + numPersonalLabel + v - 1; j += 9)
+                                    {
+                                        re.Write(lin[j] + "," + lin[j + 1] + "," + lin[j + 2] + "," + lin[j + 3] + "," + lin[j + 4] + "," + lin[j + 5] + "," + lin[j + 6] + "," + lin[j + 7] + "," + lin[j + 8] + ",");
+                                    }
+                                    for (int s = (numPersonalLabel * 9) + numPersonalLabel + v - 1; s < lin.Length; s++)
+                                    {
+                                        if (s == lin.Length - 1)
+                                        {
+                                            re.Write(lin[s]);
+                                        }
+                                        else
+                                        {
+                                            re.Write(lin[s] + ",");
+                                        }
+                                    }
+                                    re.WriteLine();
+                                    break;
+                                case "SpecialLabel":
+                                    int va = Convert.ToInt32(lin[1]) * 2 + 1;
+                                    int numPersonalLabe = Convert.ToInt32(lin[va + 1]);
+                                    for (int d = 0; d < (numPersonalLabe * 9) + numPersonalLabe + va - 1; d++)
+                                    {
+                                        re.Write(lin[d] + ",");
+                                    }
+                                    re.Write(lin[(numPersonalLabe * 9) + numPersonalLabe + va + 1]);
+                                    re.Write("serial,");
+                                    re.Write("atributos,");
+                                    for (int c = (numPersonalLabe * 9) + numPersonalLabe + va - 2; c < lin.Length; c += 6)
+                                    {
+                                        if (c == lin.Length - 1)
+                                        {
+                                            re.Write(lin[c]);
+                                        }
+                                        else
+                                        {
+                                            re.Write(lin[c] + "," + lin[c + 1] + "," + lin[c + 2] + "," + lin[c + 3] + "," + lin[c + 4] + lin[c + 5] + ",");
+                                        }
+                                    }
+                                    re.WriteLine();
+                                    break;
+
+                            }
+                        }
+                        else
+                        {
+                            re.WriteLine(line);
+                        }
+                    }
+
+                }   
+            }
+            re.Close();
+            text.Close();
+            File.Delete(pathproperties);
+            File.Copy(path, pathproperties);
+            File.Delete(path);
+            // TENER UN METODO QUE SEA RANDOM Y VEA SI EXISTE UN NUMERO QUE NO ESTE OCUPADO POR SERIAL NUMBER
             // LUEGO NADA DARLE ESTE NUMERO Y AGREGAR LA ETIQUETA:D
-        }
+        }      //Falta ponerle num de serie y ver como puedo descomponer el label para escribirlos en texto
 
         public void RemoveLabel(string nameImage, int serialNumber)
         {
@@ -153,7 +262,7 @@ namespace Entrega2_Equipo1
                                                     i += 2;
                                                 }
                                             }
-                                            for (int s = values; s < lin.Length; s++)
+                                            for (int s = values+1; s < lin.Length; s++)
                                             {
                                                 if (s == lin.Length - 1)
                                                 {
@@ -166,8 +275,7 @@ namespace Entrega2_Equipo1
                                             }
                                             x.WriteLine();
                                             break;
-                                        case "PersonLabel":
-                                            Console.WriteLine("p");
+                                        case "PersonLabel":                            
                                             x.Write(lin[0] + ",");
                                             int v = Convert.ToInt32(lin[1]) * 2 + 1;
 
@@ -204,7 +312,6 @@ namespace Entrega2_Equipo1
                                             x.WriteLine();
                                             break;
                                         case "SpecialLabel":  //tengo que decirle a gf que le ponga type en la clase
-                                            Console.WriteLine("estoy aqui");
                                             int va = Convert.ToInt32(lin[1]) * 2 + 1;
                                             int numPersonalLabe = Convert.ToInt32(lin[va + 1]);
                                             for (int d = 0; d < (numPersonalLabe * 9) + numPersonalLabe + va - 1; d++)
@@ -218,7 +325,7 @@ namespace Entrega2_Equipo1
                                                 {
                                                     x.Write(lin[c]);
                                                 }
-                                                else
+                                                else if  (Convert.ToInt32(lin[c]) != serialNumber)
                                                 {
                                                     x.Write(lin[c] + "," + lin[c + 1] + "," + lin[c + 2] + "," + lin[c + 3] + "," + lin[c + 4] + lin[c + 5] + ",");
                                                 }
@@ -246,7 +353,7 @@ namespace Entrega2_Equipo1
                     }
                 }
             }
-        }  
+        }    //Listo
 
         public bool ChangeRating(string nameImage, int rating)
         {
@@ -279,18 +386,18 @@ namespace Entrega2_Equipo1
                         p.WriteLine(line);
                     }
                 }
-                return true;
+                
             }
             st.Close();
             p.Close();
             File.Delete(pathproperties);
             File.Copy(patho, pathproperties);
             File.Delete(patho);
-            return false;
+            return true;
 
             
             
-        }
+        }  //Listo
 
         public void AddSearchPatterm(string patron)
         {
