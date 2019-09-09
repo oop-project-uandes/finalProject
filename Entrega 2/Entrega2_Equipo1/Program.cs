@@ -11,8 +11,9 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-            Library library = new Library();
-            library.LoadLibrary();
+            Library h = new Library();
+            h.LoadLibrary();
+            h.RemoveLabel("stock2.jpg",2);
 
         }
     }
