@@ -17,7 +17,6 @@ namespace Entrega2_Equipo1
         { 
             this.Imagens = new List<Image>();
             this.SmartList = new Dictionary<string, List<Image>>();
-
         }
 
         public List<Image> Imagens { get => imagens; set => imagens = value; }
@@ -172,7 +171,7 @@ namespace Entrega2_Equipo1
                                             x.Write(lin[0] + ",");
                                             int v = Convert.ToInt32(lin[1]) * 2 + 1;
 
-                                            int numPersonalLabel = Convert.ToInt32(lin[v + 1]);      //Se cargan las PersonLabel
+                                            int numPersonalLabel = Convert.ToInt32(lin[v + 1]);     
                                             int j;
                                             for (int i = 1; i <= v; i++)
                                             {
