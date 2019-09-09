@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace Entrega2_Equipo1
             this.Imagens = new List<Image>();
             this.SmartList = new Dictionary<string, List<Image>>();
         }
-
+        
         public List<Image> Imagens { get => imagens; set => imagens = value; }
         public Dictionary<string, List<Image>> SmartList { get => smartList; set => smartList = value; }
 
@@ -127,11 +127,12 @@ namespace Entrega2_Equipo1
                             {
 
                                 case "SimpleLabel":
+                                    SimpleLabel x = (SimpleLabel)m;
                                     Console.WriteLine("s");
                                     re.Write(lin[0] + ",");
                                     re.Write(Convert.ToString(Convert.ToInt32(lin[1]) + 1) + ",");
                                     re.Write("20,");
-                                    re.Write(m + ",");        //ver como le pongo la sentencia
+                                    re.Write(x.Sentence + ",");        //ver como le pongo la sentencia
                                     for (int s = 2; s < lin.Length; s++)
                                     {
                                         if (s == lin.Length - 1)
@@ -241,7 +242,7 @@ namespace Entrega2_Equipo1
                                 string[] lin = line.Split(',');
                                 if (lin[0] == nameImage)
                                 {
-                                    
+                                    Console.WriteLine(label.labelType);
                                     switch (label.labelType)
                                     {
 
@@ -290,7 +291,7 @@ namespace Entrega2_Equipo1
                                             {
                                                 if (Convert.ToInt32(lin[j]) == serialNumber)
                                                 {
-
+                                                    throw new NotImplementedException();
                                                 }
                                                 else
                                                 {
@@ -321,18 +322,22 @@ namespace Entrega2_Equipo1
                                             x.Write(lin[(numPersonalLabe * 9) + numPersonalLabe + va - 1]);
                                             for (int c = (numPersonalLabe * 9) + numPersonalLabe + va - 2; c < lin.Length; c += 6)
                                             {
+                                                Console.Write(lin[c]);
                                                 if (c == lin.Length - 1)
                                                 {
                                                     x.Write(lin[c]);
                                                 }
-                                                else if  (Convert.ToInt32(lin[c]) != serialNumber)
+                                                else if  (Convert.ToInt32(lin[c]) == serialNumber)
+                                                {
+                                                    throw new NotImplementedException();
+                                                }
+                                                else
                                                 {
                                                     x.Write(lin[c] + "," + lin[c + 1] + "," + lin[c + 2] + "," + lin[c + 3] + "," + lin[c + 4] + lin[c + 5] + ",");
                                                 }
                                             }
                                             x.WriteLine();
                                             break;
-
                                     }
                                 } 
                                 else

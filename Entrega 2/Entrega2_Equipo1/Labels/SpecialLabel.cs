@@ -46,6 +46,7 @@ namespace Entrega2_Equipo1
             Photographer = photographer;
             PhotoMotive = photomotive;
             Selfie = selfie;
+            this.labelType = "SpecialLabel";
         }
 
         public SpecialLabel(int serialNumber) : base(serialNumber)
