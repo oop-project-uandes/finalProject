@@ -13,7 +13,8 @@ namespace Entrega2_Equipo1
         {
             Library library = new Library();
             library.LoadLibrary();
-            library.RemoveLabel("stock1.jpg", 112);
+            SimpleLabel simple = new SimpleLabel("nene");
+            library.AddLabel("stock1.jpg",simple);
         }
     }
 }
