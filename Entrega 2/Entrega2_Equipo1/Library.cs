@@ -108,10 +108,8 @@ namespace Entrega2_Equipo1
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\repositorio.txt";
             StreamReader text = new StreamReader(pathproperties);
             StreamWriter re = new StreamWriter(path);
-            Console.WriteLine("hola");
             foreach (Image image in imagens)
             {
-                Console.WriteLine("aqui");
                 if (image.Name == nameImage)
                 {
                     Image val = new Image(image.Name, image.Labels, image.Calification);
@@ -127,11 +125,11 @@ namespace Entrega2_Equipo1
                             {
 
                                 case "SimpleLabel":
-                                    Console.WriteLine("s");
+                                    SimpleLabel simple = (SimpleLabel)m;
                                     re.Write(lin[0] + ",");
                                     re.Write(Convert.ToString(Convert.ToInt32(lin[1]) + 1) + ",");
                                     re.Write("20,");
-                                    re.Write(m + ",");        //ver como le pongo la sentencia
+                                    re.Write(simple.Sentence + ",");        //ver como le pongo la sentencia
                                     for (int s = 2; s < lin.Length; s++)
                                     {
                                         if (s == lin.Length - 1)
@@ -154,7 +152,7 @@ namespace Entrega2_Equipo1
                                     }
                                     re.Write(Convert.ToString(Convert.ToInt32(lin[v + 1]) + 1 + ","));
                                     re.Write("serial");
-                                    re.Write("cada atributo");
+                                    re.Write("");
                                     int numPersonalLabel = Convert.ToInt32(lin[v + 1]);
                                     int j;
                                     for (j = v + 2; j <= (numPersonalLabel * 9) + numPersonalLabel + v - 1; j += 9)
@@ -241,7 +239,7 @@ namespace Entrega2_Equipo1
                                 string[] lin = line.Split(',');
                                 if (lin[0] == nameImage)
                                 {
-                                    
+                                    Console.WriteLine(label.labelType);
                                     switch (label.labelType)
                                     {
 
