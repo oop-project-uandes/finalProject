@@ -11,7 +11,7 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-   
+            
         }
     }
 }

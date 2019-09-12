@@ -64,20 +64,62 @@ namespace Entrega2_Equipo1
 									temp.Add(image);
 								}
 								break;
-							/*
+							
 							case "FaceLocation:
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, Convert.ToDouble(atributes[1])))
 								{
 									temp.Add(image);
 								}
-							*/
+							
 							case "Nationality":
 								if (image.SomePersonLabelContains(atributes[0], null, (ENationality)Enum.Parse(typeof(ENationality), atributes[1])))
 								{
 									temp.Add(image);
 								}
 								break;
-						}               
+
+                            case "GeographicLocation":
+                                
+                                string[] substring = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
+                                double[] coords = [Convert.ToDouble(substring[0]),Convert.ToDouble(substring[1])];
+                                if (image.SomeSpecialLabelContains(atributes[0], coords))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+
+                            case "Address":
+                                if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+                            case "Photographer":
+                                if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+                            case "Photomotive":
+                                if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+                            case "Selfie":
+                                if (image.SomeSpecialLabelContains(atributes[0], null, null, Convert.ToBoolean(atributes[1])))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+                            case "Sentence":
+                                if (image.SomeSimpleLabelContains(atributes[0], atributes[1]))
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+
+                        }               
                     }
                 }
             }
