@@ -65,11 +65,14 @@ namespace Entrega2_Equipo1
 								}
 								break;
 							
-							case "FaceLocation:
-								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, Convert.ToDouble(atributes[1])))
+							case "FaceLocation":
+                                string[] subFACEstring = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
+                                double[] faceCoords = { Convert.ToDouble(subFACEstring[0]), Convert.ToDouble(subFACEstring[1]) };
+                                if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, faceCoords))
 								{
 									temp.Add(image);
 								}
+                                break;
 							
 							case "Nationality":
 								if (image.SomePersonLabelContains(atributes[0], null, (ENationality)Enum.Parse(typeof(ENationality), atributes[1])))
@@ -81,7 +84,7 @@ namespace Entrega2_Equipo1
                             case "GeographicLocation":
                                 
                                 string[] substring = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
-                                double[] coords = [Convert.ToDouble(substring[0]),Convert.ToDouble(substring[1])];
+                                double[] coords = { Convert.ToDouble(substring[0]), Convert.ToDouble(substring[1]) };
                                 if (image.SomeSpecialLabelContains(atributes[0], coords))
                                 {
                                     temp.Add(image);
