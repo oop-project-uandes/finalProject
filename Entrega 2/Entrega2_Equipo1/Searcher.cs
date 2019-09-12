@@ -125,7 +125,21 @@ namespace Entrega2_Equipo1
                         }               
                     }
                 }
+                Total.Add(temp);
             }
+            //Image Filter
+            foreach(List<Image> subList in Total)
+            {
+                foreach(Image tempImage in subList)
+                {
+                    if (!Final.Contains(tempImage))
+                    {
+                        Final.Add(tempImage);
+                    }
+                    
+                }
+            }
+
 			return Final;
 		}
             
