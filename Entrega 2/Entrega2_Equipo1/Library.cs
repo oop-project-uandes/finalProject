@@ -19,6 +19,8 @@ namespace Entrega2_Equipo1
             this.smartList = smartlist;    
         }
 
+        public Library() : this(new List<Image>(), new Dictionary<string, List<Image>>()) { }
+
         public List<Image> Images { get => images; set => images = value; }
         public Dictionary<string, List<Image>> SmartList { get => smartList; set => smartList = value; }
 
