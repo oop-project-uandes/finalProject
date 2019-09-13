@@ -14,13 +14,8 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-
-
             ProgramManager manager = new ProgramManager();
-            manager.StartProgram();
-
+            manager.Run();
         }
-
-        
     }
 }

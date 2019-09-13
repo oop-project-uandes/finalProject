@@ -53,7 +53,8 @@ namespace Entrega2_Equipo1
                                     cont++;
                                 }
 								break;
-							case "SurName":
+							case "Surname":
+                                //Console.WriteLine(atributes[1]);
 								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
 								{
                                     cont++;
@@ -68,7 +69,7 @@ namespace Entrega2_Equipo1
 							
 							case "FaceLocation":
                                 string[] subFACEstring = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
-                                double[] faceCoords = { Convert.ToDouble(subFACEstring[0]), Convert.ToDouble(subFACEstring[1]) };
+                                double[] faceCoords = { Convert.ToDouble(subFACEstring[0]), Convert.ToDouble(subFACEstring[1]), Convert.ToDouble(subFACEstring[2]), Convert.ToDouble(subFACEstring[3]) };
                                 if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, faceCoords))
 								{
                                     cont++;
@@ -146,7 +147,7 @@ namespace Entrega2_Equipo1
                                 {
                                     string[] resString = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
                                     int[] resolution = { Convert.ToInt32(resString[0]), Convert.ToInt32(resString[1]) };
-                                    if (image.Resolution == resolution)
+                                    if (image.Resolution[0] == resolution[0] && image.Resolution[1] == resolution[1])
                                     {
                                         cont++;
                                     }
@@ -161,7 +162,7 @@ namespace Entrega2_Equipo1
                                 {
                                     string[] aspectString = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
                                     int[] aspectRatio = { Convert.ToInt32(aspectString[0]), Convert.ToInt32(aspectString[1]) };
-                                    if (image.Resolution == aspectRatio)
+                                    if (image.Resolution[0] == aspectRatio[0] && image.Resolution[1] == aspectRatio[1])
                                     {
                                         cont++;
                                     }
