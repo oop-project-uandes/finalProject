@@ -29,6 +29,24 @@ namespace Entrega2_Equipo1
                 this.startingOption = StartingMenu();
                 switch (this.startingOption)
                 {
+                    // Import a file to My Library from a path defined by the user
+                    case 0:
+                        break;
+                    // Export a file from My Library to a path defined by the user
+                    case 1:
+                        break;
+                    // Editing Area (Apply filters, features, watson, slideshares, etc)
+                    case 2:
+                        break;
+                    // Show library, add elements or erase elements, add or remove labels
+                    case 3:
+                        break;
+                    // Search in the library
+                    case 4:
+                        break;
+                    // Show smart lists, add smartlists or erase elements
+                    case 5:
+                        break;
                     case 6:
                         this._continue = false;
                         break;
@@ -209,7 +227,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Show My Library and add labels to pictures", "Search in My Library", "Manage Smart Lists", "Exit" }, "~ START MENU ~", "Please, select an option:");
+            int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, "~ START MENU ~", "Please, select an option:");
             return retorno;
         }
 
