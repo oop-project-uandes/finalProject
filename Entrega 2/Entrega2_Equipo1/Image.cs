@@ -18,7 +18,6 @@ namespace Entrega2_Equipo1
         private int calification;
         private int[] resolution;
         private int[] aspectRatio;
-        private double saturation;
         private bool darkClear;
         private Dictionary<int, Dictionary<string, string>> exif;
         
@@ -29,7 +28,6 @@ namespace Entrega2_Equipo1
         public int Calification { get => this.calification; set => this.calification = value; }
         public int[] Resolution { get => this.resolution; set => this.resolution = value; }
         public int[] AspectRatio { get => this.aspectRatio; set => this.aspectRatio = value; }
-        public double Saturation { get => this.saturation; set => this.saturation = value; }
         public bool DarkClear { get => this.darkClear; set => this.darkClear = value; }
         public Dictionary<int, Dictionary<string, string>> Exif { get => this.exif; set => this.exif = value; }
 
@@ -41,7 +39,6 @@ namespace Entrega2_Equipo1
             this.bitmapImage = LoadbitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
-            //this.Saturation = LoadSaturation();
             this.DarkClear = LoadDarkClear();
             this.exif = LoadExif();
         }
@@ -91,30 +88,6 @@ namespace Entrega2_Equipo1
             return returningAspect;
         }
 
-
-        private double LoadSaturation()
-        {
-            throw new NotImplementedException();
-            /*
-             * NOT WORKING CODE
-            double[] aux = new double[bitmapImage.Width*bitmapImage.Height];
-            Color color;
-            int counter = 0;
-            for (int i = 0; i < this.bitmapImage.Height; i++)
-            {
-                for (int x = 0; x < this.bitmapImage.Width; x++)
-                {
-                    color = this.bitmapImage.GetPixel(x, i);
-                    double v1 = Math.Max(Math.Max(color.R, color.G), color.B);
-                    double v2 = Math.Min(Math.Min(color.R, color.G), color.B);
-                    aux[counter] = Math.Acos((v1 + v2) / v1);
-                    counter++;
-                    Console.WriteLine(aux[counter]);
-                }
-            }
-            return aux.Average();
-            */
-        }
 
 
         private bool LoadDarkClear()

@@ -9,31 +9,31 @@ namespace Entrega2_Equipo1
     [Serializable]
     public class Library
     {
-        private List<Image> imagens;
+        private List<Image> images;
         private Dictionary<string, List<Image>> smartList;
 
 
-        public Library(List<Image> images, Dictionary<string, List<Image>> smarlist )
+        public Library(List<Image> images, Dictionary<string, List<Image>> smartlist )
         {
-            this.Imagens = images;        // images es una lista que entrega la descerealizacion
-            this.SmartList = smarlist;    //Diccionario con los patrones e imagenes que corresponde de la descerealizacion
+            this.images = images;
+            this.smartList = smartlist;    
         }
 
-        public List<Image> Imagens { get => imagens; set => imagens = value; }
+        public List<Image> Images { get => images; set => images = value; }
         public Dictionary<string, List<Image>> SmartList { get => smartList; set => smartList = value; }
 
         public bool AddImage(Image image)
         {
-            imagens.Add(image);
+            images.Add(image);
             return true;
         }
         public bool RemoveImage(string nameImage)
         {
-            foreach (Image imag in imagens)
+            foreach (Image imag in images)
             {
                 if (imag.Name == nameImage)
                 {
-                    imagens.Remove(imag);
+                    images.Remove(imag);
                     return true;
                 }
             }
@@ -42,7 +42,7 @@ namespace Entrega2_Equipo1
 
         public bool AddLabel(string nameImage, Label label)
         {
-            foreach (Image imag in imagens)
+            foreach (Image imag in images)
             {
                 if (imag.Name == nameImage)
                 {
@@ -55,7 +55,7 @@ namespace Entrega2_Equipo1
 
         public bool RemoveLabel(string nameImage, int serialNumber)
         {
-            foreach (Image imag in imagens)
+            foreach (Image imag in images)
             {
                 if (imag.Name == nameImage)
                 {
@@ -92,7 +92,7 @@ namespace Entrega2_Equipo1
         public bool ChageRating (string nameImage, int rating)
 
         {
-            foreach(Image image in imagens)
+            foreach(Image image in images)
             {
                 if (image.Name == nameImage)
                 {

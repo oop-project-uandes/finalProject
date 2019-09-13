@@ -14,7 +14,11 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-           
+           /*
+            * 
+            * 1) Agregar metodo para importar Bitmaps a la libreria
+            * 2) Cuando se crea el working area hay que hacer el set de la libreria
+            */
         }
     }
 }
