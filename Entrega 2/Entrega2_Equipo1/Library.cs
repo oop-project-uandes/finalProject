@@ -22,34 +22,38 @@ namespace Entrega2_Equipo1
         public List<Image> Imagens { get => imagens; set => imagens = value; }
         public Dictionary<string, List<Image>> SmartList { get => smartList; set => smartList = value; }
 
-        public void AddImage(Image image)
+        public bool AddImage(Image image)
         {
             imagens.Add(image);
+            return true;
         }
-        public void RemoveImage(string nameImage)
+        public bool RemoveImage(string nameImage)
         {
             foreach (Image imag in imagens)
             {
                 if (imag.Name == nameImage)
                 {
                     imagens.Remove(imag);
+                    return true;
                 }
             }
+            return false;
         }
 
-        public void AddLabel(string nameImage, Label label)
+        public bool AddLabel(string nameImage, Label label)
         {
             foreach (Image imag in imagens)
             {
                 if (imag.Name == nameImage)
                 {
                     imag.Labels.Add(label);
+                    return true;
                 }
             }
-
+            return false;
         }
 
-        public void RemoveLabel(string nameImage, int serialNumber)
+        public bool RemoveLabel(string nameImage, int serialNumber)
         {
             foreach (Image imag in imagens)
             {
@@ -60,10 +64,12 @@ namespace Entrega2_Equipo1
                         if (label.SerialNumber == serialNumber)
                         {
                             imag.Labels.Remove(label);
+                            return true;
                         }
                     }
                 }
             }
+            return false;
         }
 
         public bool AddSmartList(string patron, List<Image> images)
