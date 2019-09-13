@@ -17,7 +17,8 @@ namespace Entrega2_Equipo1
            /*
             * 
             * 1) Agregar metodo para importar Bitmaps a la libreria
-            * 2) Cuando se crea el working area hay que hacer el set de la libreria
+            * 2) Cuando se importa en flujo programa, se agrega una copia de la imagen en Files, y luego
+            * se invoca el constructor 
             */
         }
     }

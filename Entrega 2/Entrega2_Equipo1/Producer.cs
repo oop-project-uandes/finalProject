@@ -48,27 +48,27 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap Calendar(string[12] nombresImágenes, int anio)
+        public System.Drawing.Bitmap Calendar(string[] nombresImágenes, int anio)
         {
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap ApplyFilter(string nombreImagen, EFilter filtro, string Texto : null)
+        public System.Drawing.Bitmap ApplyFilter(string nombreImagen, EFilter filtro, string Texto = null)
         {
             throw new NotImplementedException();
         }
 
-        public Dictionary<string propiedad, string valor> SexAndAgeRecognition(string nombreImagen)
+        public Dictionary<string, string> SexAndAgeRecognition(string nombreImagen)
         {
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap PixelCensorship(string nombreImagen, double[4] posicion)
+        public System.Drawing.Bitmap PixelCensorship(string nombreImagen, double[] posicion)
         {
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap BlackCensorship(string nombreImagen, double[4] posicion)
+        public System.Drawing.Bitmap BlackCensorship(string nombreImagen, double[] posicion)
         {
             throw new NotImplementedException();
         }
