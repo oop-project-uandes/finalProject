@@ -121,6 +121,68 @@ namespace Entrega2_Equipo1
                                     temp.Add(image);
                                 }
                                 break;
+                            case "ImageName": //string
+                                if (image.Name == atributes[1])
+                                {
+                                    temp.Add(image);
+                                }
+                                break;
+                            case "Calification": // int 
+                                try
+                                {
+                                    if (image.Calification == Convert.ToInt32(atributes[1]))
+                                    {
+                                        temp.Add(image);
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Calification => Parameter: {0} must be an integer", atributes[1]);
+                                }
+                                break;
+                            case "Resolution": // int[]
+                                try
+                                {
+                                    string[] resString = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
+                                    int[] resolution = { Convert.ToInt32(resString[0]), Convert.ToInt32(resString[1]) };
+                                    if (image.Resolution == resolution)
+                                    {
+                                        temp.Add(image);
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Resolution => Parameter: {0} must be an integer array", atributes[1]);
+                                }
+                                break;
+                            case "AspectRatio": // int[]
+                                try
+                                {
+                                    string[] aspectString = atributes[1].Split(new string[] { "," }, StringSplitOptions.None);
+                                    int[] aspectRatio = { Convert.ToInt32(aspectString[0]), Convert.ToInt32(aspectString[1]) };
+                                    if (image.Resolution == aspectRatio)
+                                    {
+                                        temp.Add(image);
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("AspectRatio => Parameter: {0} must be an integer array", atributes[1]);
+                                }
+                                break;
+                            case "DarkClear": // bool
+                                try
+                                {
+                                    if ( image.DarkClear == Convert.ToBoolean(atributes[1]))
+                                    {
+                                        temp.Add(image);
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("DarkClear => Parameter: {0} must be a boolean", atributes[1]);
+                                }
+                                break;
 
                         }               
                     }
