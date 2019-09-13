@@ -38,7 +38,7 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap Collage(List<string> nombresImágenes, double[2] tamanoFondo, double[] tamanosImagenes, System.Drawing.Bitmap imagenFondo)
+        public System.Drawing.Bitmap Collage(List<string> nombresImágenes, double[] tamanoFondo, double[] tamanosImagenes, System.Drawing.Bitmap imagenFondo)
         {
             throw new NotImplementedException();
         }

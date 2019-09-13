@@ -14,17 +14,23 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
-
-            Image testImage1 = new Image("stock1.jpg", new List<Label>(), 3);
-            Image testImage2 = new Image("stock2.jpg", new List<Label>(), 4);
+            PersonLabel plabel = new PersonLabel("Matias", new double[] { 45.0, 32.0, 21.0, 23.0 }, "Rivera");
+            SimpleLabel slabel = new SimpleLabel("Este es un simple label"); 
+            Image testImage1 = new Image("stock1.jpg", new List<Label>() { plabel}, 3);
+            Image testImage2 = new Image("stock2.jpg", new List<Label>() { plabel, slabel}, 4);
             Image testImage3 = new Image("stock3.jpg", new List<Label>(), 3);
             List<Image> imageList = new List<Image>(){ testImage1,testImage2,testImage3};
-            string Declaration = "Calificaction: 3";
+            string Declaration = "Sentence:Este es un simple label or Surname: Rivera";
             Searcher search = new Searcher();
             List < Image >  resultado = search.Search(imageList, Declaration);
             foreach(Image image in resultado)
             {
+
                 Console.WriteLine(image.Name);
+
+               
+                
+
             }
 
 

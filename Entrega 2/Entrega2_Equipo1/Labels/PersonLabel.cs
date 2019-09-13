@@ -43,12 +43,12 @@ namespace Entrega2_Equipo1
         {
             this.Name = name;
             this.FaceLocation = faceLocation;
-            this.Surname = DEFAULT_SURNAME;
-            this.Nationality = DEFAULT_NATIONALITY;
-            this.EyesColor = DEFAULT_COLOR;
-            this.HairColor = DEFAULT_COLOR;
-            this.Sex = DEFAULT_SEX;
-            this.BirthDate = DEFAULT_BIRTHDATE;
+            this.Surname = surname;
+            this.Nationality = nationality;
+            this.EyesColor = eyesColor;
+            this.HairColor = hairColor;
+            this.Sex = sex;
+            this.BirthDate = birthDate;
             this.labelType = "PersonLabel";
         }
             
