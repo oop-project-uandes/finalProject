@@ -2,6 +2,7 @@
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class SpecialLabel : Label
     {
         // (latitude, longitude)

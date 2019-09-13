@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1
 {
-
+    [Serializable]
     public abstract class Label
     {
         public string labelType { get; set; }

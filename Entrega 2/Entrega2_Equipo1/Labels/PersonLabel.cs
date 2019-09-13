@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class PersonLabel : Label
     {
         private string name;

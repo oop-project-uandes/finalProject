@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class Image
     {
         private List<Label> labels;
