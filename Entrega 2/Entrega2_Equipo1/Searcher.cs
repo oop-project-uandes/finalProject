@@ -22,47 +22,48 @@ namespace Entrega2_Equipo1
 			foreach (List<List<string>> subDec in Declarations)
             {
 				List<Image> temp = new List<Image>();
-				foreach (List<string> atributes in subDec)
+                foreach (Image image in images)
                 {
-                    foreach (Image image in images)
+                    int cont = 0;
+                    foreach (List<string> atributes in subDec)
                     {
 						switch (atributes[0])
 						{
 							case "HairColor":
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
 								{
-									temp.Add(image);
+                                    cont++;
 								}
 								break;
 							case "EyeColor":
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 							case "Sex":
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, (ESex)Enum.Parse(typeof(ESex), atributes[1])))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 							case "Name":
 								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 							case "SurName":
 								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 							case "Birthdate":
 								if (image.SomePersonLabelContains(atributes[0], atributes[1]))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 							
 							case "FaceLocation":
@@ -70,15 +71,15 @@ namespace Entrega2_Equipo1
                                 double[] faceCoords = { Convert.ToDouble(subFACEstring[0]), Convert.ToDouble(subFACEstring[1]) };
                                 if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, EColor.None, ESex.None, faceCoords))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
                                 break;
 							
 							case "Nationality":
 								if (image.SomePersonLabelContains(atributes[0], null, (ENationality)Enum.Parse(typeof(ENationality), atributes[1])))
 								{
-									temp.Add(image);
-								}
+                                    cont++;
+                                }
 								break;
 
                             case "GeographicLocation":
@@ -87,44 +88,44 @@ namespace Entrega2_Equipo1
                                 double[] coords = { Convert.ToDouble(substring[0]), Convert.ToDouble(substring[1]) };
                                 if (image.SomeSpecialLabelContains(atributes[0], coords))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
 
                             case "Address":
                                 if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "Photographer":
                                 if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "Photomotive":
                                 if (image.SomeSpecialLabelContains(atributes[0], null, atributes[1]))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "Selfie":
                                 if (image.SomeSpecialLabelContains(atributes[0], null, null, Convert.ToBoolean(atributes[1])))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "Sentence":
                                 if (image.SomeSimpleLabelContains(atributes[0], atributes[1]))
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "ImageName": //string
                                 if (image.Name == atributes[1])
                                 {
-                                    temp.Add(image);
+                                    cont++;
                                 }
                                 break;
                             case "Calification": // int 
@@ -132,7 +133,7 @@ namespace Entrega2_Equipo1
                                 {
                                     if (image.Calification == Convert.ToInt32(atributes[1]))
                                     {
-                                        temp.Add(image);
+                                        cont++;
                                     }
                                 }
                                 catch
@@ -147,7 +148,7 @@ namespace Entrega2_Equipo1
                                     int[] resolution = { Convert.ToInt32(resString[0]), Convert.ToInt32(resString[1]) };
                                     if (image.Resolution == resolution)
                                     {
-                                        temp.Add(image);
+                                        cont++;
                                     }
                                 }
                                 catch
@@ -162,7 +163,7 @@ namespace Entrega2_Equipo1
                                     int[] aspectRatio = { Convert.ToInt32(aspectString[0]), Convert.ToInt32(aspectString[1]) };
                                     if (image.Resolution == aspectRatio)
                                     {
-                                        temp.Add(image);
+                                        cont++;
                                     }
                                 }
                                 catch
@@ -175,7 +176,7 @@ namespace Entrega2_Equipo1
                                 {
                                     if ( image.DarkClear == Convert.ToBoolean(atributes[1]))
                                     {
-                                        temp.Add(image);
+                                        cont++;
                                     }
                                 }
                                 catch
@@ -183,14 +184,17 @@ namespace Entrega2_Equipo1
                                     Console.WriteLine("DarkClear => Parameter: {0} must be a boolean", atributes[1]);
                                 }
                                 break;
-
                         }               
+                    }
+                if (cont == subDec.Count) //Contador de parametros que calzan, es igual a la cantidad de parametros en subDec
+                    {
+                        temp.Add(image);
                     }
                 }
                 Total.Add(temp);
             }
             //Image Filter
-            foreach(List<Image> subList in Total)
+            foreach(List<Image> subList  in Total)
             {
                 foreach(Image tempImage in subList)
                 {
