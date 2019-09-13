@@ -14,6 +14,7 @@ namespace Entrega2_Equipo1
     {
         static void Main(string[] args)
         {
+
             Image testImage1 = new Image("stock1.jpg", new List<Label>(), 3);
             Image testImage2 = new Image("stock2.jpg", new List<Label>(), 4);
             Image testImage3 = new Image("stock3.jpg", new List<Label>(), 3);
@@ -26,6 +27,8 @@ namespace Entrega2_Equipo1
                 Console.WriteLine(image.Name);
             }
 
+
+            
         }
     }
 }

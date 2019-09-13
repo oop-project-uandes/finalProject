@@ -1,0 +1,4 @@
+1) Flujo programa con todos sus metodos (agregar Importar y exportar y la opcion de crear etiquetas cuando se importa)
+2) Trabajar en el working area y definir como se va a comunicar con el library (fiLES Y DEMAS)
+3) Filtros que faltan
+4) Producer.cs

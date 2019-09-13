@@ -12,7 +12,7 @@ namespace Entrega2_Equipo1
         private List<Image> images;
         private Dictionary<string, List<Image>> smartList;
 
-
+        
         public Library(List<Image> images, Dictionary<string, List<Image>> smartlist )
         {
             this.images = images;
