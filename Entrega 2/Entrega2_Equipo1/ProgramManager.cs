@@ -31,6 +31,7 @@ namespace Entrega2_Equipo1
                 {
                     // Import a file to My Library from a path defined by the user
                     case 0:
+                        ImportImageFromPath();
                         break;
                     // Export a file from My Library to a path defined by the user
                     case 1:
@@ -62,9 +63,109 @@ namespace Entrega2_Equipo1
 
 
 
+        private void ImportImageFromPath()
+        {
+            string positive = "All chosen files exists...";
+            string negative = "[!] ERROR: Some of the chosen files doesn't exist, or the path is incorrect";
+            string pressKey = "Press any key to continue...";
+            string option1 = "Try importing again";
+            string option2 = "Go back to Start Menu";
+
+            while (true)
+            {
+                string[] userImportingSettings = ChoosePathAndImages();
+                string path = userImportingSettings[0];
+                string[] files = userImportingSettings[1].Split(',');
+                bool analisysResult = FilesExists(files, path);
+
+                Console.WriteLine("\n");
+                if (analisysResult == true)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(positive);
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(pressKey);
+                    Console.ReadKey();
+                    List <Image> internalList = new List<Image>();
+                    foreach (string file in files)
+                    {
+                        // Aqui quede. La idea es hacer algo tipo internalList.Add(CreateImage(file, path));
+                        // y luego todas esas images agregarlas a la biblioteca, y estaria listo este metodo
+                    }
+                }
+                else
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - negative.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(negative);
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(pressKey);
+                    Console.ReadKey();
+                    List<string> auxList = new List<string>() { option1, option2 };
+                    int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
+                    if (userChoice == 1) break;
+                }
+            }
+            return;
+        }
 
 
 
+
+        // User interaction during the import files, and creates an image to add to the library
+        private Image CreateImage(string name, string path)
+        {
+            // Aqui hay que manejar la interaccion con el usuario, por si quiere agregarles etiquetas,
+            // sobre todo cuales recomienda watson, etc...
+            // La idea es crear el objeto imagen como tal y retornarlo
+        }
+
+
+        // Verify if the files given by the user exists
+        private bool FilesExists(string[] files, string path)
+        {
+            foreach (string file in files)
+            {
+                string completePath = @path + file;
+                if (!File.Exists(completePath))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
+        // Interaction with the user in the import file from path
+        private string[] ChoosePathAndImages()
+        {
+            Console.Clear();
+            string title = "~ IMPORT FROM PATH ~";
+            string description = "Please, introduce the path to the files you want to import: ";
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
+            Console.WriteLine(title + "\n");
+            Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+            Console.WriteLine(description + "\n");
+            Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+            Console.Write("-> ");
+            string userPath = Console.ReadLine();
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+            string description2 = "Please, introduce the name(s) of the file(s) you want to import, separated by comma: ";
+            Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+            Console.WriteLine(description2);
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+            Console.Write("-> ");
+            string filenames = Console.ReadLine();
+            string[] returningArray = new string[] { userPath, filenames };
+            return returningArray;
+        }
+
+
+        // Manager that verifies if the library exists and loads it or create a new one
         private void LoadingLibraryManager()
         {
             bool exists = ExistsLibrary();
@@ -80,6 +181,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Saves the library into library.bin
         private void SaveLibrary()
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -89,6 +191,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Loads the library from library.bin
         private void LoadLibrary()
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -99,6 +202,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Returns true if the library.bin fil exists, and false in the other case
         private bool ExistsLibrary()
         {
             if (File.Exists(DEFAULT_LIBRARY_PATH)) return true;
@@ -106,6 +210,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
         {
             Console.Clear();
@@ -117,12 +222,13 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Shows presentation message
         private void ShowPresentation()
         {
             Console.BackgroundColor = ConsoleColor.DarkBlue ;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetWindowSize(74, 28);
+            Console.SetWindowSize(115, 28);
             List<string> presentationStrings = new List<string>();
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\presentation.txt";
             StreamReader file = new StreamReader(path);
@@ -141,6 +247,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Shows goodbye message
         private void ShowGoodbye()
         {
             Console.BackgroundColor = ConsoleColor.DarkBlue;

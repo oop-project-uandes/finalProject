@@ -29,6 +29,7 @@ namespace Entrega2_Equipo1
             images.Add(image);
             return true;
         }
+
         public bool RemoveImage(string nameImage)
         {
             foreach (Image imag in images)
