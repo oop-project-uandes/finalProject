@@ -20,6 +20,7 @@ namespace Entrega2_Equipo1
         private int[] aspectRatio;
         private bool darkClear;
         private Dictionary<int, Dictionary<string, string>> exif;
+        private const int DEFAULT_CALIFICATION = -1;
         
 
         public List<Label> Labels { get => this.labels; set => this.labels = value; }
@@ -31,22 +32,26 @@ namespace Entrega2_Equipo1
         public bool DarkClear { get => this.darkClear; set => this.darkClear = value; }
         public Dictionary<int, Dictionary<string, string>> Exif { get => this.exif; set => this.exif = value; }
 
+        
         public Image(string name, List<Label> labels, int calification)
         {
             this.Name = name;
             this.Labels = labels;
             this.Calification = calification;
-            this.bitmapImage = LoadbitmapImage(name);
+            this.bitmapImage = LoadBitmapImage(name);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
             this.DarkClear = LoadDarkClear();
             this.exif = LoadExif();
         }
 
+        // Other constructor with DEFAULT_CALIFICATION
+        public Image(string name, List<Label> labels) : this(name, labels, DEFAULT_CALIFICATION) { }
 
-        private Bitmap LoadbitmapImage(string name)
+
+
+        private Bitmap LoadBitmapImage(string path)
         {
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
             Bitmap returningbitmapImage = new Bitmap(path);
             return returningbitmapImage;
         }

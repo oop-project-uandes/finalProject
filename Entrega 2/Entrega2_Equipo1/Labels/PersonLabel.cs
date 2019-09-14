@@ -19,10 +19,9 @@ namespace Entrega2_Equipo1
         private EColor hairColor;
         private const ESex DEFAULT_SEX = ESex.None;
         private ESex sex;
-        private const string DEFAULT_BIRTHDATE = "1900-1-1";
+        private const string DEFAULT_BIRTHDATE = "";
         private string birthDate;
         private double[] faceLocation;
-        private string type;
 
         public PersonLabel(string name, double[] faceLocation) : this(name, faceLocation, DEFAULT_SURNAME) { }
 

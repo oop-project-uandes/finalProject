@@ -14,6 +14,7 @@ namespace Entrega2_Equipo1
         private readonly string DEFAULT_LIBRARY_PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\library.bin";
         private bool _continue = true;
         private int startingOption;
+        
 
 
 
@@ -112,16 +113,63 @@ namespace Entrega2_Equipo1
 
 
 
-
+        
         // User interaction during the import files, and creates an image to add to the library
-        private Image CreateImage(string name, string path)
+        private Image CreatingImageMenu(string name, string path)
         {
-            // Aqui hay que manejar la interaccion con el usuario, por si quiere agregarles etiquetas,
-            // sobre todo cuales recomienda watson, etc...
-            // La idea es crear el objeto imagen como tal y retornarlo
+            int calification = -1;
+            List<Label> imageLabels = new List<Label>();
+
+            Console.Clear();
+            Console.WriteLine("\n~ " + name + " ~\n");
+
+            Console.Write("Calification: ");
+            if (calification == -1) Console.WriteLine("Not set");
+            else Console.WriteLine(calification);
+
+            Console.Write("Labels: ");
+            if (imageLabels.Count == 0) Console.WriteLine("Not set");
+            else
+            {
+                foreach (Label label in imageLabels)
+                {
+                    Console.WriteLine($"\n{label.labelType}");
+                    if (label.labelType == "SimpleLabel")
+                    {
+                        SimpleLabel newlabel = (SimpleLabel)label;
+                        Console.WriteLine($"\nTag: {newlabel.Sentence}");
+                    }
+                    else if (label.labelType == "PersonLabel")
+                    {
+                        PersonLabel newlabel = (PersonLabel)label;
+                        Console.WriteLine($"\nName: {newlabel.Name}");
+                        Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
+                        if (newlabel.Surname != null) Console.WriteLine($"\nSurname: {newlabel.Surname}");
+                        if (newlabel.Nationality != ENationality.None) Console.WriteLine($"\nNationality: {newlabel.Nationality}");
+                        if (newlabel.EyesColor != EColor.None) Console.WriteLine($"\nEyesColor: {newlabel.EyesColor}");
+                        if (newlabel.HairColor != EColor.None) Console.WriteLine($"\nHairColor: {newlabel.HairColor}");
+                        if (newlabel.Sex != ESex.None) Console.WriteLine($"\nSex: {newlabel.Sex}");
+                        if (newlabel.BirthDate != "") Console.WriteLine($"\nSex: {newlabel.BirthDate}");
+                    }
+                    else if (label.labelType == "SpecialLabel")
+                    {
+                        SpecialLabel newlabel = (SpecialLabel)label;
+                        if (newlabel.GeographicLocation != null) Console.WriteLine($"\nGeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
+                        if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
+                        if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
+                        if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
+                        if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: No");
+                        else Console.WriteLine($"\nSelfie: Yes");
+                    }
+                }
+            }
+
+            int selectedOption = CreateMenu(...)
         }
 
 
+        
+        
         // Verify if the files given by the user exists
         private bool FilesExists(string[] files, string path)
         {
@@ -273,7 +321,7 @@ namespace Entrega2_Equipo1
 
 
         // Generate a menu, returns the int selected by the user, starting at 0
-        private int GenerateMenu(List<string> options, string title, string description)
+        private int GenerateMenu(List<string> options, string title = null, string description = null)
         {
             int totalOptions = options.Count;
             if (totalOptions < 1) return -1;
@@ -285,11 +333,18 @@ namespace Entrega2_Equipo1
             {
                 Console.Clear();
                 int i = 1;
-                Console.WriteLine("\n");
-                Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
-                Console.WriteLine(title + "\n");
-                Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
-                Console.WriteLine(description + "\n");
+                if (title != null)
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(title);
+                }
+                if (description != null)
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(description + "\n");
+                }
                 foreach (string option in options)
                 {
                     if (selectedOption == i - 1)
