@@ -18,11 +18,6 @@ namespace Entrega2_Equipo1
         private int startingOption;
         
 
-
-
-
-
-
         public void Run()
         {
             ShowPresentation();
@@ -39,31 +34,23 @@ namespace Entrega2_Equipo1
                         break;
                     // Export a file from My Library to a path defined by the user
                     case 1:
+
                         break;
                     // Editing Area (Apply filters, features, watson, slideshares, etc)
                     case 2:
-                        break;
-                    // Show library, add elements or erase elements, add or remove labels
-                    case 3:
 
-                        // Codigo de prueba para entender si funciona o no la importacion
-                        /*
-                        foreach (Image image in library.Images)
-                        {
-                            Console.WriteLine($"Name: {image.Name}, Calification: {image.Calification}");
-                            foreach (Label label in image.Labels)
-                            {
-                                Console.WriteLine(label.labelType);
-                            }
-                        }
-                        Console.ReadKey();
-                        */
+                        break;
+                    // Show library, add elements or erase elements, add or remove labels. Por ahora solo sirve para mostrar la libreria
+                    case 3:
+                        ShowLibrary();
                         break;
                     // Search in the library
                     case 4:
+
                         break;
                     // Show smart lists, add smartlists or erase elements
                     case 5:
+
                         break;
                     case 6:
                         this._continue = false;
@@ -76,8 +63,48 @@ namespace Entrega2_Equipo1
         }
 
 
-
-
+        private void ShowLibrary()
+        {
+            Console.Clear();
+            foreach (Image image in library.Images)
+            {
+                Console.WriteLine("-----------------------------------------------------------------");
+                Console.WriteLine($"\n          Name: {image.Name}, Calification: {image.Calification}");
+                foreach (Label label in image.Labels)
+                {
+                    Console.WriteLine("\n" + label.labelType);
+                    switch (label.labelType)
+                    {
+                        case "SimpleLabel":
+                            SimpleLabel slabel = (SimpleLabel)label;
+                            Console.WriteLine($"Sentence: {slabel.Sentence}");
+                            break;
+                        case "PersonLabel":
+                            PersonLabel plabel = (PersonLabel)label;
+                            if (plabel.Name != null) Console.WriteLine($"Name: {plabel.Name}");
+                            if (plabel.Surname != null) Console.WriteLine($"Surname: {plabel.Surname}");
+                            if (plabel.Nationality != ENationality.None) Console.WriteLine($"Nationality: {plabel.Nationality}");
+                            if (plabel.EyesColor != EColor.None) Console.WriteLine($"EyesColor: {plabel.EyesColor}");
+                            if (plabel.HairColor != EColor.None) Console.WriteLine($"HairColor: {plabel.HairColor}");
+                            if (plabel.Sex!= ESex.None) Console.WriteLine($"Sex: {plabel.Sex}");
+                            if (plabel.BirthDate != "") Console.WriteLine($"Birthdate: {plabel.BirthDate}");
+                            if (plabel.FaceLocation != null) Console.WriteLine($"FaceLocation: {plabel.FaceLocation[0]}, {plabel.FaceLocation[1]}, {plabel.FaceLocation[2]}, {plabel.FaceLocation[3]}");
+                            break;
+                        case "SpecialLabel":
+                            SpecialLabel splabel = (SpecialLabel)label;
+                            if (splabel.GeographicLocation != null) Console.WriteLine($"GeographicLocation: {splabel.GeographicLocation[0]}, {splabel.GeographicLocation[1]}");
+                            if (splabel.Address != null) Console.WriteLine($"Address: {splabel.Address}");
+                            if (splabel.Photographer != null) Console.WriteLine($"Photographer: {splabel.Photographer}");
+                            if (splabel.PhotoMotive != null) Console.WriteLine($"PhotoMotive: {splabel.PhotoMotive}");
+                            if (splabel.Selfie == true) Console.WriteLine($"Selfie: It is a Selfie");
+                            else Console.WriteLine($"Selfie: It is not a Selfie");
+                            break;
+                    }
+                }
+                Console.WriteLine("-----------------------------------------------------------------");
+            }
+            Console.ReadKey();
+        }
 
 
         private void ImportImageFromPath()
@@ -244,8 +271,8 @@ namespace Entrega2_Equipo1
                                 if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
                                 if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
                                 if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
-                                if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: No");
-                                else Console.WriteLine($"\nSelfie: Yes");
+                                if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: It is a Selfie");
+                                else Console.WriteLine($"\nSelfie: It is not a Selfie");
                             }
                         }
                     }
@@ -850,8 +877,6 @@ namespace Entrega2_Equipo1
             return returningImage;
         }
 
-
-        
         
         // Verify if the files given by the user exists
         private bool FilesExists(string[] files, string path)
