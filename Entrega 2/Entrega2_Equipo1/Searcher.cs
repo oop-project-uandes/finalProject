@@ -215,7 +215,22 @@ namespace Entrega2_Equipo1
 
         public List<System.Drawing.Bitmap> FaceSearcher(string PersonName, List<Image> images)
         {
-            return null;
+			List<Image> resultImages = Search(images, "Name: "+PersonName); //Must search by the following format: "Matias", list of images where "Matias" appears in
+			Dictionary<System.Drawing.Bitmap, double[]> imageDict = new Dictionary<System.Drawing.Bitmap, double[]>(); //Dictionary made out of Bitmap and coordinates
+			foreach (Image image in resultImages)
+			{
+				List<PersonLabel> labels = image.SelectPersonLabels(); //List of PersonLabel of one image
+				foreach (PersonLabel label in labels) //PersonLabel of labels
+				{
+					if (label.Name == PersonName && label.FaceLocation != null)
+					{
+						double[] faceCoord = label.FaceLocation;
+						System.Drawing.Bitmap bitImage = image.BitmapImage;
+						imageDict.Add(bitImage, faceCoord); 
+					}
+				}
+			}
+			return scissors.Crop(imageDict); //returns a List<System.Drawing.Bitmap>
         }
     
         public List<List<List<string>>> Declaration(string Declaration)

@@ -154,7 +154,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<PersonLabel> SelectPersonLabels()
+        public List<PersonLabel> SelectPersonLabels()
         {
             List <PersonLabel> returningList = new List<PersonLabel>();
             foreach (Label label in this.labels)
@@ -168,7 +168,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<SpecialLabel> SelectSpecialLabel()
+        public List<SpecialLabel> SelectSpecialLabel()
         {
             List<SpecialLabel> returningList = new List<SpecialLabel>();
             foreach (Label label in this.labels)
@@ -182,7 +182,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        private List<SimpleLabel> SelectSimpleLabels()
+        public List<SimpleLabel> SelectSimpleLabels()
         {
             List<SimpleLabel> returningList = new List<SimpleLabel>();
             foreach (Label label in this.labels)
