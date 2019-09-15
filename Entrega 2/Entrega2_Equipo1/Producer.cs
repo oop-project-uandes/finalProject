@@ -1,6 +1,7 @@
 ﻿using Entrega2_Equipo1.Enums;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,25 @@ namespace Entrega2_Equipo1
         private WorkingArea WorkingArea;
         private List<Tool> tools;
 
-        public Producer(WorkingArea workingArea,List<Tool> tools)
+        public Producer()
         {
-            this.WorkingArea = workingArea;
-            this.tools = tools;
+            this.WorkingArea = new WorkingArea();
+            this.tools = new List<Tool>() { new Brush(), new Merger(), new Resizer(),
+                new Scissors(), new Zoom(), new AddCensorship(), new AddImage(),
+                new AddShape(), new AddText(), new WatsonAnalizer(), new AutomaticAdjustmentFilter(),
+                new BlackNWhiteFilter(), new BrightnessFilter(), new ColorFilter(), new InvertFilter(),
+                new MirrorFilter(), new OldFilmFilter(), new RotateFlipFilter(), new SepiaFilter(), new WindowsFilter()};
         }
+
+
+        public Dictionary<int, Dictionary<string, double>> ClassifyImage(string path)
+        {
+            Bitmap bitmapImage = new Bitmap(path);
+            WatsonAnalizer myFilter = (WatsonAnalizer)this.tools[9];
+            Dictionary<int, Dictionary<string, double>> resultadoClasificacion = myFilter.FindClassifiers(bitmapImage);
+            return resultadoClasificacion;
+        }
+
 
         public bool Presentation(List<string> nombresImagenes)
         {

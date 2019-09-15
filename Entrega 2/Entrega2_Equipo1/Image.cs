@@ -33,12 +33,12 @@ namespace Entrega2_Equipo1
         public Dictionary<int, Dictionary<string, string>> Exif { get => this.exif; set => this.exif = value; }
 
         
-        public Image(string name, List<Label> labels, int calification)
+        public Image(string path, List<Label> labels, int calification)
         {
             this.Name = name;
             this.Labels = labels;
             this.Calification = calification;
-            this.bitmapImage = LoadBitmapImage(name);
+            this.bitmapImage = LoadBitmapImage(path);
             this.Resolution = LoadResolution();
             this.AspectRatio = LoadAspectRatio();
             this.DarkClear = LoadDarkClear();

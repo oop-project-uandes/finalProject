@@ -11,6 +11,7 @@ namespace Entrega2_Equipo1
     public class ProgramManager
     {
         private Library library;
+        private Producer producer;
         private readonly string DEFAULT_LIBRARY_PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\library.bin";
         private bool _continue = true;
         private int startingOption;
@@ -25,6 +26,7 @@ namespace Entrega2_Equipo1
         {
             ShowPresentation();
             LoadingLibraryManager();
+            this.producer = new Producer();
             while (this._continue == true)
             {
                 this.startingOption = StartingMenu();
@@ -71,6 +73,7 @@ namespace Entrega2_Equipo1
             string pressKey = "Press any key to continue...";
             string option1 = "Try importing again";
             string option2 = "Go back to Start Menu";
+            List<Image> internalList = new List<Image>();
 
             while (true)
             {
@@ -88,12 +91,13 @@ namespace Entrega2_Equipo1
                     Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
                     Console.WriteLine(pressKey);
                     Console.ReadKey();
-                    List <Image> internalList = new List<Image>();
+                    
                     foreach (string file in files)
                     {
-                        // Aqui quede. La idea es hacer algo tipo internalList.Add(CreateImage(file, path));
-                        // y luego todas esas images agregarlas a la biblioteca, y estaria listo este metodo
+                        Image newImage = CreatingImageMenu(file, path);
+                        internalList.Add(newImage);
                     }
+                    break;
                 }
                 else
                 {
@@ -108,63 +112,178 @@ namespace Entrega2_Equipo1
                     if (userChoice == 1) break;
                 }
             }
+            foreach (Image image in internalList)
+            {
+                library.AddImage(image);
+            }
             return;
         }
 
 
-
-        
         // User interaction during the import files, and creates an image to add to the library
         private Image CreatingImageMenu(string name, string path)
         {
             int calification = -1;
             List<Label> imageLabels = new List<Label>();
+            string title = "~ " + name + " ~\n";
+            string cal = "Calification: ";
+            string lab = "Labels: ";
+            int selectedOption = 0;
+            List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
 
-            Console.Clear();
-            Console.WriteLine("\n~ " + name + " ~\n");
-
-            Console.Write("Calification: ");
-            if (calification == -1) Console.WriteLine("Not set");
-            else Console.WriteLine(calification);
-
-            Console.Write("Labels: ");
-            if (imageLabels.Count == 0) Console.WriteLine("Not set");
-            else
+            while (true)
             {
-                foreach (Label label in imageLabels)
+                bool _continue = true;
+
+                while (_continue == true)
                 {
-                    Console.WriteLine($"\n{label.labelType}");
-                    if (label.labelType == "SimpleLabel")
+                    Console.Clear();
+                    Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(title);
+
+                    Console.SetCursorPosition((Console.WindowWidth - cal.Length) / 4, Console.CursorTop);
+                    Console.Write(cal);
+                    if (calification == -1) Console.WriteLine("Not set\n");
+                    else Console.WriteLine(calification);
+
+                    Console.SetCursorPosition((Console.WindowWidth - lab.Length) / 4, Console.CursorTop);
+                    Console.Write(lab);
+
+                    if (imageLabels.Count == 0) Console.WriteLine("Not set\n");
+                    else
                     {
-                        SimpleLabel newlabel = (SimpleLabel)label;
-                        Console.WriteLine($"\nTag: {newlabel.Sentence}");
+                        foreach (Label label in imageLabels)
+                        {
+                            Console.WriteLine($"\n{label.labelType}");
+                            if (label.labelType == "SimpleLabel")
+                            {
+                                SimpleLabel newlabel = (SimpleLabel)label;
+                                Console.WriteLine($"\nTag: {newlabel.Sentence}");
+                            }
+                            else if (label.labelType == "PersonLabel")
+                            {
+                                PersonLabel newlabel = (PersonLabel)label;
+                                Console.WriteLine($"\nName: {newlabel.Name}");
+                                Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
+                                if (newlabel.Surname != null) Console.WriteLine($"\nSurname: {newlabel.Surname}");
+                                if (newlabel.Nationality != ENationality.None) Console.WriteLine($"\nNationality: {newlabel.Nationality}");
+                                if (newlabel.EyesColor != EColor.None) Console.WriteLine($"\nEyesColor: {newlabel.EyesColor}");
+                                if (newlabel.HairColor != EColor.None) Console.WriteLine($"\nHairColor: {newlabel.HairColor}");
+                                if (newlabel.Sex != ESex.None) Console.WriteLine($"\nSex: {newlabel.Sex}");
+                                if (newlabel.BirthDate != "") Console.WriteLine($"\nSex: {newlabel.BirthDate}");
+                            }
+                            else if (label.labelType == "SpecialLabel")
+                            {
+                                SpecialLabel newlabel = (SpecialLabel)label;
+                                if (newlabel.GeographicLocation != null) Console.WriteLine($"\nGeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
+                                if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
+                                if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
+                                if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
+                                if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: No");
+                                else Console.WriteLine($"\nSelfie: Yes");
+                            }
+                        }
                     }
-                    else if (label.labelType == "PersonLabel")
+
+                    int i = 1;
+                    foreach (string option in options)
                     {
-                        PersonLabel newlabel = (PersonLabel)label;
-                        Console.WriteLine($"\nName: {newlabel.Name}");
-                        Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
-                        if (newlabel.Surname != null) Console.WriteLine($"\nSurname: {newlabel.Surname}");
-                        if (newlabel.Nationality != ENationality.None) Console.WriteLine($"\nNationality: {newlabel.Nationality}");
-                        if (newlabel.EyesColor != EColor.None) Console.WriteLine($"\nEyesColor: {newlabel.EyesColor}");
-                        if (newlabel.HairColor != EColor.None) Console.WriteLine($"\nHairColor: {newlabel.HairColor}");
-                        if (newlabel.Sex != ESex.None) Console.WriteLine($"\nSex: {newlabel.Sex}");
-                        if (newlabel.BirthDate != "") Console.WriteLine($"\nSex: {newlabel.BirthDate}");
+                        if (selectedOption == i - 1)
+                        {
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
                     }
-                    else if (label.labelType == "SpecialLabel")
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
                     {
-                        SpecialLabel newlabel = (SpecialLabel)label;
-                        if (newlabel.GeographicLocation != null) Console.WriteLine($"\nGeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
-                        if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
-                        if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
-                        if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
-                        if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: No");
-                        else Console.WriteLine($"\nSelfie: Yes");
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > options.Count - 1)
+                            {
+                                selectedOption = options.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue = false;
+                            break;
                     }
                 }
-            }
 
-            int selectedOption = CreateMenu(...)
+                if (selectedOption == 0)
+                {
+                    while (true)
+                    {
+                        Console.Clear();
+                        string setCalificationTitle = "~ Set Calification ~\n";
+                        string introduceCalification = "Introduce the new Calification <1-5> (-1 to exit): ";
+                        Console.SetCursorPosition((Console.WindowWidth - setCalificationTitle.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(setCalificationTitle);
+                        Console.SetCursorPosition((Console.WindowWidth - introduceCalification.Length) / 2, Console.CursorTop);
+                        Console.Write(introduceCalification);
+                        string snewCalification = Console.ReadLine();
+                        try
+                        {
+                            int newCalification = Convert.ToInt32(snewCalification);
+                            if (newCalification != -1 && (newCalification < 1 || newCalification > 5)) throw new Exception("Not valid Calification");
+                            calification = newCalification;
+                            break;
+                        }
+                        catch
+                        {
+                            string notValid = "Not valid Calification";
+                            string pressKey = "Press any key to continue...";
+                            Console.SetCursorPosition((Console.WindowWidth - notValid.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(notValid);
+                            Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(pressKey);
+                            Console.ReadKey();
+                        }
+                    }
+                }
+                if (selectedOption == 1)
+                {
+                    while (true)
+                    {
+                        Console.Clear();
+                        string setCalificationTitle = "~ Set new Label ~\n";
+                        string introduceCalification = "Select the Label type you want to create: ";
+                        string SimpleLabelCreation = "~ SimpleLabel Creation ~\n";
+                        string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
+                        int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
+                        if (selectedOption1 == 3) break;
+                        if (selectedOption == 0)
+                        {
+                            Dictionary<int, Dictionary<string, double>> watsonResults = this.producer.ClassifyImage(path + name);
+                            List<string> watsonOptions = new List<string>();
+                            foreach (Dictionary<string, double> dic in watsonResults.Values)
+                            {
+                                foreach (KeyValuePair<string, double> pair in dic)
+                                {
+                                    watsonOptions.Add(pair.Key);
+                                }
+                            }
+                            watsonOptions.Add("Personalized Label");
+                        }
+                    }
+                }
+                if (selectedOption == 2) break;
+            }
+            return new Image(path+name, imageLabels, calification);
         }
 
 
@@ -331,7 +450,7 @@ namespace Entrega2_Equipo1
             Console.ForegroundColor = ConsoleColor.White;
             while (_continue == true)
             {
-                Console.Clear();
+                if(title != null && description != null) Console.Clear();
                 int i = 1;
                 if (title != null)
                 {

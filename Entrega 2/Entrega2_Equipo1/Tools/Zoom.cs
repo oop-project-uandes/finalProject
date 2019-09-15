@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Entrega2_Equipo1
 {
     // TODO: IMPLEMENTAR
-    public class Zoom
+    public class Zoom : Tool
     {
         public Zoom() { }
 

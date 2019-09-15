@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace Entrega2_Equipo1.Tools.Features
+namespace Entrega2_Equipo1
 {
     public class AddCensorship : Tool
     {
