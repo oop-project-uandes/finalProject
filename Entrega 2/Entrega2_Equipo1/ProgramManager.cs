@@ -128,6 +128,7 @@ namespace Entrega2_Equipo1
             string title = "~ " + name + " ~\n";
             string cal = "Calification: ";
             string lab = "Labels: ";
+            string separator = "----------------------------------------";
             int selectedOption = 0;
             List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
 
@@ -152,13 +153,17 @@ namespace Entrega2_Equipo1
                     if (imageLabels.Count == 0) Console.WriteLine("Not set\n");
                     else
                     {
+                        Console.WriteLine("\n");
                         foreach (Label label in imageLabels)
                         {
-                            Console.WriteLine($"\n{label.labelType}");
+                            Console.Write($"{label.labelType}");
                             if (label.labelType == "SimpleLabel")
                             {
                                 SimpleLabel newlabel = (SimpleLabel)label;
-                                Console.WriteLine($"\nTag: {newlabel.Sentence}");
+                                string tag = $"Tag: {newlabel.Sentence}\n";
+                                Console.SetCursorPosition((Console.WindowWidth - tag.Length) / 4, Console.CursorTop);
+                                Console.Write(tag);
+                                Console.WriteLine(separator);
                             }
                             else if (label.labelType == "PersonLabel")
                             {
@@ -261,13 +266,18 @@ namespace Entrega2_Equipo1
                     {
                         Console.Clear();
                         string setCalificationTitle = "~ Set new Label ~\n";
-                        string introduceCalification = "Select the Label type you want to create: ";
+                        string introduceCalification = "Please, select the Label type you want to create: ";
                         string SimpleLabelCreation = "~ SimpleLabel Creation ~\n";
+                        string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
                         string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
                         int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
                         if (selectedOption1 == 3) break;
-                        if (selectedOption == 0)
+                        if (selectedOption1 == 0)
                         {
+                            Console.Clear();
+                            string LoadingWatson = "Loading Watson recommendations...";
+                            Console.SetCursorPosition((Console.WindowWidth - LoadingWatson.Length) / 2, Console.CursorTop);
+                            Console.Write(LoadingWatson);
                             Dictionary<int, Dictionary<string, double>> watsonResults = this.producer.ClassifyImage(path + name);
                             List<string> watsonOptions = new List<string>();
                             foreach (Dictionary<string, double> dic in watsonResults.Values)
@@ -278,6 +288,24 @@ namespace Entrega2_Equipo1
                                 }
                             }
                             watsonOptions.Add("Personalized Label");
+                            int selectedOption2 = GenerateMenu(watsonOptions, SimpleLabelCreation, SelectOption);
+                            string selected = watsonOptions[selectedOption2];
+                            if (selected != "Personalized Label")
+                            {
+                                SimpleLabel auxLabel = new SimpleLabel(selected);
+                                imageLabels.Add(auxLabel);
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.SetCursorPosition((Console.WindowWidth - SimpleLabelCreation.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(SimpleLabelCreation);
+                                Console.SetCursorPosition((Console.WindowWidth - SimpleLabelSelection.Length) / 2, Console.CursorTop);
+                                Console.Write(SimpleLabelSelection);
+                                string userTag = Console.ReadLine();
+                                SimpleLabel auxLabel = new SimpleLabel(userTag);
+                                imageLabels.Add(auxLabel);
+                            }
                         }
                     }
                 }
