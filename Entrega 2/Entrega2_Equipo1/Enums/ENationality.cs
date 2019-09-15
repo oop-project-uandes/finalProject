@@ -43,7 +43,7 @@ namespace Entrega2_Equipo1
         CaboVerde,
         Camboya,
         Camerún,
-        Canada, //
+        Canada, 
         Catar,
         Chad,
         Chile,
