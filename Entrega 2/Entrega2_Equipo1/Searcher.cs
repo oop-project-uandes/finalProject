@@ -237,8 +237,8 @@ namespace Entrega2_Equipo1
         {
             List<List<List<string>>> Total = new List<List<List<string>>>();
             
-            if (Declaration.Contains("or"))
-            {
+            if (Declaration.Contains(" or ")) //Note: before it was .Contains("or") and now is .Contains(" or ")
+			{
                 foreach (string SubDeclaration0 in Declaration.Split(new string[] { " or " }, StringSplitOptions.None))
                 {
                     List<List<string>> subDec = new List<List<string>>();
