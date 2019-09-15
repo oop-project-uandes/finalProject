@@ -128,14 +128,13 @@ namespace Entrega2_Equipo1
             string title = "~ " + name + " ~\n";
             string cal = "Calification: ";
             string lab = "Labels: ";
-            string separator = "----------------------------------------";
+            string separator = "-----------------------------------------------------------------------------";
             int selectedOption = 0;
             List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
 
             while (true)
             {
                 bool _continue = true;
-
                 while (_continue == true)
                 {
                     Console.Clear();
@@ -156,7 +155,9 @@ namespace Entrega2_Equipo1
                         Console.WriteLine("\n");
                         foreach (Label label in imageLabels)
                         {
+                            Console.WriteLine(separator);
                             Console.Write($"{label.labelType}");
+
                             if (label.labelType == "SimpleLabel")
                             {
                                 SimpleLabel newlabel = (SimpleLabel)label;
@@ -165,17 +166,31 @@ namespace Entrega2_Equipo1
                                 Console.Write(tag);
                                 Console.WriteLine(separator);
                             }
+
+
                             else if (label.labelType == "PersonLabel")
                             {
                                 PersonLabel newlabel = (PersonLabel)label;
-                                Console.WriteLine($"\nName: {newlabel.Name}");
-                                Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
-                                if (newlabel.Surname != null) Console.WriteLine($"\nSurname: {newlabel.Surname}");
+
+                                if (newlabel.Name != null)
+                                {
+                                    string namelabel = $"Name: {newlabel.Name}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - namelabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(namelabel);
+                                }
+                                if (newlabel.FaceLocation != null) Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
+                                if (newlabel.Surname != null)
+                                {
+                                    string surnamelabel = $"Surname: {newlabel.Surname}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - surnamelabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(surnamelabel);
+                                }
                                 if (newlabel.Nationality != ENationality.None) Console.WriteLine($"\nNationality: {newlabel.Nationality}");
                                 if (newlabel.EyesColor != EColor.None) Console.WriteLine($"\nEyesColor: {newlabel.EyesColor}");
                                 if (newlabel.HairColor != EColor.None) Console.WriteLine($"\nHairColor: {newlabel.HairColor}");
                                 if (newlabel.Sex != ESex.None) Console.WriteLine($"\nSex: {newlabel.Sex}");
                                 if (newlabel.BirthDate != "") Console.WriteLine($"\nSex: {newlabel.BirthDate}");
+                                Console.WriteLine(separator);
                             }
                             else if (label.labelType == "SpecialLabel")
                             {
@@ -229,6 +244,8 @@ namespace Entrega2_Equipo1
                     }
                 }
 
+
+                // If the user wants to set a new calification
                 if (selectedOption == 0)
                 {
                     while (true)
@@ -260,6 +277,9 @@ namespace Entrega2_Equipo1
                         }
                     }
                 }
+
+
+                // If the user wants to set a new label
                 if (selectedOption == 1)
                 {
                     while (true)
@@ -268,10 +288,19 @@ namespace Entrega2_Equipo1
                         string setCalificationTitle = "~ Set new Label ~\n";
                         string introduceCalification = "Please, select the Label type you want to create: ";
                         string SimpleLabelCreation = "~ SimpleLabel Creation ~\n";
+                        string PersonLabelCreation = "~ PersonLabel Creation ~\n";
+                        string PersonLabelSelection = "Please, select the attribute you want to add: ";
                         string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
                         string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
                         int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
+
+                        // If the user wants to exit the label selection menu
                         if (selectedOption1 == 3) break;
+
+
+
+
+                        // If the user wants to add a SimpleLabel
                         if (selectedOption1 == 0)
                         {
                             Console.Clear();
@@ -307,8 +336,61 @@ namespace Entrega2_Equipo1
                                 imageLabels.Add(auxLabel);
                             }
                         }
+
+
+
+
+
+                        // If the user wants to add a PersonLabel
+                        if (selectedOption1 == 1)
+                        {
+                            int userSelection;
+                            PersonLabel auxLabel = new PersonLabel();
+                            while (true)
+                            {
+                                Console.Clear();
+                                List<string> personOptions = new List<string>() { "Name", "Surname", "FaceLocation", "Nationality", "EyesColor", "HairColor", "Sex", "Birthdate", "Exit" };
+                                userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
+                                if (userSelection == 8) break;
+                                switch (userSelection)
+                                {
+                                    case 0:
+                                        Console.Clear();
+                                        string AddNameTitle = "~ Add Name to PersonLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddNameTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddNameTitle);
+                                        string AddNameSelection = "Please, introduce the name: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddNameSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddNameSelection);
+                                        auxLabel.Name = Console.ReadLine();
+                                        break;
+                                    case 1:
+                                        Console.Clear();
+                                        string AddSurnameTitle = "~ Add Surname to PersonLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddSurnameTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddSurnameTitle);
+                                        string AddSurnameSelection = "Please, introduce the surname: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddSurnameSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddSurnameSelection);
+                                        auxLabel.Surname = Console.ReadLine();
+                                        break;
+                                }
+                            }
+                            imageLabels.Add(auxLabel);
+                            if (userSelection == 8) break;
+                        }
                     }
                 }
+
+
+
+
+
+
+
+
+
+
                 if (selectedOption == 2) break;
             }
             return new Image(path+name, imageLabels, calification);

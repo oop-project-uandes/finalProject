@@ -10,6 +10,7 @@ namespace Entrega2_Equipo1
     public class PersonLabel : Label
     {
         private string name;
+        private const string DEFAULT_NAME = null;
         private const string DEFAULT_SURNAME = null;
         private string surname;
         private const ENationality DEFAULT_NATIONALITY = ENationality.None;
@@ -22,6 +23,11 @@ namespace Entrega2_Equipo1
         private const string DEFAULT_BIRTHDATE = "";
         private string birthDate;
         private double[] faceLocation;
+        private const double[] DEFAULT_FACE_LOCATION = null;
+
+        public PersonLabel() : this(DEFAULT_NAME) { }
+
+        public PersonLabel(string name) : this(name, DEFAULT_FACE_LOCATION) { } 
 
         public PersonLabel(string name, double[] faceLocation) : this(name, faceLocation, DEFAULT_SURNAME) { }
 
