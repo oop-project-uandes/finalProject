@@ -731,6 +731,7 @@ namespace Entrega2_Equipo1
                                 if (userSelection == 5) break;
                                 switch (userSelection)
                                 {
+                                    // Quede aqui, tengo que implementar el switch igual que con el personlabel
                                     case 0:
 
                                         break;
