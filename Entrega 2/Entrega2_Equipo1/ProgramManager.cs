@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Drawing;
 
 namespace Entrega2_Equipo1
 {
@@ -44,6 +45,16 @@ namespace Entrega2_Equipo1
                         break;
                     // Show library, add elements or erase elements, add or remove labels
                     case 3:
+                        // Codigo de prueba para entender si funciona o no la importacion
+                        foreach (Image image in library.Images)
+                        {
+                            Console.WriteLine($"Name: {image.Name}, Calification: {image.Calification}");
+                            foreach (Label label in image.Labels)
+                            {
+                                Console.WriteLine(label.labelType);
+                            }
+                        }
+                        Console.ReadKey();
                         break;
                     // Search in the library
                     case 4:
@@ -116,13 +127,17 @@ namespace Entrega2_Equipo1
             {
                 library.AddImage(image);
             }
+            SaveLibrary();
             return;
         }
+
 
 
         // User interaction during the import files, and creates an image to add to the library
         private Image CreatingImageMenu(string name, string path)
         {
+            // Se debe poder importar una carpeta completa y decidir si las labels / calificacion se deben agregar
+            // a todas las imagenes
             int calification = -1;
             List<Label> imageLabels = new List<Label>();
             string title = "~ " + name + " ~\n";
@@ -145,6 +160,7 @@ namespace Entrega2_Equipo1
                     Console.Write(cal);
                     if (calification == -1) Console.WriteLine("Not set\n");
                     else Console.WriteLine(calification);
+                    Console.WriteLine("\n");
 
                     Console.SetCursorPosition((Console.WindowWidth - lab.Length) / 4, Console.CursorTop);
                     Console.Write(lab);
@@ -156,7 +172,7 @@ namespace Entrega2_Equipo1
                         foreach (Label label in imageLabels)
                         {
                             Console.WriteLine(separator);
-                            Console.Write($"{label.labelType}");
+                            Console.Write($"{label.labelType}\n");
 
                             if (label.labelType == "SimpleLabel")
                             {
@@ -166,8 +182,6 @@ namespace Entrega2_Equipo1
                                 Console.Write(tag);
                                 Console.WriteLine(separator);
                             }
-
-
                             else if (label.labelType == "PersonLabel")
                             {
                                 PersonLabel newlabel = (PersonLabel)label;
@@ -178,18 +192,48 @@ namespace Entrega2_Equipo1
                                     Console.SetCursorPosition((Console.WindowWidth - namelabel.Length) / 4, Console.CursorTop);
                                     Console.Write(namelabel);
                                 }
-                                if (newlabel.FaceLocation != null) Console.WriteLine($"\nFaceLocation: LEFT = {newlabel.FaceLocation[0]}, TOP = {newlabel.FaceLocation[1]}, WIDTH = {newlabel.FaceLocation[2]}, HEIGHT = {newlabel.FaceLocation[3]}");
+                                if (newlabel.FaceLocation != null)
+                                {
+                                    string locationlabel = $"\nLocation:{newlabel.FaceLocation[3]},{newlabel.FaceLocation[2]},{newlabel.FaceLocation[0]},{newlabel.FaceLocation[1]}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - locationlabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(locationlabel);
+                                }
                                 if (newlabel.Surname != null)
                                 {
                                     string surnamelabel = $"Surname: {newlabel.Surname}\n";
                                     Console.SetCursorPosition((Console.WindowWidth - surnamelabel.Length) / 4, Console.CursorTop);
                                     Console.Write(surnamelabel);
                                 }
-                                if (newlabel.Nationality != ENationality.None) Console.WriteLine($"\nNationality: {newlabel.Nationality}");
-                                if (newlabel.EyesColor != EColor.None) Console.WriteLine($"\nEyesColor: {newlabel.EyesColor}");
-                                if (newlabel.HairColor != EColor.None) Console.WriteLine($"\nHairColor: {newlabel.HairColor}");
-                                if (newlabel.Sex != ESex.None) Console.WriteLine($"\nSex: {newlabel.Sex}");
-                                if (newlabel.BirthDate != "") Console.WriteLine($"\nSex: {newlabel.BirthDate}");
+                                if (newlabel.Nationality != ENationality.None)
+                                {
+                                    string nationalitylabel = $"Nationality: {newlabel.Nationality}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - nationalitylabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(nationalitylabel);
+                                }
+                                if (newlabel.EyesColor != EColor.None)
+                                {
+                                    string eyescolorlabel = $"EyesColor: {newlabel.EyesColor}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - eyescolorlabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(eyescolorlabel);
+                                }
+                                if (newlabel.HairColor != EColor.None)
+                                {
+                                    string haircolorlabel = $"HairColor: {newlabel.HairColor}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - haircolorlabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(haircolorlabel);
+                                }
+                                if (newlabel.Sex != ESex.None)
+                                {
+                                    string sexlabel = $"Sex: {newlabel.Sex}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - sexlabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(sexlabel);
+                                }
+                                if (newlabel.BirthDate != "")
+                                {
+                                    string birthdatelabel = $"Birthdate: {newlabel.BirthDate}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - birthdatelabel.Length) / 4, Console.CursorTop);
+                                    Console.Write(birthdatelabel);
+                                }
                                 Console.WriteLine(separator);
                             }
                             else if (label.labelType == "SpecialLabel")
@@ -204,7 +248,6 @@ namespace Entrega2_Equipo1
                             }
                         }
                     }
-
                     int i = 1;
                     foreach (string option in options)
                     {
@@ -290,17 +333,19 @@ namespace Entrega2_Equipo1
                         string SimpleLabelCreation = "~ SimpleLabel Creation ~\n";
                         string PersonLabelCreation = "~ PersonLabel Creation ~\n";
                         string PersonLabelSelection = "Please, select the attribute you want to add: ";
+                        string SpecialLabelCreation = "~ SpecialLabel Creation ~\n";
+                        string SpecialLabelSelection = "Please, select the attribute you want to add: ";
                         string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
                         string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
                         int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
 
-                        // If the user wants to exit the label selection menu
+                        // If user wants to exit the label selection menu
                         if (selectedOption1 == 3) break;
 
 
 
 
-                        // If the user wants to add a SimpleLabel
+                        // If user wants to add a SimpleLabel
                         if (selectedOption1 == 0)
                         {
                             Console.Clear();
@@ -341,7 +386,7 @@ namespace Entrega2_Equipo1
 
 
 
-                        // If the user wants to add a PersonLabel
+                        // If user wants to add a PersonLabel
                         if (selectedOption1 == 1)
                         {
                             int userSelection;
@@ -374,10 +419,337 @@ namespace Entrega2_Equipo1
                                         Console.Write(AddSurnameSelection);
                                         auxLabel.Surname = Console.ReadLine();
                                         break;
+                                    case 2:
+                                        double left, top, width, height;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+
+                                            string AddFaceLocation = "~ Add FaceLocation to PersonLabel ~\n\n";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddFaceLocation.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddFaceLocation);
+
+                                            string AddLeftSelection = "Please, introduce the LEFT parameter: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddLeftSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddLeftSelection);
+                                            try
+                                            {
+                                                left = Convert.ToDouble(Console.ReadLine());
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string LeftNotValid = "[!] ERROR: LEFT parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - LeftNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(LeftNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+                                            string AddTopSelection = "Please, introduce the TOP parameter: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddTopSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddTopSelection);
+                                            try
+                                            {
+                                                top = Convert.ToDouble(Console.ReadLine());
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string TopNotValid = "[!] ERROR: TOP parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - TopNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(TopNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+                                            string AddHeightSelection = "Please, introduce the HEIGHT parameter: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddHeightSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddHeightSelection);
+                                            try
+                                            {
+                                                height = Convert.ToDouble(Console.ReadLine());
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string HeightNotValid = "[!] ERROR: HEIGHT parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - HeightNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(HeightNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+                                            string AddWidthSelection = "Please, introduce the WIDTH parameter: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddWidthSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddWidthSelection);
+                                            try
+                                            {
+                                                width = Convert.ToDouble(Console.ReadLine());
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string WidthNotValid = "[!] ERROR: WIDTH parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - WidthNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(WidthNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                            auxLabel.FaceLocation = new double[] { width, height, top, left };
+                                            break;
+                                        }
+                                        break;
+                                    case 3:
+                                        ENationality auxnationality;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+                                            string AddNationalityTitle = "~ Add Nationality to PersonLabel ~\n\n";
+                                            string AddNationalitySelection = "Please, introduce the nationality: ";
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddNationalityTitle.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddNationalityTitle);
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddNationalitySelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddNationalitySelection);
+
+                                            string option = Console.ReadLine();
+
+                                            try
+                                            {
+                                                auxnationality = (ENationality)Enum.Parse(typeof(ENationality), option);
+                                                break;
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string NationalityNotValid = "[!] ERROR: Nationality parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - NationalityNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(NationalityNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                        }
+                                        auxLabel.Nationality = auxnationality;
+                                        break;
+                                    case 4:
+                                        EColor EyesColor;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+                                            string AddEyesColorTitle = "~ Add EyesColor to PersonLabel ~\n\n";
+                                            string AddEyesColorSelection = "Please, introduce the EyesColor: ";
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddEyesColorTitle.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddEyesColorTitle);
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddEyesColorSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddEyesColorSelection);
+
+                                            string option = Console.ReadLine();
+
+                                            try
+                                            {
+                                                EyesColor = (EColor)Enum.Parse(typeof(EColor), option);
+                                                break;
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string ColorNotValid = "[!] ERROR: Color parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - ColorNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(ColorNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                        }
+                                        auxLabel.EyesColor = EyesColor;
+                                        break;
+                                    case 5:
+                                        EColor HairColor;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+                                            string AddHairColorTitle = "~ Add HairColor to PersonLabel ~\n\n";
+                                            string AddHairColorSelection = "Please, introduce the HairColor: ";
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddHairColorTitle.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddHairColorTitle);
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddHairColorSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddHairColorSelection);
+
+                                            string option = Console.ReadLine();
+
+                                            try
+                                            {
+                                                HairColor = (EColor)Enum.Parse(typeof(EColor), option);
+                                                break;
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string ColorNotValid = "[!] ERROR: Color parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - ColorNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(ColorNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                        }
+                                        auxLabel.HairColor = HairColor;
+                                        break;
+                                    case 6:
+                                        ESex Sex;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+                                            string AddSexTitle = "~ Add Sex to PersonLabel ~\n\n";
+                                            string AddSexSelection = "Please, introduce the Sex <Hombre-Mujer>: ";
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddSexTitle.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddSexTitle);
+
+                                            Console.SetCursorPosition((Console.WindowWidth - AddSexSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddSexSelection);
+
+                                            string option = Console.ReadLine();
+
+                                            try
+                                            {
+                                                Sex = (ESex)Enum.Parse(typeof(ESex), option);
+                                                break;
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string SexNotValid = "[!] ERROR: Sex parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - SexNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(SexNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                        }
+                                        auxLabel.Sex = Sex;
+                                        break;
+                                    case 7:
+                                        int day, month, year;
+                                        while (true)
+                                        {
+                                            Console.Clear();
+
+                                            string AddBirthdate = "~ Add Birthdate to PersonLabel ~\n\n";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddBirthdate.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddBirthdate);
+
+                                            string AddDaySelection = "Please, introduce the DAY parameter <1-31>: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddDaySelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddDaySelection);
+                                            try
+                                            {
+                                                day = Convert.ToInt32(Console.ReadLine());
+                                                if (day < 1 || day > 31)
+                                                {
+                                                    throw new Exception("DAY parameter not valid");
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string DayNotValid = "[!] ERROR: DAY parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - DayNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(DayNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+                                            string AddMonthSelection = "Please, introduce the MONTH parameter <1-12>: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddMonthSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddMonthSelection);
+                                            try
+                                            {
+                                                month = Convert.ToInt32(Console.ReadLine());
+                                                if (month < 1 || month > 12)
+                                                {
+                                                    throw new Exception("MONTH parameter not valid");
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string MonthNotValid = "[!] ERROR: MONTH parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - MonthNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(MonthNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+                                            string AddYearSelection = "Please, introduce the YEAR parameter <1850-2019>: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddYearSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddYearSelection);
+                                            try
+                                            {
+                                                year = Convert.ToInt32(Console.ReadLine());
+                                                if (year < 1850 || year > 2019)
+                                                {
+                                                    throw new Exception("YEAR parameter not valid");
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string YearNotValid = "[!] ERROR: YEAR parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - YearNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(YearNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+
+                                            auxLabel.BirthDate = Convert.ToString(day) +"-"+ Convert.ToString(month) +"-"+ Convert.ToString(year);
+                                            break;
+                                        }
+                                        break;
                                 }
                             }
                             imageLabels.Add(auxLabel);
                             if (userSelection == 8) break;
+                        }
+
+
+
+                        // If user wants to add a SpecialLabel
+                        if (selectedOption1 == 2)
+                        {
+                            int userSelection;
+                            SpecialLabel auxLabel = new SpecialLabel();
+                            while (true)
+                            {
+                                Console.Clear();
+                                List<string> personOptions = new List<string>() { "GeographicLocation", "Address", "Photographer", "PhotoMotive", "Selfie", "Exit" };
+                                userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
+                                if (userSelection == 5) break;
+                                switch (userSelection)
+                                {
+                                    case 0:
+
+                                        break;
+                                    case 1:
+
+                                        break;
+                                    case 2:
+
+                                        break;
+                                    case 3:
+
+                                        break;
+                                    case 4:
+
+                                        break;
+                                }
+                            }
+                            imageLabels.Add(auxLabel);
+                            if (userSelection == 5) break;
                         }
                     }
                 }
@@ -393,7 +765,9 @@ namespace Entrega2_Equipo1
 
                 if (selectedOption == 2) break;
             }
-            return new Image(path+name, imageLabels, calification);
+            Image returningImage = new Image(path + name, imageLabels, calification);
+            returningImage.Name = name;
+            return returningImage;
         }
 
 
