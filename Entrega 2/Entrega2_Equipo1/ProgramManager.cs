@@ -45,7 +45,9 @@ namespace Entrega2_Equipo1
                         break;
                     // Show library, add elements or erase elements, add or remove labels
                     case 3:
+
                         // Codigo de prueba para entender si funciona o no la importacion
+                        /*
                         foreach (Image image in library.Images)
                         {
                             Console.WriteLine($"Name: {image.Name}, Calification: {image.Calification}");
@@ -55,6 +57,7 @@ namespace Entrega2_Equipo1
                             }
                         }
                         Console.ReadKey();
+                        */
                         break;
                     // Search in the library
                     case 4:
@@ -155,13 +158,11 @@ namespace Entrega2_Equipo1
                     Console.Clear();
                     Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
                     Console.WriteLine(title);
-
                     Console.SetCursorPosition((Console.WindowWidth - cal.Length) / 4, Console.CursorTop);
                     Console.Write(cal);
                     if (calification == -1) Console.WriteLine("Not set\n");
                     else Console.WriteLine(calification);
                     Console.WriteLine("\n");
-
                     Console.SetCursorPosition((Console.WindowWidth - lab.Length) / 4, Console.CursorTop);
                     Console.Write(lab);
 
@@ -718,6 +719,7 @@ namespace Entrega2_Equipo1
 
 
 
+
                         // If user wants to add a SpecialLabel
                         if (selectedOption1 == 2)
                         {
@@ -731,21 +733,98 @@ namespace Entrega2_Equipo1
                                 if (userSelection == 5) break;
                                 switch (userSelection)
                                 {
-                                    // Quede aqui, tengo que implementar el switch igual que con el personlabel
                                     case 0:
+                                        int latitude, longitude;
+                                        while (true)
+                                        {
+                                            Console.Clear();
 
+                                            string AddGeographicLocation = "~ Add GeographicLocation to SpecialLabel ~\n\n";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddGeographicLocation.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddGeographicLocation);
+
+                                            string AddLatitudeSelection = "Please, introduce the LATITUDE parameter <-90, 90>: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddLatitudeSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddLatitudeSelection);
+                                            try
+                                            {
+                                                latitude = Convert.ToInt32(Console.ReadLine());
+                                                if (latitude < -90 || latitude > 90)
+                                                {
+                                                    throw new Exception("LATITUDE parameter not valid");
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string LatitudeNotValid = "[!] ERROR: LATITUDE parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - LatitudeNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(LatitudeNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+
+
+                                            string AddLongitudeSelection = "Please, introduce the LONGITUDE parameter <-180, 180>: ";
+                                            Console.SetCursorPosition((Console.WindowWidth - AddLongitudeSelection.Length) / 2, Console.CursorTop);
+                                            Console.Write(AddLongitudeSelection);
+                                            try
+                                            {
+                                                longitude = Convert.ToInt32(Console.ReadLine());
+                                                if (longitude < -180 || longitude > 180)
+                                                {
+                                                    throw new Exception("LONGITUDE parameter not valid");
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                Console.WriteLine("\n");
+                                                string LongitudeNotValid = "[!] ERROR: LONGITUDE parameter not valid, press any key to continue...";
+                                                Console.SetCursorPosition((Console.WindowWidth - LongitudeNotValid.Length) / 2, Console.CursorTop);
+                                                Console.Write(LongitudeNotValid);
+                                                Console.ReadKey();
+                                                continue;
+                                            }
+                                            auxLabel.GeographicLocation = new double[] { latitude, longitude };
+                                            break;
+                                        }
                                         break;
                                     case 1:
-
+                                        Console.Clear();
+                                        string AddAddressTitle = "~ Add Address to SpecialLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddAddressTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddAddressTitle);
+                                        string AddAddressSelection = "Please, introduce the Address: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddAddressSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddAddressSelection);
+                                        auxLabel.Address = Console.ReadLine();
                                         break;
                                     case 2:
-
+                                        Console.Clear();
+                                        string AddPhotographerTitle = "~ Add Photographer to SpecialLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddPhotographerTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddPhotographerTitle);
+                                        string AddPhotographerSelection = "Please, introduce the Photographer: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddPhotographerSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddPhotographerSelection);
+                                        auxLabel.Photographer = Console.ReadLine();
                                         break;
                                     case 3:
-
+                                        Console.Clear();
+                                        string AddPhotoMotiveTitle = "~ Add PhotoMotive to SpecialLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddPhotoMotiveTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddPhotoMotiveTitle);
+                                        string AddPhotoMotiveSelection = "Please, introduce the PhotoMotive: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddPhotoMotiveSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddPhotoMotiveSelection);
+                                        auxLabel.PhotoMotive = Console.ReadLine();
                                         break;
                                     case 4:
-
+                                        string AddSelfieTitle = "~ Add Selfie to SpecialLabel ~\n\n";
+                                        string AddSelfieSelection = "Please, introduce the Selfie: ";
+                                        int usrSelection2 = GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
+                                        if (usrSelection2 == 0) auxLabel.Selfie = true;
+                                        else auxLabel.Selfie = false;
                                         break;
                                 }
                             }
@@ -1002,8 +1081,6 @@ namespace Entrega2_Equipo1
  /*
  * 
  * 1) Agregar metodo para importar Bitmaps a la libreria
- * 2) Cuando se importa en flujo programa, se agrega una copia de la imagen en Files, y luego
- * se invoca el constructor 
  */
     }
 }

@@ -61,6 +61,7 @@ namespace Entrega2_Equipo1
         }
 
 
+        // [latitude, longitude]
         public double[] GeographicLocation
         {
             get => geographicLocation;
