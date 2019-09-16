@@ -130,12 +130,6 @@ namespace Entrega2_Equipo1
                     List<string[]> allimages = new List<string[]>() { jpgfiles, pngfiles, bmpfiles, jpegfiles };
                     if (totalLength > 0)
                     {
-
-                        /* Aqui tiene que ir codigo
-                         * para saber si quiere tratar las imagenes como un todo o una por una
-                         */
-
-
                         Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
                         Console.WriteLine("The number of files is {0}.", totalLength);
                         Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
@@ -144,6 +138,13 @@ namespace Entrega2_Equipo1
                         Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
                         Console.WriteLine(pressKey);
                         Console.ReadKey();
+
+
+                        /* Aqui tiene que ir codigo
+                         * para saber si quiere tratar las imagenes como un todo o una por una
+                         */
+
+
                         foreach (string[] arrayOfFiles in allimages)
                         {
                             foreach (string file in arrayOfFiles)
@@ -178,17 +179,21 @@ namespace Entrega2_Equipo1
                     Console.WriteLine("\n");
                     if (analisysResult == true)
                     {
-
-                        /* Aqui tiene que ir codigo
-                         * para saber si quiere tratar las imagenes como un todo o una por una
-                         */
-
                         Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
                         Console.WriteLine(positive);
                         Console.WriteLine("\n");
                         Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
                         Console.WriteLine(pressKey);
                         Console.ReadKey();
+
+
+
+
+                        /* Aqui tiene que ir codigo
+                         * para saber si quiere tratar las imagenes como un todo o una por una
+                         */
+
+
                         foreach (string file in files)
                         {
                             Image newImage = CreatingImageMenu(file, path);
