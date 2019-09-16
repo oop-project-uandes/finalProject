@@ -52,10 +52,22 @@ namespace Entrega2_Equipo1
 
         private Bitmap LoadBitmapImage(string path)
         {
-            Bitmap returningbitmapImage = new Bitmap(path);
+            Bitmap returningbitmapImage = ConvertToBitmap(path);
             return returningbitmapImage;
         }
 
+
+        // Convert a file into Bitmap object
+        private Bitmap ConvertToBitmap(string fileName)
+        {
+            Bitmap bitmap;
+            using (Stream bmpStream = System.IO.File.Open(fileName, System.IO.FileMode.Open))
+            {
+                System.Drawing.Image image = System.Drawing.Image.FromStream(bmpStream);
+                bitmap = new Bitmap(image);
+            }
+            return bitmap;
+        }
 
         private int[] LoadResolution()
         {

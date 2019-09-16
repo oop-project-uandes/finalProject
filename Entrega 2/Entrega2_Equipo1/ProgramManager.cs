@@ -69,7 +69,8 @@ namespace Entrega2_Equipo1
             foreach (Image image in library.Images)
             {
                 Console.WriteLine("-----------------------------------------------------------------");
-                Console.WriteLine($"\n          Name: {image.Name}, Calification: {image.Calification}");
+                if(image.Calification != -1) Console.WriteLine($"\n          Name: {image.Name}, Calification: {image.Calification}");
+                else Console.WriteLine($"\n          Name: {image.Name}, Calification: Not Set");
                 foreach (Label label in image.Labels)
                 {
                     Console.WriteLine("\n" + label.labelType);
@@ -114,51 +115,102 @@ namespace Entrega2_Equipo1
             string pressKey = "Press any key to continue...";
             string option1 = "Try importing again";
             string option2 = "Go back to Start Menu";
-            List<Image> internalList = new List<Image>();
 
             while (true)
             {
                 string[] userImportingSettings = ChoosePathAndImages();
-                string path = userImportingSettings[0];
-                string[] files = userImportingSettings[1].Split(',');
-                bool analisysResult = FilesExists(files, path);
-
-                Console.WriteLine("\n");
-                if (analisysResult == true)
+                if (userImportingSettings[1] == "all")
                 {
-                    Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(positive);
+                    string[] jpgfiles = Directory.GetFiles(@userImportingSettings[0], "*.jpg");
+                    string[] pngfiles = Directory.GetFiles(@userImportingSettings[0], "*.png");
+                    string[] bmpfiles = Directory.GetFiles(@userImportingSettings[0], "*.bmp");
+                    string[] jpegfiles = Directory.GetFiles(@userImportingSettings[0], "*.jpeg");
                     Console.WriteLine("\n");
-                    Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(pressKey);
-                    Console.ReadKey();
-                    
-                    foreach (string file in files)
+                    int totalLength = jpgfiles.Length + pngfiles.Length + bmpfiles.Length + jpegfiles.Length;
+                    List<string[]> allimages = new List<string[]>() { jpgfiles, pngfiles, bmpfiles, jpegfiles };
+                    if (totalLength > 0)
                     {
-                        Image newImage = CreatingImageMenu(file, path);
-                        internalList.Add(newImage);
+
+                        /* Aqui tiene que ir codigo
+                         * para saber si quiere tratar las imagenes como un todo o una por una
+                         */
+
+
+                        Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
+                        Console.WriteLine("The number of files is {0}.", totalLength);
+                        Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(positive);
+                        Console.WriteLine("\n");
+                        Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(pressKey);
+                        Console.ReadKey();
+                        foreach (string[] arrayOfFiles in allimages)
+                        {
+                            foreach (string file in arrayOfFiles)
+                            {
+                                string path = Path.GetDirectoryName(file);
+                                path += @"\";
+                                string filename = Path.GetFileName(file);
+                                Image newImage = CreatingImageMenu(filename, path);
+                                library.AddImage(newImage);
+                                SaveLibrary();
+                            }
+                        }
+                        break;
                     }
-                    break;
+                    else
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - negative.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(negative);
+                        Console.WriteLine("\n");
+                        Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(pressKey);
+                        Console.ReadKey();
+                        List<string> auxList = new List<string>() { option1, option2 };
+                        int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
+                    }
                 }
                 else
                 {
-                    Console.SetCursorPosition((Console.WindowWidth - negative.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(negative);
+                    string path = userImportingSettings[0];
+                    string[] files = userImportingSettings[1].Split(',');
+                    bool analisysResult = FilesExists(files, path);
                     Console.WriteLine("\n");
-                    Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(pressKey);
-                    Console.ReadKey();
-                    List<string> auxList = new List<string>() { option1, option2 };
-                    int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
-                    if (userChoice == 1) break;
+                    if (analisysResult == true)
+                    {
+
+                        /* Aqui tiene que ir codigo
+                         * para saber si quiere tratar las imagenes como un todo o una por una
+                         */
+
+                        Console.SetCursorPosition((Console.WindowWidth - positive.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(positive);
+                        Console.WriteLine("\n");
+                        Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(pressKey);
+                        Console.ReadKey();
+                        foreach (string file in files)
+                        {
+                            Image newImage = CreatingImageMenu(file, path);
+                            library.AddImage(newImage);
+                            SaveLibrary();
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - negative.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(negative);
+                        Console.WriteLine("\n");
+                        Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(pressKey);
+                        Console.ReadKey();
+                        List<string> auxList = new List<string>() { option1, option2 };
+                        int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
+                        if (userChoice == 1) break;
+                    }
                 }
             }
-            foreach (Image image in internalList)
-            {
-                library.AddImage(image);
-            }
-            SaveLibrary();
-            return;
         }
 
 
@@ -166,14 +218,14 @@ namespace Entrega2_Equipo1
         // User interaction during the import files, and creates an image to add to the library
         private Image CreatingImageMenu(string name, string path)
         {
-            // Se debe poder importar una carpeta completa y decidir si las labels / calificacion se deben agregar
+            // Se debe poder decidir si las labels / calificacion se deben agregar
             // a todas las imagenes
             int calification = -1;
             List<Label> imageLabels = new List<Label>();
             string title = "~ " + name + " ~\n";
             string cal = "Calification: ";
             string lab = "Labels: ";
-            string separator = "-----------------------------------------------------------------------------";
+            string separator = "-----------------------------------------------------------------------------\n";
             int selectedOption = 0;
             List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
 
@@ -183,17 +235,18 @@ namespace Entrega2_Equipo1
                 while (_continue == true)
                 {
                     Console.Clear();
+                    Console.WriteLine("\n");
                     Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
                     Console.WriteLine(title);
                     Console.SetCursorPosition((Console.WindowWidth - cal.Length) / 4, Console.CursorTop);
                     Console.Write(cal);
-                    if (calification == -1) Console.WriteLine("Not set\n");
+                    if (calification == -1) Console.WriteLine("\t [Not set]\n");
                     else Console.WriteLine(calification);
                     Console.WriteLine("\n");
-                    Console.SetCursorPosition((Console.WindowWidth - lab.Length) / 4, Console.CursorTop);
+                    Console.SetCursorPosition(((Console.WindowWidth - lab.Length) / 4) + 4, Console.CursorTop);
                     Console.Write(lab);
 
-                    if (imageLabels.Count == 0) Console.WriteLine("Not set\n");
+                    if (imageLabels.Count == 0) Console.WriteLine("\t [Not set]\n");
                     else
                     {
                         Console.WriteLine("\n");
@@ -273,6 +326,7 @@ namespace Entrega2_Equipo1
                                 if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
                                 if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: It is a Selfie");
                                 else Console.WriteLine($"\nSelfie: It is not a Selfie");
+                                Console.WriteLine(separator);
                             }
                         }
                     }
@@ -367,6 +421,8 @@ namespace Entrega2_Equipo1
                         string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
                         int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
 
+
+
                         // If user wants to exit the label selection menu
                         if (selectedOption1 == 3) break;
 
@@ -377,6 +433,7 @@ namespace Entrega2_Equipo1
                         if (selectedOption1 == 0)
                         {
                             Console.Clear();
+                            Console.WriteLine("\n");
                             string LoadingWatson = "Loading Watson recommendations...";
                             Console.SetCursorPosition((Console.WindowWidth - LoadingWatson.Length) / 2, Console.CursorTop);
                             Console.Write(LoadingWatson);
@@ -419,10 +476,37 @@ namespace Entrega2_Equipo1
                         {
                             int userSelection;
                             PersonLabel auxLabel = new PersonLabel();
+                            
                             while (true)
                             {
+                                string settedFaceLocation;
+                                if (auxLabel.FaceLocation != null) settedFaceLocation = "\t " + Convert.ToString(auxLabel.FaceLocation[0]) + "," + Convert.ToString(auxLabel.FaceLocation[1]) + "," + Convert.ToString(auxLabel.FaceLocation[2]) + "," + Convert.ToString(auxLabel.FaceLocation[3]);
+                                else settedFaceLocation = "\t [Not set]";
+                                string settedNationality;
+                                if (auxLabel.Nationality != ENationality.None) settedNationality = "\t " + Enum.GetName(typeof(ENationality), auxLabel.Nationality);
+                                else settedNationality = "\t [Not set]";
+                                string settedEyesColor;
+                                if (auxLabel.EyesColor != EColor.None) settedEyesColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.EyesColor);
+                                else settedEyesColor = "\t\t [Not set]";
+                                string settedHairColor;
+                                if (auxLabel.HairColor != EColor.None) settedHairColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.HairColor);
+                                else settedHairColor = "\t\t [Not set]";
+                                string settedSex;
+                                if (auxLabel.Sex != ESex.None) settedSex = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.Sex);
+                                else settedSex = "\t\t [Not set]";
+                                string settedName;
+                                if (auxLabel.Name == null) settedName = "\t\t [Not set]";
+                                else settedName = "\t\t " + auxLabel.Name;
+                                string settedSurname;
+                                if (auxLabel.Surname == null) settedSurname = "\t\t [Not set]";
+                                else settedSurname = "\t\t " + auxLabel.Surname;
+                                string settedBirthDate;
+                                if (auxLabel.BirthDate == "") settedBirthDate = "\t\t [Not set]";
+                                else settedBirthDate = "\t\t " + auxLabel.BirthDate;
+
+
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "Name", "Surname", "FaceLocation", "Nationality", "EyesColor", "HairColor", "Sex", "Birthdate", "Exit" };
+                                List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Exit" };
                                 userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
                                 if (userSelection == 8) break;
                                 switch (userSelection)
@@ -754,8 +838,27 @@ namespace Entrega2_Equipo1
                             SpecialLabel auxLabel = new SpecialLabel();
                             while (true)
                             {
+                                string settedGeographicLocation;
+                                if (auxLabel.GeographicLocation != null) settedGeographicLocation = "\t " + Convert.ToString(auxLabel.GeographicLocation[0]) + "," + Convert.ToString(auxLabel.GeographicLocation[1]);
+                                else settedGeographicLocation = "\t [Not set]";
+                                string settedAddress;
+                                if (auxLabel.Address != null) settedAddress = "\t\t " + auxLabel.Address;
+                                else settedAddress = "\t\t [Not set]";
+
+                                string settedPhotographer;
+                                if (auxLabel.Photographer != null) settedPhotographer = "\t\t " + auxLabel.Photographer;
+                                else settedPhotographer = "\t [Not set]";
+
+                                string settedPhotoMotive;
+                                if (auxLabel.PhotoMotive != null) settedPhotoMotive = "\t\t " + auxLabel.PhotoMotive;
+                                else settedPhotoMotive = "\t [Not set]";
+
+                                string settedSelfie;
+                                if (auxLabel.Selfie != false) settedSelfie = "\t\t It is a Selfie";
+                                else settedSelfie = "\t\t It is not a Selfie";
+
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "GeographicLocation", "Address", "Photographer", "PhotoMotive", "Selfie", "Exit" };
+                                List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Exit" };
                                 userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
                                 if (userSelection == 5) break;
                                 switch (userSelection)
@@ -862,14 +965,7 @@ namespace Entrega2_Equipo1
                 }
 
 
-
-
-
-
-
-
-
-
+                // If the user wants to exit
                 if (selectedOption == 2) break;
             }
             Image returningImage = new Image(path + name, imageLabels, calification);
@@ -878,6 +974,7 @@ namespace Entrega2_Equipo1
         }
 
         
+
         // Verify if the files given by the user exists
         private bool FilesExists(string[] files, string path)
         {
@@ -1097,6 +1194,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
+            Console.SetWindowSize(120, 40);
             int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, "~ START MENU ~", "Please, select an option:");
             return retorno;
         }
