@@ -29,25 +29,32 @@ namespace Entrega2_Equipo1
                 switch (this.startingOption)
                 {
                     // Import a file to My Library from a path defined by the user
+                    // READY
                     case 0:
                         ImportImageFromPath();
                         break;
+
                     // Export a file from My Library to a path defined by the user
+                    // READY
                     case 1:
                         ExportFileToPath();
                         break;
+
                     // Editing Area (Apply filters, features, watson, slideshares, etc)
                     case 2:
 
                         break;
+
                     // Show library, add elements or erase elements, add or remove labels. Por ahora solo sirve para mostrar la libreria
                     case 3:
-                        ShowLibrary();
+                        ManageLibrary();
                         break;
+
                     // Search in the library
                     case 4:
 
                         break;
+
                     // Show smart lists, add smartlists or erase elements
                     case 5:
 
@@ -60,6 +67,686 @@ namespace Entrega2_Equipo1
             SaveLibrary();
             ShowGoodbye();
             return;
+        }
+
+
+        // TRABAJANDO EN ESTE METODO
+
+        private void ManageLibrary()
+        {
+            List<string> manageLibraryTitle = LoadBannerData("managelibrary.txt");
+            List<string> manageLibraryOptions = new List<string>() { "Show My Library", "Add Label", "Edit Label", "Delete Label", "Set Calification", "Delete Image", "Reset Library" , "Exit"};
+            string manageLibraryDescription = "Please, select an option: ";
+            while (true)
+            {
+                int usrDecision = GenerateMenu(manageLibraryOptions, null, manageLibraryDescription, manageLibraryTitle);
+                if (usrDecision == 7) break;
+                switch (usrDecision)
+                {
+                    // User wants to see his library
+                    case 0:
+                        ShowLibrary();
+                        break;
+                    case 1:
+                        AddLabel();
+                        break;
+                    
+                    
+                    // FALTAN LOS DEMAS CASES
+                    case 6:
+                        ResetLibrary();
+                        break;
+                }
+            }
+        }
+
+
+        private void AddLabel()
+        {
+            Console.Clear();
+            List<string> AddLabelTitle = LoadBannerData("addlabel.txt");
+            List<string> AddLabelOptions1 = new List<string>();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
+            string description1 = "Please, select to which image you want to add the Label: ";
+            string description2 = "Please, select which type of label you would like to add: ";
+            string addlabeldescription = "Please, select an option: ";
+            List<string> AddLabelOptions2 = new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Done" };
+
+            foreach (Image image in library.Images)
+            {
+                AddLabelOptions1.Add(image.Name);
+            }
+            AddLabelOptions1.Add("Exit");
+            if (AddLabelOptions1.Count == 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+                Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskeytocontinue);
+                Console.ReadKey();
+                return;
+            }
+            int numberOfTheImage = GenerateMenu(AddLabelOptions1, null, description1, AddLabelOptions1);
+
+            // If user selects Exit
+            if (AddLabelOptions1[numberOfTheImage] == "Exit") return;
+            
+            
+            Image imageToAddLabel = library.Images[numberOfTheImage];
+
+            while (true)
+            {
+                int usrLabel = GenerateMenu(AddLabelOptions2, null, description2, AddLabelTitle);
+                switch (usrLabel)
+                {
+                    // If user wants to add a SimpleLabel
+                    case 0:
+                        Console.Clear();
+
+                        // First, we load watson recommendations
+                        Console.WriteLine("\n");
+                        string LoadingWatson = "Loading Watson recommendations...";
+                        string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
+                        Console.SetCursorPosition((Console.WindowWidth - LoadingWatson.Length) / 2, Console.CursorTop);
+                        Console.Write(LoadingWatson);
+
+                        string temppath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\Temp\";
+                        string[] currentfiles = Directory.GetFiles(temppath);
+                        Random randomNumber = new Random();
+                        string realpath;
+                        while (true)
+                        {
+                            int newRandom = randomNumber.Next(1, 100000);
+                            string number = Convert.ToString(newRandom);
+                            realpath = temppath + number + ".jpg";
+                            try
+                            {
+                                library.Images[numberOfTheImage].BitmapImage.Save(realpath);
+                                break;
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                        }
+                        
+                        
+                        Dictionary<int, Dictionary<string, double>> watsonResults = this.producer.ClassifyImage(realpath);
+                        List<string> watsonOptions = new List<string>();
+                        foreach (Dictionary<string, double> dic in watsonResults.Values)
+                        {
+                            foreach (KeyValuePair<string, double> pair in dic)
+                            {
+                                watsonOptions.Add(pair.Key);
+                            }
+                        }
+                        // Add the option of a personalized Label
+                        watsonOptions.Add("Personalized Label");
+                        
+
+                        int selectedOption2 = GenerateMenu(watsonOptions, null, addlabeldescription, AddLabelTitle);
+                        string selected = watsonOptions[selectedOption2];
+                        if (selected != "Personalized Label")
+                        {
+                            SimpleLabel sauxLabel = new SimpleLabel(selected);
+                            imageToAddLabel.AddLabel(sauxLabel);
+                            SaveLibrary();
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            foreach (string titlestring in AddLabelTitle)
+                            {
+                                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(titlestring);
+                            }
+                            Console.SetCursorPosition((Console.WindowWidth - SimpleLabelSelection.Length) / 2, Console.CursorTop);
+                            Console.Write(SimpleLabelSelection);
+                            string userTag = Console.ReadLine();
+                            SimpleLabel sauxLabel = new SimpleLabel(userTag);
+                            imageToAddLabel.AddLabel(sauxLabel);
+                            SaveLibrary();
+                        }
+                        break;
+
+
+                    // User wants to Add a PersonLabel
+                    case 1:
+
+                        int userSelection;
+                        PersonLabel auxLabel = new PersonLabel();
+
+                        while (true)
+                        {
+                            string settedFaceLocation;
+                            if (auxLabel.FaceLocation != null) settedFaceLocation = "\t " + Convert.ToString(auxLabel.FaceLocation[0]) + "," + Convert.ToString(auxLabel.FaceLocation[1]) + "," + Convert.ToString(auxLabel.FaceLocation[2]) + "," + Convert.ToString(auxLabel.FaceLocation[3]);
+                            else settedFaceLocation = "\t [Not set]";
+                            string settedNationality;
+                            if (auxLabel.Nationality != ENationality.None) settedNationality = "\t " + Enum.GetName(typeof(ENationality), auxLabel.Nationality);
+                            else settedNationality = "\t [Not set]";
+                            string settedEyesColor;
+                            if (auxLabel.EyesColor != EColor.None) settedEyesColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.EyesColor);
+                            else settedEyesColor = "\t\t [Not set]";
+                            string settedHairColor;
+                            if (auxLabel.HairColor != EColor.None) settedHairColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.HairColor);
+                            else settedHairColor = "\t\t [Not set]";
+                            string settedSex;
+                            if (auxLabel.Sex != ESex.None) settedSex = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.Sex);
+                            else settedSex = "\t\t [Not set]";
+                            string settedName;
+                            if (auxLabel.Name == null) settedName = "\t\t [Not set]";
+                            else settedName = "\t\t " + auxLabel.Name;
+                            string settedSurname;
+                            if (auxLabel.Surname == null) settedSurname = "\t\t [Not set]";
+                            else settedSurname = "\t\t " + auxLabel.Surname;
+                            string settedBirthDate;
+                            if (auxLabel.BirthDate == "") settedBirthDate = "\t\t [Not set]";
+                            else settedBirthDate = "\t\t " + auxLabel.BirthDate;
+
+
+                            Console.Clear();
+                            List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Exit" };
+                            userSelection = GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
+                            if (userSelection == 8) break;
+                            switch (userSelection)
+                            {
+                                case 0:
+                                    Console.Clear();
+                                    string AddNameTitle = "~ Add Name to PersonLabel ~\n\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddNameTitle.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddNameTitle);
+                                    string AddNameSelection = "Please, introduce the name: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddNameSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddNameSelection);
+                                    auxLabel.Name = Console.ReadLine();
+                                    break;
+                                case 1:
+                                    Console.Clear();
+                                    string AddSurnameTitle = "~ Add Surname to PersonLabel ~\n\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddSurnameTitle.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddSurnameTitle);
+                                    string AddSurnameSelection = "Please, introduce the surname: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddSurnameSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddSurnameSelection);
+                                    auxLabel.Surname = Console.ReadLine();
+                                    break;
+                                case 2:
+                                    double left, top, width, height;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+
+                                        string AddFaceLocation = "~ Add FaceLocation to PersonLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddFaceLocation.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddFaceLocation);
+
+                                        string AddLeftSelection = "Please, introduce the LEFT parameter: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddLeftSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddLeftSelection);
+                                        try
+                                        {
+                                            left = Convert.ToDouble(Console.ReadLine());
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string LeftNotValid = "[!] ERROR: LEFT parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - LeftNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(LeftNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+                                        string AddTopSelection = "Please, introduce the TOP parameter: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddTopSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddTopSelection);
+                                        try
+                                        {
+                                            top = Convert.ToDouble(Console.ReadLine());
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string TopNotValid = "[!] ERROR: TOP parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - TopNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(TopNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+                                        string AddHeightSelection = "Please, introduce the HEIGHT parameter: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddHeightSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddHeightSelection);
+                                        try
+                                        {
+                                            height = Convert.ToDouble(Console.ReadLine());
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string HeightNotValid = "[!] ERROR: HEIGHT parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - HeightNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(HeightNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+                                        string AddWidthSelection = "Please, introduce the WIDTH parameter: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddWidthSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddWidthSelection);
+                                        try
+                                        {
+                                            width = Convert.ToDouble(Console.ReadLine());
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string WidthNotValid = "[!] ERROR: WIDTH parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - WidthNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(WidthNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                        auxLabel.FaceLocation = new double[] { width, height, top, left };
+                                        break;
+                                    }
+                                    break;
+                                case 3:
+                                    ENationality auxnationality;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+                                        string AddNationalityTitle = "~ Add Nationality to PersonLabel ~\n\n";
+                                        string AddNationalitySelection = "Please, introduce the nationality: ";
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddNationalityTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddNationalityTitle);
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddNationalitySelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddNationalitySelection);
+
+                                        string option = Console.ReadLine();
+
+                                        try
+                                        {
+                                            auxnationality = (ENationality)Enum.Parse(typeof(ENationality), option);
+                                            break;
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string NationalityNotValid = "[!] ERROR: Nationality parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - NationalityNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(NationalityNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                    }
+                                    auxLabel.Nationality = auxnationality;
+                                    break;
+                                case 4:
+                                    EColor EyesColor;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+                                        string AddEyesColorTitle = "~ Add EyesColor to PersonLabel ~\n\n";
+                                        string AddEyesColorSelection = "Please, introduce the EyesColor: ";
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddEyesColorTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddEyesColorTitle);
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddEyesColorSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddEyesColorSelection);
+
+                                        string option = Console.ReadLine();
+
+                                        try
+                                        {
+                                            EyesColor = (EColor)Enum.Parse(typeof(EColor), option);
+                                            break;
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string ColorNotValid = "[!] ERROR: Color parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - ColorNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(ColorNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                    }
+                                    auxLabel.EyesColor = EyesColor;
+                                    break;
+                                case 5:
+                                    EColor HairColor;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+                                        string AddHairColorTitle = "~ Add HairColor to PersonLabel ~\n\n";
+                                        string AddHairColorSelection = "Please, introduce the HairColor: ";
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddHairColorTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddHairColorTitle);
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddHairColorSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddHairColorSelection);
+
+                                        string option = Console.ReadLine();
+
+                                        try
+                                        {
+                                            HairColor = (EColor)Enum.Parse(typeof(EColor), option);
+                                            break;
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string ColorNotValid = "[!] ERROR: Color parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - ColorNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(ColorNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                    }
+                                    auxLabel.HairColor = HairColor;
+                                    break;
+                                case 6:
+                                    ESex Sex;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+                                        string AddSexTitle = "~ Add Sex to PersonLabel ~\n\n";
+                                        string AddSexSelection = "Please, introduce the Sex <Hombre-Mujer>: ";
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddSexTitle.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddSexTitle);
+
+                                        Console.SetCursorPosition((Console.WindowWidth - AddSexSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddSexSelection);
+
+                                        string option = Console.ReadLine();
+
+                                        try
+                                        {
+                                            Sex = (ESex)Enum.Parse(typeof(ESex), option);
+                                            break;
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string SexNotValid = "[!] ERROR: Sex parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - SexNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(SexNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                    }
+                                    auxLabel.Sex = Sex;
+                                    break;
+                                case 7:
+                                    int day, month, year;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+
+                                        string AddBirthdate = "~ Add Birthdate to PersonLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddBirthdate.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddBirthdate);
+
+                                        string AddDaySelection = "Please, introduce the DAY parameter <1-31>: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddDaySelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddDaySelection);
+                                        try
+                                        {
+                                            day = Convert.ToInt32(Console.ReadLine());
+                                            if (day < 1 || day > 31)
+                                            {
+                                                throw new Exception("DAY parameter not valid");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string DayNotValid = "[!] ERROR: DAY parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - DayNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(DayNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+                                        string AddMonthSelection = "Please, introduce the MONTH parameter <1-12>: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddMonthSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddMonthSelection);
+                                        try
+                                        {
+                                            month = Convert.ToInt32(Console.ReadLine());
+                                            if (month < 1 || month > 12)
+                                            {
+                                                throw new Exception("MONTH parameter not valid");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string MonthNotValid = "[!] ERROR: MONTH parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - MonthNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(MonthNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+                                        string AddYearSelection = "Please, introduce the YEAR parameter <1850-2019>: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddYearSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddYearSelection);
+                                        try
+                                        {
+                                            year = Convert.ToInt32(Console.ReadLine());
+                                            if (year < 1850 || year > 2019)
+                                            {
+                                                throw new Exception("YEAR parameter not valid");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string YearNotValid = "[!] ERROR: YEAR parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - YearNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(YearNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+
+                                        auxLabel.BirthDate = Convert.ToString(day) + "-" + Convert.ToString(month) + "-" + Convert.ToString(year);
+                                        break;
+                                    }
+                                    break;
+                            }
+                        }
+                        imageToAddLabel.AddLabel(auxLabel);
+                        SaveLibrary();
+                        break;
+
+
+
+                    // User wants to Add a SpecialLabel
+                    case 2:
+
+                        int userSelection2;
+                        SpecialLabel auxLabel2 = new SpecialLabel();
+                        while (true)
+                        {
+                            string settedGeographicLocation;
+                            if (auxLabel2.GeographicLocation != null) settedGeographicLocation = "\t " + Convert.ToString(auxLabel2.GeographicLocation[0]) + "," + Convert.ToString(auxLabel2.GeographicLocation[1]);
+                            else settedGeographicLocation = "\t [Not set]";
+                            string settedAddress;
+                            if (auxLabel2.Address != null) settedAddress = "\t\t " + auxLabel2.Address;
+                            else settedAddress = "\t\t [Not set]";
+
+                            string settedPhotographer;
+                            if (auxLabel2.Photographer != null) settedPhotographer = "\t\t " + auxLabel2.Photographer;
+                            else settedPhotographer = "\t [Not set]";
+
+                            string settedPhotoMotive;
+                            if (auxLabel2.PhotoMotive != null) settedPhotoMotive = "\t\t " + auxLabel2.PhotoMotive;
+                            else settedPhotoMotive = "\t [Not set]";
+
+                            string settedSelfie;
+                            if (auxLabel2.Selfie != false) settedSelfie = "\t\t It is a Selfie";
+                            else settedSelfie = "\t\t It is not a Selfie";
+
+                            Console.Clear();
+                            List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Exit" };
+                            userSelection2 = GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
+                            if (userSelection2 == 5) break;
+                            switch (userSelection2)
+                            {
+                                case 0:
+                                    int latitude, longitude;
+                                    while (true)
+                                    {
+                                        Console.Clear();
+
+                                        string AddGeographicLocation = "~ Add GeographicLocation to SpecialLabel ~\n\n";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddGeographicLocation.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddGeographicLocation);
+
+                                        string AddLatitudeSelection = "Please, introduce the LATITUDE parameter <-90, 90>: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddLatitudeSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddLatitudeSelection);
+                                        try
+                                        {
+                                            latitude = Convert.ToInt32(Console.ReadLine());
+                                            if (latitude < -90 || latitude > 90)
+                                            {
+                                                throw new Exception("LATITUDE parameter not valid");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string LatitudeNotValid = "[!] ERROR: LATITUDE parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - LatitudeNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(LatitudeNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+
+
+                                        string AddLongitudeSelection = "Please, introduce the LONGITUDE parameter <-180, 180>: ";
+                                        Console.SetCursorPosition((Console.WindowWidth - AddLongitudeSelection.Length) / 2, Console.CursorTop);
+                                        Console.Write(AddLongitudeSelection);
+                                        try
+                                        {
+                                            longitude = Convert.ToInt32(Console.ReadLine());
+                                            if (longitude < -180 || longitude > 180)
+                                            {
+                                                throw new Exception("LONGITUDE parameter not valid");
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            Console.WriteLine("\n");
+                                            string LongitudeNotValid = "[!] ERROR: LONGITUDE parameter not valid, press any key to continue...";
+                                            Console.SetCursorPosition((Console.WindowWidth - LongitudeNotValid.Length) / 2, Console.CursorTop);
+                                            Console.Write(LongitudeNotValid);
+                                            Console.ReadKey();
+                                            continue;
+                                        }
+                                        auxLabel2.GeographicLocation = new double[] { latitude, longitude };
+                                        break;
+                                    }
+                                    break;
+                                case 1:
+                                    Console.Clear();
+                                    string AddAddressTitle = "~ Add Address to SpecialLabel ~\n\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddAddressTitle.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddAddressTitle);
+                                    string AddAddressSelection = "Please, introduce the Address: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddAddressSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddAddressSelection);
+                                    auxLabel2.Address = Console.ReadLine();
+                                    break;
+                                case 2:
+                                    Console.Clear();
+                                    string AddPhotographerTitle = "~ Add Photographer to SpecialLabel ~\n\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddPhotographerTitle.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddPhotographerTitle);
+                                    string AddPhotographerSelection = "Please, introduce the Photographer: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddPhotographerSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddPhotographerSelection);
+                                    auxLabel2.Photographer = Console.ReadLine();
+                                    break;
+                                case 3:
+                                    Console.Clear();
+                                    string AddPhotoMotiveTitle = "~ Add PhotoMotive to SpecialLabel ~\n\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddPhotoMotiveTitle.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddPhotoMotiveTitle);
+                                    string AddPhotoMotiveSelection = "Please, introduce the PhotoMotive: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddPhotoMotiveSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddPhotoMotiveSelection);
+                                    auxLabel2.PhotoMotive = Console.ReadLine();
+                                    break;
+                                case 4:
+                                    string AddSelfieTitle = "~ Add Selfie to SpecialLabel ~\n\n";
+                                    string AddSelfieSelection = "Please, introduce the Selfie: ";
+                                    int usrSelection2 = GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
+                                    if (usrSelection2 == 0) auxLabel2.Selfie = true;
+                                    else auxLabel2.Selfie = false;
+                                    break;
+                            }
+                        }
+                        imageToAddLabel.AddLabel(auxLabel2);
+                        SaveLibrary();
+                        break;
+                    
+
+                    // User wants to exit
+                    case 3:
+                        SaveLibrary();
+                        break;
+                }
+                break;
+            }
+        }
+
+
+        private void ResetLibrary()
+        {
+            List<string> ResetLibraryTitle = LoadBannerData("resetlibrary.txt");
+            string description = "Are you sure that you want to reset your library?: ";
+            int usrDecision = GenerateMenu(new List<string>() { "Yes, reset My Library", "Exit" }, null, description, ResetLibraryTitle);
+            if (usrDecision == 0)
+            {
+                library.ResetImages();
+                SaveLibrary();
+            }
+            else return;
+            
+            string dots = "...\n";
+            string success = "Successful library reset!";
+            string presskey = "Please, press any key to continue...";
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - success.Length) / 2, Console.CursorTop);
+            Console.WriteLine(success);
+
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskey);
+            Console.ReadKey();
         }
 
 
@@ -124,45 +811,145 @@ namespace Entrega2_Equipo1
 
         private void ShowLibrary()
         {
+            // Show the title
             Console.Clear();
+            string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
+            List<string> ShowLibraryTitle = LoadBannerData("mylibrary.txt");
+            string presskeytocontinue = "Please, press any key to continue...";
+            foreach (string titlestring in ShowLibraryTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+
+            // Show all images and their labels
             foreach (Image image in library.Images)
             {
-                Console.WriteLine("-----------------------------------------------------------------");
-                if(image.Calification != -1) Console.WriteLine($"\n          Name: {image.Name}, Calification: {image.Calification}");
-                else Console.WriteLine($"\n          Name: {image.Name}, Calification: Not Set");
+                Console.WriteLine(separator);
+                string titlewithcal = $"          ~ Name: {image.Name} Calification: {image.Calification} ~";
+                string titlewithoutcal = $"          ~ Name: {image.Name} Calification: Not set ~";
+                if (image.Calification != -1)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlewithcal.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlewithcal);
+                }
+                else
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlewithoutcal.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlewithoutcal);
+                }
                 foreach (Label label in image.Labels)
                 {
-                    Console.WriteLine("\n" + label.labelType);
+                    Console.WriteLine("\n");
+                    string labeltype = "=> " + label.labelType;
+                    Console.SetCursorPosition((Console.WindowWidth - labeltype.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(labeltype);
                     switch (label.labelType)
                     {
                         case "SimpleLabel":
                             SimpleLabel slabel = (SimpleLabel)label;
-                            Console.WriteLine($"Sentence: {slabel.Sentence}");
+                            string sentence = $"Sentence: {slabel.Sentence}";
+                            Console.SetCursorPosition((Console.WindowWidth - sentence.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(sentence);
                             break;
                         case "PersonLabel":
                             PersonLabel plabel = (PersonLabel)label;
-                            if (plabel.Name != null) Console.WriteLine($"Name: {plabel.Name}");
-                            if (plabel.Surname != null) Console.WriteLine($"Surname: {plabel.Surname}");
-                            if (plabel.Nationality != ENationality.None) Console.WriteLine($"Nationality: {plabel.Nationality}");
-                            if (plabel.EyesColor != EColor.None) Console.WriteLine($"EyesColor: {plabel.EyesColor}");
-                            if (plabel.HairColor != EColor.None) Console.WriteLine($"HairColor: {plabel.HairColor}");
-                            if (plabel.Sex!= ESex.None) Console.WriteLine($"Sex: {plabel.Sex}");
-                            if (plabel.BirthDate != "") Console.WriteLine($"Birthdate: {plabel.BirthDate}");
-                            if (plabel.FaceLocation != null) Console.WriteLine($"FaceLocation: {plabel.FaceLocation[0]}, {plabel.FaceLocation[1]}, {plabel.FaceLocation[2]}, {plabel.FaceLocation[3]}");
+                            if (plabel.Name != null)
+                            {
+                                string name = $"Name: {plabel.Name}";
+                                Console.SetCursorPosition((Console.WindowWidth - name.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(name);
+                            }
+                            if (plabel.Surname != null)
+                            {
+                                string surname = $"Surname: {plabel.Surname}";
+                                Console.SetCursorPosition((Console.WindowWidth - surname.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(surname);
+                            }
+                            if (plabel.Nationality != ENationality.None)
+                            {
+                                string nationality = $"Nationality: {plabel.Nationality}";
+                                Console.SetCursorPosition((Console.WindowWidth - nationality.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(nationality);
+                            }
+                            if (plabel.EyesColor != EColor.None)
+                            {
+                                string eyescolor = $"EyesColor: {plabel.EyesColor}";
+                                Console.SetCursorPosition((Console.WindowWidth - eyescolor.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(eyescolor);
+                            }
+                            if (plabel.HairColor != EColor.None)
+                            {
+                                string haircolor = $"HairColor: {plabel.HairColor}";
+                                Console.SetCursorPosition((Console.WindowWidth - haircolor.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(haircolor);
+                            }
+                            if (plabel.Sex != ESex.None)
+                            {
+                                string sex = $"Sex: {plabel.Sex}";
+                                Console.SetCursorPosition((Console.WindowWidth - sex.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(sex);
+                            }
+                            if (plabel.BirthDate != "")
+                            {
+                                string brithdate = $"Birthdate: {plabel.BirthDate}";
+                                Console.SetCursorPosition((Console.WindowWidth - brithdate.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(brithdate);
+                            }
+                            if (plabel.FaceLocation != null)
+                            {
+
+                                string facelocation = $"FaceLocation: {plabel.FaceLocation[0]}, {plabel.FaceLocation[1]}, {plabel.FaceLocation[2]}, {plabel.FaceLocation[3]}";
+                                Console.SetCursorPosition((Console.WindowWidth - facelocation.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(facelocation);
+                            }
                             break;
                         case "SpecialLabel":
                             SpecialLabel splabel = (SpecialLabel)label;
-                            if (splabel.GeographicLocation != null) Console.WriteLine($"GeographicLocation: {splabel.GeographicLocation[0]}, {splabel.GeographicLocation[1]}");
-                            if (splabel.Address != null) Console.WriteLine($"Address: {splabel.Address}");
-                            if (splabel.Photographer != null) Console.WriteLine($"Photographer: {splabel.Photographer}");
-                            if (splabel.PhotoMotive != null) Console.WriteLine($"PhotoMotive: {splabel.PhotoMotive}");
-                            if (splabel.Selfie == true) Console.WriteLine($"Selfie: It is a Selfie");
-                            else Console.WriteLine($"Selfie: It is not a Selfie");
+                            if (splabel.GeographicLocation != null)
+                            {
+                                string geolocation = $"GeographicLocation: {splabel.GeographicLocation[0]}, {splabel.GeographicLocation[1]}";
+                                Console.SetCursorPosition((Console.WindowWidth - geolocation.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(geolocation);
+                            }
+                            if (splabel.Address != null)
+                            {
+                                string address = $"Address: {splabel.Address}";
+                                Console.SetCursorPosition((Console.WindowWidth - address.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(address);
+                            }
+                            if (splabel.Photographer != null)
+                            {
+                                string photographer = $"Photographer: {splabel.Photographer}";
+                                Console.SetCursorPosition((Console.WindowWidth - photographer.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(photographer);
+                            }
+                            if (splabel.PhotoMotive != null)
+                            {
+                                string photomotive = $"PhotoMotive: {splabel.PhotoMotive}";
+                                Console.SetCursorPosition((Console.WindowWidth - photomotive.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(photomotive);
+                            }
+                            if (splabel.Selfie == true)
+                            {
+                                string isaselfie = "Selfie: It is a Selfie";
+                                Console.SetCursorPosition((Console.WindowWidth - isaselfie.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(isaselfie);
+                            }
+                            else
+                            {
+                                string isnotaselfie = "Selfie: It is not a Selfie";
+                                Console.SetCursorPosition((Console.WindowWidth - isnotaselfie.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(isnotaselfie);
+                            }
                             break;
                     }
                 }
-                Console.WriteLine("-----------------------------------------------------------------");
+                Console.WriteLine(separator);
             }
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);
+            Console.Write(presskeytocontinue);
             Console.ReadKey();
         }
 
@@ -339,7 +1126,7 @@ namespace Entrega2_Equipo1
             string title = "~ All images ~\n";
             string cal = "Calification: ";
             string lab = "Labels: ";
-            string separator = "-----------------------------------------------------------------------------\n";
+            string separator = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>\n";
             int selectedOption = 0;
             List<string> options = new List<string>() { "Set Calification", "Set new Label", "Continue" };
 
@@ -367,7 +1154,7 @@ namespace Entrega2_Equipo1
                         foreach (Label label in imageLabels)
                         {
                             Console.WriteLine(separator);
-                            Console.Write($"{label.labelType}\n");
+                            Console.Write($"=> {label.labelType}\n");
 
                             if (label.labelType == "SimpleLabel")
                             {
@@ -389,7 +1176,7 @@ namespace Entrega2_Equipo1
                                 }
                                 if (newlabel.FaceLocation != null)
                                 {
-                                    string locationlabel = $"\nLocation:{newlabel.FaceLocation[3]},{newlabel.FaceLocation[2]},{newlabel.FaceLocation[0]},{newlabel.FaceLocation[1]}\n";
+                                    string locationlabel = $"Location:{newlabel.FaceLocation[3]},{newlabel.FaceLocation[2]},{newlabel.FaceLocation[0]},{newlabel.FaceLocation[1]}\n";
                                     Console.SetCursorPosition((Console.WindowWidth - locationlabel.Length) / 4, Console.CursorTop);
                                     Console.Write(locationlabel);
                                 }
@@ -434,12 +1221,12 @@ namespace Entrega2_Equipo1
                             else if (label.labelType == "SpecialLabel")
                             {
                                 SpecialLabel newlabel = (SpecialLabel)label;
-                                if (newlabel.GeographicLocation != null) Console.WriteLine($"\nGeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
-                                if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
-                                if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
-                                if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
-                                if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: It is a Selfie");
-                                else Console.WriteLine($"\nSelfie: It is not a Selfie");
+                                if (newlabel.GeographicLocation != null) Console.Write($"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
+                                if (newlabel.Address != null) Console.Write($"Address: {newlabel.Address}");
+                                if (newlabel.Photographer != null) Console.Write($"Photographer: {newlabel.Photographer}");
+                                if (newlabel.PhotoMotive != null) Console.Write($"PhotoMotive: {newlabel.PhotoMotive}");
+                                if (newlabel.Selfie != false) Console.Write($"Selfie: It is a Selfie");
+                                else Console.Write($"Selfie: It is not a Selfie");
                                 Console.WriteLine(separator);
                             }
                         }
@@ -1086,7 +1873,7 @@ namespace Entrega2_Equipo1
             string title = "~ " + name + " ~\n";
             string cal = "Calification: ";
             string lab = "Labels: ";
-            string separator = "-----------------------------------------------------------------------------\n";
+            string separator = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>\n";
             int selectedOption = 0;
             List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
 
@@ -1114,7 +1901,7 @@ namespace Entrega2_Equipo1
                         foreach (Label label in imageLabels)
                         {
                             Console.WriteLine(separator);
-                            Console.Write($"{label.labelType}\n");
+                            Console.Write($"=> {label.labelType}\n");
 
                             if (label.labelType == "SimpleLabel")
                             {
@@ -1136,7 +1923,7 @@ namespace Entrega2_Equipo1
                                 }
                                 if (newlabel.FaceLocation != null)
                                 {
-                                    string locationlabel = $"\nLocation:{newlabel.FaceLocation[3]},{newlabel.FaceLocation[2]},{newlabel.FaceLocation[0]},{newlabel.FaceLocation[1]}\n";
+                                    string locationlabel = $"Location:{newlabel.FaceLocation[3]},{newlabel.FaceLocation[2]},{newlabel.FaceLocation[0]},{newlabel.FaceLocation[1]}\n";
                                     Console.SetCursorPosition((Console.WindowWidth - locationlabel.Length) / 4, Console.CursorTop);
                                     Console.Write(locationlabel);
                                 }
@@ -1181,12 +1968,12 @@ namespace Entrega2_Equipo1
                             else if (label.labelType == "SpecialLabel")
                             {
                                 SpecialLabel newlabel = (SpecialLabel)label;
-                                if (newlabel.GeographicLocation != null) Console.WriteLine($"\nGeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
-                                if (newlabel.Address != null) Console.WriteLine($"\nAddress: {newlabel.Address}");
-                                if (newlabel.Photographer != null) Console.WriteLine($"\nPhotographer: {newlabel.Photographer}");
-                                if (newlabel.PhotoMotive != null) Console.WriteLine($"\nPhotoMotive: {newlabel.PhotoMotive}");
-                                if (newlabel.Selfie != false) Console.WriteLine($"\nSelfie: It is a Selfie");
-                                else Console.WriteLine($"\nSelfie: It is not a Selfie");
+                                if (newlabel.GeographicLocation != null) Console.Write($"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
+                                if (newlabel.Address != null) Console.Write($"Address: {newlabel.Address}");
+                                if (newlabel.Photographer != null) Console.Write($"Photographer: {newlabel.Photographer}");
+                                if (newlabel.PhotoMotive != null) Console.Write($"PhotoMotive: {newlabel.PhotoMotive}");
+                                if (newlabel.Selfie != false) Console.Write($"Selfie: It is a Selfie");
+                                else Console.Write($"Selfie: It is not a Selfie");
                                 Console.WriteLine(separator);
                             }
                         }
@@ -1865,6 +2652,7 @@ namespace Entrega2_Equipo1
                 Console.SetCursorPosition((Console.WindowWidth - bannerstring.Length) / 2, Console.CursorTop);
                 Console.WriteLine(bannerstring);
             }
+            Console.WriteLine("\n");
             Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
             Console.WriteLine(description + "\n");
             Console.SetCursorPosition((Console.WindowWidth - description.Length) / 2, Console.CursorTop);
@@ -2109,7 +2897,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(150, 50);
+            Console.SetWindowSize(200, 50);
             Console.Clear();
             List<string> startingStrings = LoadBannerData("startmenu.txt");
             int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "Please, select an option:", startingStrings);
@@ -2132,12 +2920,5 @@ namespace Entrega2_Equipo1
             return returningList;
         }
  
- /*
- * 
- * TODO: 
- *       3) AGREGAR UN MENU EN MANAGE LIBRARY, QUE TENGA LA OPCION DE MOSTRAR LA LIBRERIA, Y SOLO ENTONCES ES QUE LA MUESTRA
- *       4) AGREGAR EL METODO PARA EXPORTAR IMAGENES DESDE EL PROGRAMA
- * 
- */
     }
 }

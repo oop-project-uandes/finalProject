@@ -22,6 +22,7 @@ namespace Entrega2_Equipo1
         public Library() : this(new List<Image>(), new Dictionary<string, List<Image>>()) { }
 
         public List<Image> Images { get => images; set => images = value; }
+
         public Dictionary<string, List<Image>> SmartList { get => smartList; set => smartList = value; }
 
         public bool AddImage(Image image)
@@ -55,6 +56,7 @@ namespace Entrega2_Equipo1
             }
             return false;
         }
+
 
         public bool RemoveLabel(string nameImage, int serialNumber)
         {
@@ -92,7 +94,7 @@ namespace Entrega2_Equipo1
 
         }
 
-        public bool ChageRating (string nameImage, int rating)
+        public bool ChangeRating (string nameImage, int rating)
 
         {
             foreach(Image image in images)
@@ -105,6 +107,12 @@ namespace Entrega2_Equipo1
             }
             return false;
 
+        }
+
+        public void ResetImages()
+        {
+            images.Clear();
+            return;
         }
 
     }

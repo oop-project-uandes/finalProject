@@ -56,6 +56,10 @@ namespace Entrega2_Equipo1
             return returningbitmapImage;
         }
 
+        public void AddLabel(Label label)
+        {
+            this.labels.Add(label);
+        }
 
         // Convert a file into Bitmap object
         private Bitmap ConvertToBitmap(string fileName)
