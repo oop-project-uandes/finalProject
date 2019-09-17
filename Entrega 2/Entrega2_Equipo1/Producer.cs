@@ -45,7 +45,8 @@ namespace Entrega2_Equipo1
 
         public System.Drawing.Bitmap Merge(List<Image> images)
         {
-            return Merge(images);
+            Merger merger = new Merger();
+            return merger.Merge(images[0].BitmapImage, images[1].BitmapImage);
         }
 
         public System.Drawing.Bitmap Mosaic (string imagenBase, List<Image> Imagenes)
