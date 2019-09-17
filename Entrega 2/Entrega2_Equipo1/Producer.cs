@@ -33,22 +33,22 @@ namespace Entrega2_Equipo1
         }
 
 
-        public bool Presentation(List<string> nombresImagenes)
+        public bool Presentation(List<Image> images)
         {
             throw new NotImplementedException();
         }
 
-        public bool Slideshow(List<string> nombresImagenes)
+        public bool Slideshow(List<Image> images)
         {
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap Merge(List<string> nombresImagenes)
+        public System.Drawing.Bitmap Merge(List<Image> images)
         {
-            throw new NotImplementedException();
+            return Merge(images);
         }
 
-        public System.Drawing.Bitmap Mosaic (string imagenBase, List<string> nombresImagenes)
+        public System.Drawing.Bitmap Mosaic (string imagenBase, List<Image> Imagenes)
         {
             throw new NotImplementedException();
         }
@@ -68,14 +68,115 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap ApplyFilter(string nombreImagen, EFilter filtro, string Texto = null)
-        {
-            throw new NotImplementedException();
+        public System.Drawing.Bitmap ApplyFilter(Image image ,EFilter filtro, string Texto = null)
+        {   
+            switch (filtro)
+            {
+                case EFilter.AutomaticAdjustmentFilter:
+                    AutomaticAdjustmentFilter AAF = new AutomaticAdjustmentFilter();
+                    return AAF.ApplyFilter(image.BitmapImage);
+
+                case EFilter.BlackNWhiteFilter:
+                    BlackNWhiteFilter BNWF = new BlackNWhiteFilter();
+                    return BNWF.ApplyFilter(image.BitmapImage);
+
+                case EFilter.BrightnessFilter:
+                    BrightnessFilter BF = new BrightnessFilter();
+                    int DEFAULT_BRIGHTNESS = 100; //TEMP VALUE
+                    return BF.ApplyFilter(image.BitmapImage, DEFAULT_BRIGHTNESS);
+                
+                case EFilter.ColorFilter:
+                    ColorFilter CF = new ColorFilter();
+                    EColorFilterTypes DEFAULT_ECOLOR = EColorFilterTypes.Red; //TEMP VALUE
+                    return CF.ApplyFilter(image.BitmapImage, DEFAULT_ECOLOR);
+                
+                case EFilter.InverFilter:
+                    InvertFilter IF = new InvertFilter();
+                    return IF.ApplyFilter(image.BitmapImage);
+
+                case EFilter.MirrorFilter:
+                    MirrorFilter MF = new MirrorFilter();
+                    return MF.ApplyFilter(image.BitmapImage);
+
+                case EFilter.OldFilmFilter:
+                    OldFilmFilter OFF = new OldFilmFilter();
+                    int DEFAULT_NOISE = 100; //TEMP VALUE
+                    return OFF.ApplyFilter(image.BitmapImage, DEFAULT_NOISE);
+
+                case EFilter.RotateFlipFilter:
+                    RotateFlipFilter RFF = new RotateFlipFilter();
+                    RotateFlipType DEFAULT_ROTATE = RotateFlipType.RotateNoneFlipNone; //TEMP VALUE
+                    return RFF.RotateFlip(image.BitmapImage, DEFAULT_ROTATE);
+
+                case EFilter.SepiaFilter:
+                    SepiaFilter SF = new SepiaFilter();
+                    return SF.ApplyFilter(image.BitmapImage);
+
+                case EFilter.WindowsFilter:
+                    WindowsFilter WF = new WindowsFilter();
+                    return WF.ApplyFilter(image.BitmapImage);
+            }
+            return image.BitmapImage;
         }
 
-        public Dictionary<string, string> SexAndAgeRecognition(string nombreImagen)
+        public Dictionary<string, int> SexAndAgeRecognition(Image image)
         {
-            throw new NotImplementedException();
+            Dictionary<string, int> result = new Dictionary<string, int>() { };
+            WatsonAnalizer WA = new WatsonAnalizer();
+            Dictionary<int, Dictionary<string, object>> facesDict = WA.FindFaces(image.BitmapImage);
+            double ageScore = 0;
+            int maleScore = 0;
+            int femaleScore = 0;
+            int cont = 0;
+
+            foreach (KeyValuePair<int, Dictionary<string,object>> pair in facesDict)
+            {
+                Dictionary<string, object> value = pair.Value;
+                foreach(KeyValuePair<string,object> Scores in value)
+                {
+                    string String = Scores.Key;
+                    object Object = Scores.Key;
+
+                    switch (String)
+                    {
+                        case "age":
+                            Age ageObj = (Age)Object;
+                            ageScore += (ageObj.MaxAge-ageObj.MinAge)/ 2;
+                            break;
+
+                        case "gender":
+                            Gender genderObj = (Gender)Object;
+                            if (genderObj.GenderLabel == "male")
+                            {
+                                maleScore++;
+                            }
+                            else
+                            {
+                                femaleScore++;
+                            }
+                            break;
+                    }
+                }
+                cont++;
+            }
+            if (maleScore > femaleScore)
+            {
+                result.Add("Male", Convert.ToInt32(Math.Floor(ageScore/cont)));
+            }
+            else if (maleScore < femaleScore)
+            {
+                result.Add("Female", Convert.ToInt32(Math.Floor(ageScore / cont)));
+            }
+            else
+            {
+                Random rnd = new Random();
+                string[] genders = new string[2];
+                genders[0] = "Male";
+                genders[1] = "Female";
+                result.Add(genders[rnd.Next(0,1)], Convert.ToInt32(Math.Floor(ageScore / cont)));
+            }
+
+            return result;
         }
 
         public System.Drawing.Bitmap PixelCensorship(string nombreImagen, double[] posicion)
@@ -83,9 +184,10 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap BlackCensorship(string nombreImagen, double[] posicion)
+        public System.Drawing.Bitmap BlackCensorship(Image image, int[] coordinates)
         {
-            throw new NotImplementedException();
+            AddCensorship AC = new AddCensorship();
+            return AC.blackCensorship(image.BitmapImage,coordinates);
         }
 
     }

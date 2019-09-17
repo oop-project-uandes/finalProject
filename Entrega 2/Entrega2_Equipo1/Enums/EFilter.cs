@@ -10,7 +10,11 @@ namespace Entrega2_Equipo1.Enums
     {
         AutomaticAdjustmentFilter,
         BlackNWhiteFilter,
+        BrightnessFilter,
+        ColorFilter,
+        InverFilter,
         SepiaFilter,
+        RotateFlipFilter,
         MirrorFilter,
         OldFilmFilter,
         WindowsFilter
