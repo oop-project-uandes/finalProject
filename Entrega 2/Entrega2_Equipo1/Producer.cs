@@ -68,7 +68,8 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap ApplyFilter(Image image ,EFilter filtro, string Texto = null)
+        public System.Drawing.Bitmap ApplyFilter(Image image ,EFilter filtro, Color color = default(Color), int brightness = 0, int noise = 60, 
+            RotateFlipType RFT = RotateFlipType.RotateNoneFlipNone, string Texto = null)
         {   
             switch (filtro)
             {
@@ -82,13 +83,11 @@ namespace Entrega2_Equipo1
 
                 case EFilter.BrightnessFilter:
                     BrightnessFilter BF = new BrightnessFilter();
-                    int DEFAULT_BRIGHTNESS = 100; //TEMP VALUE
-                    return BF.ApplyFilter(image.BitmapImage, DEFAULT_BRIGHTNESS);
+                    return BF.ApplyFilter(image.BitmapImage, brightness);
                 
                 case EFilter.ColorFilter:
                     ColorFilter CF = new ColorFilter();
-                    EColorFilterTypes DEFAULT_ECOLOR = EColorFilterTypes.Red; //TEMP VALUE
-                    return CF.ApplyFilter(image.BitmapImage, DEFAULT_ECOLOR);
+                    return CF.ApplyFilter(image.BitmapImage, color);
                 
                 case EFilter.InverFilter:
                     InvertFilter IF = new InvertFilter();
@@ -100,13 +99,11 @@ namespace Entrega2_Equipo1
 
                 case EFilter.OldFilmFilter:
                     OldFilmFilter OFF = new OldFilmFilter();
-                    int DEFAULT_NOISE = 100; //TEMP VALUE
-                    return OFF.ApplyFilter(image.BitmapImage, DEFAULT_NOISE);
+                    return OFF.ApplyFilter(image.BitmapImage, noise);
 
                 case EFilter.RotateFlipFilter:
                     RotateFlipFilter RFF = new RotateFlipFilter();
-                    RotateFlipType DEFAULT_ROTATE = RotateFlipType.RotateNoneFlipNone; //TEMP VALUE
-                    return RFF.RotateFlip(image.BitmapImage, DEFAULT_ROTATE);
+                    return RFF.RotateFlip(image.BitmapImage, RFT);
 
                 case EFilter.SepiaFilter:
                     SepiaFilter SF = new SepiaFilter();
