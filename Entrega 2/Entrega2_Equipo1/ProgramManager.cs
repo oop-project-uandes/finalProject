@@ -71,7 +71,6 @@ namespace Entrega2_Equipo1
 
 
         // TRABAJANDO EN ESTE METODO
-
         private void ManageLibrary()
         {
             List<string> manageLibraryTitle = LoadBannerData("managelibrary.txt");
@@ -83,18 +82,22 @@ namespace Entrega2_Equipo1
                 if (usrDecision == 7) break;
                 switch (usrDecision)
                 {
-                    // User wants to see his library
+                    // User wants to see his library => READY
                     case 0:
                         ShowLibrary();
                         break;
-                    // User wants to add a label
+
+                    // User wants to add a label => READY
                     case 1:
                         AddLabel();
                         break;
-                    // User wants to edit a label
+
+                    // User wants to edit a label => WORKING HERE
                     case 2:
+                        EditLabel();
                         break;
-                    // User wants to delete a label => WORKING HERE
+
+                    // User wants to delete a label => READY
                     case 3:
                         DeleteLabel();
                         break;
@@ -110,7 +113,14 @@ namespace Entrega2_Equipo1
         }
 
 
-        // WORKING ON THIS FUNCTION
+        // WORKING ON THIS METHOD
+        private void EditLabel()
+        {
+            // WORKING HERE
+        }
+
+
+        
         private void DeleteLabel()
         {
             Console.Clear();
@@ -221,7 +231,6 @@ namespace Entrega2_Equipo1
 
         }
         
-
 
         private void AddLabel()
         {
