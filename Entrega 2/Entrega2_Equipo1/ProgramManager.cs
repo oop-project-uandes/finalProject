@@ -34,7 +34,7 @@ namespace Entrega2_Equipo1
                         break;
                     // Export a file from My Library to a path defined by the user
                     case 1:
-
+                        ExportFileToPath();
                         break;
                     // Editing Area (Apply filters, features, watson, slideshares, etc)
                     case 2:
@@ -59,6 +59,65 @@ namespace Entrega2_Equipo1
             }
             SaveLibrary();
             ShowGoodbye();
+            return;
+        }
+
+
+        private void ExportFileToPath()
+        {
+            List<string> bannerTitle = LoadBannerData("export.txt");
+            List<string> options = new List<string>();
+            foreach (Image image in library.Images)
+            {
+                options.Add(image.Name);
+            }
+            options.Add("Exit");
+            while (true)
+            {
+                int usrOption = GenerateMenu(options, null, "Please, select the file you want to export: ", bannerTitle);
+                if (usrOption == options.Count - 1) return;
+                Image usrWants = library.Images[usrOption];
+                Console.Clear();
+                foreach (string linestring in bannerTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - linestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(linestring);
+                }
+
+                string introducePath = "Please, introduce the path to save the image: ";
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - introducePath.Length) / 2, Console.CursorTop);
+                Console.Write(introducePath);
+                string path = Console.ReadLine();
+
+                string introduceName = "Please, introduce the name of the new file: ";
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - introduceName.Length) / 2, Console.CursorTop);
+                Console.Write(introduceName);
+                string filename = Console.ReadLine();
+
+                string introduceFormat = "Please, select the exporting format: ";
+                List<string> formats = new List<string>() { ".jpg", ".jpeg", ".bmp", ".png" };
+                int usrIntFormat = GenerateMenu(formats, null, introduceFormat, bannerTitle);
+                string selectedFormat = formats[usrIntFormat];
+
+                Bitmap copyUsrWants = (Bitmap)usrWants.BitmapImage.Clone();
+                try
+                {
+                    copyUsrWants.Save(path + filename + selectedFormat);
+                    break;
+                }
+                catch
+                {
+                    string notValid = "Not valid path or filename";
+                    string pressKey = "Press any key to continue...";
+                    Console.SetCursorPosition((Console.WindowWidth - notValid.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(notValid);
+                    Console.SetCursorPosition((Console.WindowWidth - pressKey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(pressKey);
+                    Console.ReadKey();
+                }
+            }
             return;
         }
 
@@ -1019,7 +1078,6 @@ namespace Entrega2_Equipo1
         }
         
 
-
         // User interaction during the import files, and creates an image to add to the library
         private Image CreatingImageMenu(string name, string path)
         {
@@ -1779,7 +1837,6 @@ namespace Entrega2_Equipo1
         }
 
         
-
         // Verify if the files given by the user exists
         private bool FilesExists(string[] files, string path)
         {
@@ -2052,7 +2109,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(120, 25);
+            Console.SetWindowSize(150, 50);
             Console.Clear();
             List<string> startingStrings = LoadBannerData("startmenu.txt");
             int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "Please, select an option:", startingStrings);
