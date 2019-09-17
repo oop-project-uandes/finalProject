@@ -87,11 +87,20 @@ namespace Entrega2_Equipo1
                     case 0:
                         ShowLibrary();
                         break;
+                    // User wants to add a label
                     case 1:
                         AddLabel();
                         break;
+                    // User wants to edit a label
+                    case 2:
+                        break;
+                    // User wants to delete a label => WORKING HERE
+                    case 3:
+                        DeleteLabel();
+                        break;
                     
-                    
+
+
                     // FALTAN LOS DEMAS CASES
                     case 6:
                         ResetLibrary();
@@ -99,6 +108,119 @@ namespace Entrega2_Equipo1
                 }
             }
         }
+
+
+        // WORKING ON THIS FUNCTION
+        private void DeleteLabel()
+        {
+            Console.Clear();
+            List<string> DeleteLabelTitle = LoadBannerData("deletelabel.txt");
+            List<string> DeleteLabelOptions1 = new List<string>();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
+            string description1 = "Please, select on which image you want to delete a Label: ";
+            string description2 = "Please, select which label you want to delete: ";
+            
+
+            foreach (Image image in library.Images)
+            {
+                DeleteLabelOptions1.Add(image.Name);
+            }
+            DeleteLabelOptions1.Add("Exit");
+            if (DeleteLabelOptions1.Count == 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+                Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskeytocontinue);
+                Console.ReadKey();
+                return;
+            }
+            int numberOfTheImage = GenerateMenu(DeleteLabelOptions1, null, description1, DeleteLabelTitle);
+
+            // If user selects Exit
+            if (DeleteLabelOptions1[numberOfTheImage] == "Exit") return;
+            Image imageToDeleteLabel = library.Images[numberOfTheImage];
+
+
+            List<string> optionsToDelete = new List<string>();
+            // We load the options of the labels to delete
+            foreach (Label label in imageToDeleteLabel.Labels)
+            {
+                string newstring = "";
+                if (label.labelType == "SimpleLabel")
+                {
+                    SimpleLabel slabel = (SimpleLabel)label;
+                    newstring += "\nSimpleLabel";
+                    newstring += $"\n        Sentence: {slabel.Sentence}";
+                    optionsToDelete.Add(newstring);
+                }
+                else if (label.labelType == "PersonLabel")
+                {
+                    PersonLabel slabel = (PersonLabel)label;
+                    newstring += "\nPersonLabel";
+
+                    if(slabel.Name != null) newstring += $"\n        Name: {slabel.Name}";
+                    else newstring += $"\n        Name: [Not set]";
+
+                    if (slabel.Surname != null) newstring += $"\n        Surname: {slabel.Surname}";
+                    else newstring += $"\n        Surname: [Not set]";
+
+                    if (slabel.Nationality != ENationality.None) newstring += $"\n        Nationality: {slabel.Nationality}";
+                    else newstring += $"\n        Nationality: [Not set]";
+
+                    if (slabel.EyesColor != EColor.None) newstring += $"\n        EyesColor: {slabel.EyesColor}";
+                    else newstring += $"\n        EyesColor: [Not set]";
+
+                    if (slabel.HairColor != EColor.None) newstring += $"\n        HairColor: {slabel.HairColor}";
+                    else newstring += $"\n        HairColor: [Not set]";
+
+                    if (slabel.Sex!= ESex.None) newstring += $"\n        Sex: {slabel.Sex}";
+                    else newstring += $"\n        Sex: [Not set]";
+
+                    if (slabel.BirthDate != "") newstring += $"\n        BirthDate: {slabel.BirthDate}";
+                    else newstring += $"\n        BirthDate: [Not set]";
+
+                    if (slabel.FaceLocation != null) newstring += $"\n        Location: {slabel.FaceLocation[3]},{slabel.FaceLocation[2]},{slabel.FaceLocation[0]},{slabel.FaceLocation[1]}";
+                    else newstring += $"\n        Location: [Not set]";
+
+                    optionsToDelete.Add(newstring);
+                }
+                else if (label.labelType == "SpecialLabel")
+                {
+                    SpecialLabel slabel = (SpecialLabel)label;
+                    newstring += "\nSpecialLabel";
+
+                    if (slabel.GeographicLocation != null) newstring += $"\n        GeographicLocation: {slabel.GeographicLocation[0]}, {slabel.GeographicLocation[1]}";
+                    else newstring += $"\n        GeographicLocation: [Not set]";
+
+                    if (slabel.Address != null) newstring += $"\n        Address: {slabel.Address}";
+                    else newstring += $"\n        Address: [Not set]";
+
+                    if (slabel.Photographer != null) newstring += $"\n        Photographer: {slabel.Photographer}";
+                    else newstring += $"\n        Photographer: [Not set]";
+
+                    if (slabel.PhotoMotive != null) newstring += $"\n        PhotoMotive: {slabel.PhotoMotive}";
+                    else newstring += $"\n        PhotoMotive: [Not set]";
+
+                    if (slabel.Selfie == true) newstring += $"\n        Selfie: It is a Selfie";
+                    else newstring += $"\n        Selfie: It is not a Selfie";
+
+                    optionsToDelete.Add(newstring);
+                }
+            }
+
+
+            optionsToDelete.Add("Exit");
+            int intUsrWantsToDelete = GenerateMenu(optionsToDelete, null, description2, DeleteLabelTitle);
+
+            if (optionsToDelete[intUsrWantsToDelete] == "Exit") return;
+
+            imageToDeleteLabel.Labels.RemoveAt(intUsrWantsToDelete);
+            return;
+
+        }
+        
 
 
         private void AddLabel()
