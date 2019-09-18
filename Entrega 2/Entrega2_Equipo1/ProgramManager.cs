@@ -116,7 +116,214 @@ namespace Entrega2_Equipo1
         // WORKING ON THIS METHOD
         private void EditLabel()
         {
-            // WORKING HERE
+            Console.Clear();
+            List<string> EditLabelTitle = LoadBannerData("editlabel.txt");
+            List<string> EditLabelOptions1 = new List<string>();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
+            string description1 = "Please, select to which image you want to add the Label: ";
+            string description2 = "Please, select which label you would like to edit ";
+            //string addlabeldescription = "Please, select an option: ";
+            //List<string> AddLabelOptions2 = new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Done" };
+            List<string> optionsToEdit = new List<string>();
+
+            // We show all the images to the user, so he can choose which image he wants to edit
+            foreach (Image image in library.Images)
+            {
+                EditLabelOptions1.Add(image.Name);
+            }
+            EditLabelOptions1.Add("Exit");
+            if (EditLabelOptions1.Count == 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+                Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskeytocontinue);
+                Console.ReadKey();
+                return;
+            }
+            int numberOfTheImage = GenerateMenu(EditLabelOptions1, null, description1, EditLabelOptions1);
+
+            // If user selects Exit
+            if (EditLabelOptions1[numberOfTheImage] == "Exit") return;
+
+            // We get the image he wants to edit
+            Image imageToEditLabel = library.Images[numberOfTheImage];
+
+            foreach (Label label in imageToEditLabel.Labels)
+            {
+                string newstring = "";
+                if (label.labelType == "SimpleLabel")
+                {
+                    SimpleLabel slabel = (SimpleLabel)label;
+                    newstring += "\nSimpleLabel";
+                    newstring += $"\n        Sentence: {slabel.Sentence}";
+                    optionsToEdit.Add(newstring);
+                }
+                else if (label.labelType == "PersonLabel")
+                {
+                    PersonLabel slabel = (PersonLabel)label;
+                    newstring += "\nPersonLabel";
+
+                    if (slabel.Name != null) newstring += $"\n        Name: {slabel.Name}";
+                    else newstring += $"\n        Name: [Not set]";
+
+                    if (slabel.Surname != null) newstring += $"\n        Surname: {slabel.Surname}";
+                    else newstring += $"\n        Surname: [Not set]";
+
+                    if (slabel.Nationality != ENationality.None) newstring += $"\n        Nationality: {slabel.Nationality}";
+                    else newstring += $"\n        Nationality: [Not set]";
+
+                    if (slabel.EyesColor != EColor.None) newstring += $"\n        EyesColor: {slabel.EyesColor}";
+                    else newstring += $"\n        EyesColor: [Not set]";
+
+                    if (slabel.HairColor != EColor.None) newstring += $"\n        HairColor: {slabel.HairColor}";
+                    else newstring += $"\n        HairColor: [Not set]";
+
+                    if (slabel.Sex != ESex.None) newstring += $"\n        Sex: {slabel.Sex}";
+                    else newstring += $"\n        Sex: [Not set]";
+
+                    if (slabel.BirthDate != "") newstring += $"\n        BirthDate: {slabel.BirthDate}";
+                    else newstring += $"\n        BirthDate: [Not set]";
+
+                    if (slabel.FaceLocation != null) newstring += $"\n        Location: {slabel.FaceLocation[3]},{slabel.FaceLocation[2]},{slabel.FaceLocation[0]},{slabel.FaceLocation[1]}";
+                    else newstring += $"\n        Location: [Not set]";
+
+                    optionsToEdit.Add(newstring);
+                }
+                else if (label.labelType == "SpecialLabel")
+                {
+                    SpecialLabel slabel = (SpecialLabel)label;
+                    newstring += "\nSpecialLabel";
+
+                    if (slabel.GeographicLocation != null) newstring += $"\n        GeographicLocation: {slabel.GeographicLocation[0]}, {slabel.GeographicLocation[1]}";
+                    else newstring += $"\n        GeographicLocation: [Not set]";
+
+                    if (slabel.Address != null) newstring += $"\n        Address: {slabel.Address}";
+                    else newstring += $"\n        Address: [Not set]";
+
+                    if (slabel.Photographer != null) newstring += $"\n        Photographer: {slabel.Photographer}";
+                    else newstring += $"\n        Photographer: [Not set]";
+
+                    if (slabel.PhotoMotive != null) newstring += $"\n        PhotoMotive: {slabel.PhotoMotive}";
+                    else newstring += $"\n        PhotoMotive: [Not set]";
+
+                    if (slabel.Selfie == true) newstring += $"\n        Selfie: It is a Selfie";
+                    else newstring += $"\n        Selfie: It is not a Selfie";
+
+                    optionsToEdit.Add(newstring);
+                }
+            }
+            optionsToEdit.Add("Exit");
+
+            int intUsrWantsToEdit = GenerateMenu(optionsToEdit, null, description2, EditLabelTitle);
+
+            if (optionsToEdit[intUsrWantsToEdit] == "Exit") return;
+
+            Label labelUsrWants = imageToEditLabel.Labels[intUsrWantsToEdit];
+            string chooseWhatToDo = "Please, select what you want to edit: ";
+            switch (labelUsrWants.labelType)
+            {
+                case "SimpleLabel":
+                    
+                    string introduceTheTag = "Please, introduce the new tag: ";
+                    SimpleLabel silabel = (SimpleLabel)labelUsrWants;
+                    while (true)
+                    {
+
+                        List<string> optionsToEditSimpleLabel = new List<string>();
+                        string sentence = $"Sentence: {silabel.Sentence}";
+                        optionsToEditSimpleLabel.Add(sentence);
+                        optionsToEditSimpleLabel.Add("Done");
+                        int usrWants = GenerateMenu(optionsToEditSimpleLabel, null, chooseWhatToDo, EditLabelTitle);
+                        if (usrWants == 1) break;
+                        else
+                        {
+                            Console.Clear();
+                            foreach (string titlestring in EditLabelTitle)
+                            {
+                                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                                Console.WriteLine(titlestring);
+                            }
+                            Console.SetCursorPosition((Console.WindowWidth - introduceTheTag.Length) / 2, Console.CursorTop);
+                            Console.Write(introduceTheTag);
+                            string newtag = Console.ReadLine();
+                            silabel.Sentence = newtag;
+                            SaveLibrary();
+                        }
+                    }
+                    SaveLibrary();
+                    break;
+
+                case "PersonLabel":
+                    PersonLabel auxLabel = (PersonLabel)labelUsrWants;
+                    while (true)
+                    {
+                        string settedFaceLocation;
+                        if (auxLabel.FaceLocation != null) settedFaceLocation = "\t " + Convert.ToString(auxLabel.FaceLocation[0]) + "," + Convert.ToString(auxLabel.FaceLocation[1]) + "," + Convert.ToString(auxLabel.FaceLocation[2]) + "," + Convert.ToString(auxLabel.FaceLocation[3]);
+                        else settedFaceLocation = "\t [Not set]";
+                        string settedNationality;
+                        if (auxLabel.Nationality != ENationality.None) settedNationality = "\t " + Enum.GetName(typeof(ENationality), auxLabel.Nationality);
+                        else settedNationality = "\t [Not set]";
+                        string settedEyesColor;
+                        if (auxLabel.EyesColor != EColor.None) settedEyesColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.EyesColor);
+                        else settedEyesColor = "\t\t [Not set]";
+                        string settedHairColor;
+                        if (auxLabel.HairColor != EColor.None) settedHairColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.HairColor);
+                        else settedHairColor = "\t\t [Not set]";
+                        string settedSex;
+                        if (auxLabel.Sex != ESex.None) settedSex = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.Sex);
+                        else settedSex = "\t\t [Not set]";
+                        string settedName;
+                        if (auxLabel.Name == null) settedName = "\t\t [Not set]";
+                        else settedName = "\t\t " + auxLabel.Name;
+                        string settedSurname;
+                        if (auxLabel.Surname == null) settedSurname = "\t\t [Not set]";
+                        else settedSurname = "\t\t " + auxLabel.Surname;
+                        string settedBirthDate;
+                        if (auxLabel.BirthDate == "") settedBirthDate = "\t\t [Not set]";
+                        else settedBirthDate = "\t\t " + auxLabel.BirthDate;
+
+                        List<string> optionsToEditPersonLabel = new List<string>() { settedName, settedSurname, settedSex, settedNationality, settedHairColor, settedEyesColor, settedBirthDate, settedFaceLocation, "Done" };
+                        int usrWants2 = GenerateMenu(optionsToEditPersonLabel, null, chooseWhatToDo, EditLabelTitle);
+                        if (optionsToEditPersonLabel[usrWants2] == "Done") break;
+
+                        // Ya sabemos cual opcion quiere editar el usuario, ahora hacemos clear y mostramos el titulo
+                        Console.Clear();
+                        foreach (string titlestring in EditLabelTitle)
+                        {
+                            Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(titlestring);
+                        }
+                        
+
+                        // Aqui hay que mostrarle al usuario la pantalla de edicion del atributo que decidio editar, setearlo como nuevo atributo
+                        // y hacer saveLibrary. Hay que dejar que siga el while, no hacer break
+
+                    /*
+                     * Algo al estilo:
+                     * 
+                     * Solo hay que cambiar la frase que pide el nuevo atributo, mas nada. Solo cambia el facelocation, pues
+                     * hay que pedir 4 valores. En cambio en los demas, todos se parecen asi que se puede jugar con el string
+                     * if(optionsToEditPersonLabel[usrWants2] == settedFaceLocation
+                     * {
+                     * ... editas uno por uno los parametros de facelocation
+                     * }
+                     * else
+                     * {
+                     * ... 
+                     * }
+                     */
+
+                        
+                    }
+                    SaveLibrary();
+                    break;
+
+                case "SpecialLabel":
+                    SpecialLabel splabel = (SpecialLabel)labelUsrWants;
+                    break;
+            }
         }
 
 
