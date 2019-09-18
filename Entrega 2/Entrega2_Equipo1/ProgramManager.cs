@@ -177,12 +177,12 @@ namespace Entrega2_Equipo1
                 // In other case, we enter in the switch
                 switch (usrDecision1)
                 {
-                    // User wants to apply filters => WORKING HERE
+                    // User wants to apply filters => READY
                     case 0:
                         ApplyFilters();
                         break;
 
-                    // User wants to apply features
+                    // User wants to apply features => Falta esto
                     case 1:
                         break;
 
@@ -196,21 +196,510 @@ namespace Entrega2_Equipo1
                         DeleteFromEditingArea();
                         break;
 
-                    // User wants to export images from the editing area
+                    // User wants to export images from the editing area => Falta esto
                     case 4:
                         break;
                 }
             }
         }
 
-        // WORKING ON THIS METHOD
+
+        
+        // To apply the filters
         private void ApplyFilters()
         {
+            while (true)
+            {
+                // Verify that the working area is not empty
+                string presskey = "Press any key to continue...";
+                string emptyWorkingArea = "Your Editing Area is empty";
+                if (producer.imagesInTheWorkingArea().Count == 0)
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(emptyWorkingArea);
+                    Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(presskey);
+                    Console.ReadKey();
+                    return;
+                }
 
+
+                // Load the title and the options for the menu
+                string choosefilter = "Please, choose the Filter you want to apply: ";
+                List<string> ApplyFiltersTitle = LoadBannerData("applyfilters.txt");
+                List<string> options = new List<string>() { "BlackNWhiteFilter", "BrightnessFilter", "ColorFilter",
+                                                        "InvertFiler", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
+                                                        "SepiaFilter", "WindowsFilter","AutomaticAdjustmentFilter", "Exit"};
+
+                // Ask user what he wants to do, and if he wants to exit, we exit
+                int usrDec = GenerateMenu(options, null, choosefilter, ApplyFiltersTitle);
+                if (options[usrDec] == "Exit") break; ;
+
+
+                // First, we get the names of the images user wants to apply the filter
+                List<string> filenames = ChooseWhichImagesWantToApplyFilter();
+
+
+                // Switch for the usrDecision
+                switch (usrDec)
+                {
+                    // Apply blacknwhite filter
+                    case 0:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.BlackNWhiteFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+
+                    // Apply brightness filter
+                    case 1:
+                        // We get the level of brightness to apply
+                        int brightnesslevel = ChooseLevelOfBrightness();
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.BrightnessFilter, default(Color), brightnesslevel);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+
+                    // Apply color filter
+                    case 2:
+                        // We get the color that user wants
+                        Color usrColor = ChooseColor();
+                        // We apply the filter
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.ColorFilter, usrColor);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+
+                    // Apply invert filter
+                    case 3:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.InvertFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+
+                    // Apply mirror filter
+                    case 4:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.MirrorFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+                    // Apply OldFilm Filter
+                    case 5:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.OldFilmFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+                    // Apply RotateFlip filter
+                    case 6:
+                        // We get the rotateFlip type
+                        RotateFlipType rotateType = ChooseRotateFlipType();
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.RotateFlipFilter, default(Color), 0, 0, rotateType);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+                    // Apply SepiaFilter
+                    case 7:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.SepiaFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+                    // Apply WindowsFilter
+                    case 8:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.WindowsFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+
+                    // Apply AutomaticAdjustmentFilter
+                    case 9:
+                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        {
+                            foreach (string filename in filenames)
+                            {
+                                if (image.Name == filename)
+                                {
+                                    // First, we apply the filter to the image
+                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.AutomaticAdjustmentFilter);
+                                    // And then, we change the bitmap of the selectedImage
+                                    image.BitmapImage = bitmap;
+                                    ShowDoneApplyingFor(image.Name);
+                                }
+                            }
+                        }
+                        break;
+                }
+                Console.WriteLine("\n");
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+            }
+            return;
         }
 
 
+
+        // To choose the rotateFlipType
+        private RotateFlipType ChooseRotateFlipType()
+        {
+            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> options = new List<string>() { "Rotate180FlipXY", "Rotate90FlipNone", "Rotate270FlipXY",
+                                                        "Rotate180FlipNone", "RotateNoneFlipXY", "Rotate270FlipNone",
+                                                        "Rotate90FlipXY", "RotateNoneFlipX", "Rotate180FlipY", "Rotate90FlipX",
+                                                        "Rotate270FlipY", "Rotate180FlipX", "RotateNoneFlipY", "Rotate270FlipX",
+                                                        "Rotate90FlipY" };
+
+            int usrDec = GenerateMenu(options, null, "Please, choose the type of Rotation and Flip: ", applyfiltertitle);
+            return (RotateFlipType)Enum.Parse(typeof(RotateFlipType), options[usrDec]);
+        }
+
+
+        // To choose the color 
+        private Color ChooseColor()
+        {
+            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            Color returningColor = Color.FromArgb(0, 0, 0);
+            int usrWants = GenerateMenu(new List<string>() { "Select color from list", "Select a custom color" }, null, "Please, select an option: ", applyfiltertitle);
+            switch (usrWants)
+            {
+                case 0:
+                    int numberOfTheColor = GenerateMenu(new List<string>() { "Red", "Green", "Yellow", "Blue" }, null, "Please, select a color", applyfiltertitle);
+                    switch (numberOfTheColor)
+                    {
+                        case 0:
+                            returningColor = Color.FromArgb(255, 0, 0);
+                            break;
+                        case 1:
+                            returningColor = Color.FromArgb(0, 255, 0);
+                            break;
+                        case 2:
+                            returningColor = Color.FromArgb(255, 255, 0);
+                            break;
+                        case 3:
+                            returningColor = Color.FromArgb(0, 0, 255);
+                            break;
+                    }
+                    break;
+                case 1:
+                    while (true)
+                    {
+                        Console.Clear();
+                        string presskey = "Press any key to continue...";
+                        string valueNotValid = "[!] ERROR: Color not valid";
+                        string introduceTheValues = "Please, introduce the values in format R,G,B separated by comma <0,255>: ";
+                        int R, G, B;
+                        foreach (string titlestring in applyfiltertitle)
+                        {
+                            Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(titlestring);
+                        }
+                        Console.WriteLine("\n\n");
+                        Console.SetCursorPosition((Console.WindowWidth - introduceTheValues.Length) / 2, Console.CursorTop);
+                        Console.Write(introduceTheValues);
+                        string[] separatedvalues = Console.ReadLine().Split(',');
+                        try
+                        {
+                            R = Convert.ToInt32(separatedvalues[0]);
+                            if (R < 0 || R > 255) throw new Exception("[!] ERROR: Red value not valid");
+                            G = Convert.ToInt32(separatedvalues[1]);
+                            if (G < 0 || G > 255) throw new Exception("[!] ERROR: Green value not valid");
+                            B = Convert.ToInt32(separatedvalues[2]);
+                            if (B < 0 || B > 255) throw new Exception("[!] ERROR: Blue value not valid");
+                            returningColor = Color.FromArgb(R, G, B);
+                            break;
+                        }
+                        catch
+                        {
+                            Console.SetCursorPosition((Console.WindowWidth - valueNotValid.Length) / 2, Console.CursorTop);
+                            Console.Write(valueNotValid);
+                            Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                            Console.Write(presskey);
+                            Console.ReadKey();
+                        }
+                    }
+                    break;
+            }
+            return returningColor;
+        }
+
+
+        // To choose the level of brightness
+        private int ChooseLevelOfBrightness()
+        { 
+            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            string presskey = "Press any key to continue...";
+            string valueNotValid = "[!] ERROR: Brightness value not valid";
+            string chooselevel = "Please, introduce the level of brightness <-255, 255>: ";
+            int chosen;
+            while (true)
+            {
+                Console.Clear();
+                foreach (string titlestring in applyfiltertitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+
+                Console.SetCursorPosition((Console.WindowWidth - chooselevel.Length) / 2, Console.CursorTop);
+                Console.Write(chooselevel);
+
+                try
+                {
+                    chosen = Convert.ToInt32(Console.ReadLine());
+                    if (chosen < -255 || chosen > 255) throw new Exception("[!] ERROR: Value not valid");
+                    break;
+                }
+                catch
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - valueNotValid.Length) / 2, Console.CursorTop);
+                    Console.Write(valueNotValid);
+                    Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                    Console.Write(presskey);
+                }
+            }
+            return chosen;
+        }
         
+
+        // Show the message of done when applying filters
+        private void ShowDoneApplyingFor(string name)
+        {
+            string applyed = "Done on ";
+            string dots = "...";
+            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+
+            Console.Clear();
+            string completeMessage = applyed + name + " !";
+
+            foreach (string titlestring in applyfiltertitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - completeMessage.Length) / 2, Console.CursorTop);
+            Console.WriteLine(completeMessage);
+
+            System.Threading.Thread.Sleep(500);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+        }
+
+
+        // Returns the list of the names of the image sthat the user wants to apply the filter
+        private List<string> ChooseWhichImagesWantToApplyFilter()
+        {
+            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            string choosefiles = "Please, choose to which images you want to apply the filter";
+            string chosenfiles = "Chosen images: ";
+            List<string> chosenImages = new List<string>();
+            List<string> possibleToChoose = new List<string>();
+
+            // Load the possibilities for the user
+            foreach (Image image in producer.imagesInTheWorkingArea())
+            {
+                possibleToChoose.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+            }
+
+            possibleToChoose.Add("Continue");
+
+            while (true)
+            {
+                int selectedOption = 0;
+                bool _continue = true;
+                while (_continue == true)
+                {
+                    // Clear the screen and show the title
+                    Console.Clear();
+                    int i = 1;
+                    foreach (string titlestring in applyfiltertitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+
+                    // Show the chosen images till the moment
+                    Console.SetCursorPosition((Console.WindowWidth - chosenfiles.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(chosenfiles);
+                    foreach (string chosenimage in chosenImages)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - chosenimage.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(chosenimage);
+                    }
+
+                    // Show the options to the user
+                    Console.WriteLine("\n\n");
+                    Console.SetCursorPosition((Console.WindowWidth - choosefiles.Length) / 10, Console.CursorTop);
+                    Console.WriteLine(choosefiles);
+
+
+                    Console.WriteLine("\n\n");
+                    foreach (string option in possibleToChoose)
+                    {
+                        if (selectedOption == i - 1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            Console.WriteLine("\n");
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
+                    }
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > possibleToChoose.Count - 1)
+                            {
+                                selectedOption = possibleToChoose.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue = false;
+                            break;
+                    }
+
+                }
+
+
+                // If user wants to exit, we return the chosen images
+                if (possibleToChoose[selectedOption] == "Continue") return chosenImages;
+
+
+                // Now, selectedOption has the number of the file that the user wants to apply the filter
+                // Whe add to the chosenImages the name of the file
+                Image image2 = producer.imagesInTheWorkingArea()[selectedOption];
+                chosenImages.Add($"Name: {image2.Name} - Calification: {image2.Calification} - Resolution: {image2.Resolution[0]}x{image2.Resolution[1]} - AspectRatio: {image2.AspectRatio[0]}x{image2.AspectRatio[1]} - Clear: {image2.DarkClear}\n");
+
+                // And delete the option from the possibleToChoose
+                possibleToChoose.RemoveAt(selectedOption);
+            }
+        }
+
+
+
         private void DeleteFromEditingArea()
         {
             string presskey = "Press any key to continue...";
