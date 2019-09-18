@@ -25,6 +25,12 @@ namespace Entrega2_Equipo1
         }
 
 
+        public void DeleteImageInTheWorkingArea(int position)
+        {
+            WorkingArea.WorkingAreaImages.RemoveAt(position);
+            return;
+        }
+
         public List<Image> imagesInTheWorkingArea()
         {
             return this.WorkingArea.WorkingAreaImages;

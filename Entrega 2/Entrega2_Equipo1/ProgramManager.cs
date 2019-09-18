@@ -76,26 +76,9 @@ namespace Entrega2_Equipo1
         }
 
 
+        // WORKING ON THIS METHOD
         private void EditingArea()
         {
-
-            /* ----------------------------------------------------------------------
-             *                  EDITING AREA
-             *                  
-             *    IMAGES IN THE WORKING AREA: lista de imagenes en el working area (DEBE ESTAR EN WORKINGAREA)
-             *    
-             *    1. APPLY FILTERS
-             *    2. APPLY FEATURES
-             *    3. IMPORT IMAGES TO THE EDITING AREA
-             *    4. DELETE IMAGES FROM THE EDITING AREA
-             *    5. EXPORT IMAGES FROM THE EDITING AREA
-             *    6. EXIT
-             *    
-             *    Las fotos editadas deberian agregarse al working area, y desde ahi es que se exportan a la libreria
-             * ----------------------------------------------------------------------
-             * 
-             */
-
 
             while (true)
             {
@@ -118,6 +101,7 @@ namespace Entrega2_Equipo1
                 int selectedOption = 0;
 
                 bool _continue2 = true;
+
                 // Show the menu and gets the number selected
                 while (_continue2 == true)
                 {
@@ -193,21 +177,23 @@ namespace Entrega2_Equipo1
                 // In other case, we enter in the switch
                 switch (usrDecision1)
                 {
-                    // User wants to apply filters
+                    // User wants to apply filters => WORKING HERE
                     case 0:
+                        ApplyFilters();
                         break;
 
                     // User wants to apply features
                     case 1:
                         break;
 
-                    // User wants to import images to the editing area => WORKING HERE
+                    // User wants to import images to the editing area => READY
                     case 2:
                         ImportToEditingArea();
                         break;
 
-                    // User wants to delete images from the editing area
+                    // User wants to delete images from the editing area => READY
                     case 3:
+                        DeleteFromEditingArea();
                         break;
 
                     // User wants to export images from the editing area
@@ -217,11 +203,77 @@ namespace Entrega2_Equipo1
             }
         }
 
+        // WORKING ON THIS METHOD
+        private void ApplyFilters()
+        {
+
+        }
+
+
+        
+        private void DeleteFromEditingArea()
+        {
+            string presskey = "Press any key to continue...";
+            string donthaveimages = "You dont have any images to delete in the Editing Area";
+            Console.Clear();
+            List<string> deletefromeditingareatitle = LoadBannerData("deletefromeditingarea.txt");
+            while (true)
+            {
+                List<string> options = new List<string>();
+                foreach (Image image in producer.imagesInTheWorkingArea())
+                {
+                    options.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+                }
+                options.Add("Exit");
+                if (options.Count == 1)
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - donthaveimages.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(donthaveimages);
+                    Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(presskey);
+                    Console.ReadKey();
+                    return;
+                }
+                int usrWants = GenerateMenu(options, null, "Please, select which image you want to delete: ", deletefromeditingareatitle);
+                if (options[usrWants] == "Exit") break;
+                else
+                {
+                    producer.DeleteImageInTheWorkingArea(usrWants);
+                }
+                string dots = "...\n";
+                string success = "Image successfully eliminated from Editing Area!";
+
+                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+                Console.WriteLine(dots);
+
+                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+                Console.WriteLine(dots);
+
+                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - success.Length) / 2, Console.CursorTop);
+                Console.WriteLine(success);
+
+                Console.WriteLine();
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+            }
+
+            return;
+            
+        }
+
 
         private void ImportToEditingArea()
         {
             Console.Clear();
-            List<string> EditingAreaTitle = LoadBannerData("editingarea.txt");
+            List<string> EditingAreaTitle = LoadBannerData("importeditingarea.txt");
             List<Image> imagesSelected = new List<Image>();
             List<string> imagesToAdd = new List<string>();
             string curr = "Images selected: \n";
@@ -311,19 +363,6 @@ namespace Entrega2_Equipo1
                             break;
                     }
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 int usrDecision = selectedOption;
                 
