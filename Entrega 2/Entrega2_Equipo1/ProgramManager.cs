@@ -104,7 +104,11 @@ namespace Entrega2_Equipo1
                     case 3:
                         DeleteLabel();
                         break;
-                    
+
+                    // User wants to set a new calification
+                    case 4:
+                        SetCalification(); // WORKING HERE
+                        break;
 
                     // FALTAN LOS DEMAS CASES
                     case 6:
@@ -112,6 +116,78 @@ namespace Entrega2_Equipo1
                         break;
                 }
             }
+        }
+
+        private void SetCalification()
+        {
+            Console.Clear();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
+            string description1 = "Please, select to which image you want to edit the Calification: ";
+            string calificationNotValid = "[!] ERROR: Calification not valid";
+            string presskey = "Press any key to continue...";
+            List<string> SetCalificationTitle = LoadBannerData("setcalification.txt");
+            List<string> SetCalificationOptions1 = new List<string>();
+            foreach (Image image in library.Images)
+            {
+                SetCalificationOptions1.Add(image.Name);
+            }
+            SetCalificationOptions1.Add("Exit");
+            if (SetCalificationOptions1.Count == 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+                Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskeytocontinue);
+                Console.ReadKey();
+                return;
+            }
+            int numberOfTheImage = GenerateMenu(SetCalificationOptions1, null, description1, SetCalificationTitle);
+            // If user selects Exit
+            if (SetCalificationOptions1[numberOfTheImage] == "Exit") return;
+
+            // We get the image he wants to edit
+            Image imageToEditCalification = library.Images[numberOfTheImage];
+
+            while (true)
+            {
+                // Now, we know which image user wants to edit
+                Console.Clear();
+                foreach (string titlestring in SetCalificationTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+                string setNewCalificationDescription = "Please, introduce the new Calification <1-5> (-1 to exit): ";
+                Console.SetCursorPosition((Console.WindowWidth - setNewCalificationDescription.Length) / 2, Console.CursorTop);
+                Console.Write(setNewCalificationDescription);
+                string snewcal = Console.ReadLine();
+                try
+                {
+                    int newcal = Convert.ToInt32(snewcal);
+                    if (newcal == -1)
+                    {
+                        break;
+                    }
+                    if (newcal < 1 || newcal > 5)
+                    {
+                        throw new Exception("[!] ERROR: Calification not valid");
+                    }
+                    imageToEditCalification.Calification = newcal;
+                    SaveLibrary();
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - calificationNotValid.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(calificationNotValid);
+                    Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(presskey);
+                    Console.ReadKey();
+                }
+            }
+            
         }
 
 
@@ -578,7 +654,6 @@ namespace Entrega2_Equipo1
                         // Show the user the screen to modify the attribute
                         string enterNew = "Please, enter the new ";
                         string newaux = "";
-                        string presskey = "Please, press any key to continue";
                         switch (usrWants2)
                         {
                             case 0:
@@ -680,7 +755,6 @@ namespace Entrega2_Equipo1
         }
 
 
-        
         private void DeleteLabel()
         {
             Console.Clear();
