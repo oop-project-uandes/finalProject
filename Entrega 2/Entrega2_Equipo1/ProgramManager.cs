@@ -105,9 +105,13 @@ namespace Entrega2_Equipo1
                         DeleteLabel();
                         break;
 
-                    // User wants to set a new calification
+                    // User wants to set a new calification => READY
                     case 4:
-                        SetCalification(); // WORKING HERE
+                        SetCalification();
+                        break;
+
+                    case 5:
+                        DeleteImage();
                         break;
 
                     // FALTAN LOS DEMAS CASES
@@ -117,6 +121,63 @@ namespace Entrega2_Equipo1
                 }
             }
         }
+
+
+        private void DeleteImage()
+        {
+            Console.Clear();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
+            string description1 = "Please, select wich image you want to delete: ";
+            
+            List<string> DeleteImageTitle = LoadBannerData("deleteimage.txt");
+            List<string> DeleteImageOptions1 = new List<string>();
+            foreach (Image image in library.Images)
+            {
+                DeleteImageOptions1.Add(image.Name);
+            }
+            DeleteImageOptions1.Add("Exit");
+            if (DeleteImageOptions1.Count == 1)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+                Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskeytocontinue);
+                Console.ReadKey();
+                return;
+            }
+            int numberOfTheImage = GenerateMenu(DeleteImageOptions1, null, description1, DeleteImageTitle);
+            // If user selects Exit
+            if (DeleteImageOptions1[numberOfTheImage] == "Exit") return;
+
+            library.Images.RemoveAt(numberOfTheImage);
+            SaveLibrary();
+
+            string dots = "...\n";
+            string success = "Image successfully eliminated!";
+            string presskey = "Please, press any key to continue...";
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+
+            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - success.Length) / 2, Console.CursorTop);
+            Console.WriteLine(success);
+
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskey);
+            Console.ReadKey();
+        }
+
 
         private void SetCalification()
         {
@@ -191,7 +252,6 @@ namespace Entrega2_Equipo1
         }
 
 
-        
         private void EditLabel()
         {
             Console.Clear();
