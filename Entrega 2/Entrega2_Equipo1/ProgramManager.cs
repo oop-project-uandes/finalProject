@@ -17,6 +17,9 @@ namespace Entrega2_Equipo1
         private bool _continue = true;
         private int startingOption;
         
+        
+        // TODO: AL FINAL EL USUARIO DEBE SER CAPAZ DE DEJAR PARAMETROS EN LOS LABELS SIN DEFINIR (POR EJEMPLO, 
+        // EN ADD LABEL Y EN EDIT LABEL, SI SE INTRODUCE None EN CUALQUIERA DE LOS PARAMETROS ESTE DEBE QUEDAR SIN DEFINIR
 
         public void Run()
         {
@@ -92,7 +95,7 @@ namespace Entrega2_Equipo1
                         AddLabel();
                         break;
 
-                    // User wants to edit a label => WORKING HERE
+                    // User wants to edit a label => READY
                     case 2:
                         EditLabel();
                         break;
@@ -102,7 +105,6 @@ namespace Entrega2_Equipo1
                         DeleteLabel();
                         break;
                     
-
 
                     // FALTAN LOS DEMAS CASES
                     case 6:
@@ -131,6 +133,7 @@ namespace Entrega2_Equipo1
             {
                 EditLabelOptions1.Add(image.Name);
             }
+
             EditLabelOptions1.Add("Exit");
             if (EditLabelOptions1.Count == 1)
             {
@@ -537,7 +540,141 @@ namespace Entrega2_Equipo1
                     break;
 
                 case "SpecialLabel":
-                    SpecialLabel splabel = (SpecialLabel)labelUsrWants;
+                    SpecialLabel auxLabel2 = (SpecialLabel)labelUsrWants;
+                    while (true)
+                    {
+                        string settedGeographicLocation;
+                        if (auxLabel2.GeographicLocation != null) settedGeographicLocation = "GeographicLocation:\t" + Convert.ToString(auxLabel2.GeographicLocation[0]) + "," + Convert.ToString(auxLabel2.GeographicLocation[1]);
+                        else settedGeographicLocation = "GeographicLocation:\t[Not set]";
+
+                        string settedAddress;
+                        if (auxLabel2.Address == null) settedAddress = "Address:\t\t[Not set]";
+                        else settedAddress = "Address:\t\t" + auxLabel2.Address;
+
+                        string settedPhotographer;
+                        if (auxLabel2.Photographer== null) settedPhotographer = "Photographer:\t[Not set]";
+                        else settedPhotographer = "Photographer:\t" + auxLabel2.Photographer;
+
+                        string settedPhotoMotive;
+                        if (auxLabel2.PhotoMotive == null) settedPhotoMotive = "PhotoMotive:\t\t[Not set]";
+                        else settedPhotoMotive = "PhotoMotive:\t\t" + auxLabel2.PhotoMotive;
+
+                        string settedSelfie;
+                        if (auxLabel2.Selfie == false) settedSelfie = "Selfie:\t\tIt is not a Selfie";
+                        else settedSelfie = "Selfie:\t\tIt is a Selfie";
+
+                        List<string> optionsToEditSpecialLabel = new List<string>() { settedGeographicLocation, settedAddress, settedPhotographer, settedPhotoMotive, settedSelfie, "Done" };
+                        int usrWants2 = GenerateMenu(optionsToEditSpecialLabel, null, chooseWhatToDo, EditLabelTitle);
+                        if (optionsToEditSpecialLabel[usrWants2] == "Done") break;
+
+                        // Ya sabemos cual opcion quiere editar el usuario, ahora hacemos clear y mostramos el titulo
+                        Console.Clear();
+                        foreach (string titlestring in EditLabelTitle)
+                        {
+                            Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                            Console.WriteLine(titlestring);
+                        }
+
+                        // Show the user the screen to modify the attribute
+                        string enterNew = "Please, enter the new ";
+                        string newaux = "";
+                        string presskey = "Please, press any key to continue";
+                        switch (usrWants2)
+                        {
+                            case 0:
+                                int latitude, longitude;
+                                while (true)
+                                {
+                                    Console.Clear();
+                                    foreach (string titlestring in EditLabelTitle)
+                                    {
+                                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                                        Console.WriteLine(titlestring);
+                                    }
+
+                                    string AddLatitudeSelection = "Please, introduce the LATITUDE parameter <-90, 90>: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddLatitudeSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddLatitudeSelection);
+                                    try
+                                    {
+                                        latitude = Convert.ToInt32(Console.ReadLine());
+                                        if (latitude < -90 || latitude > 90)
+                                        {
+                                            throw new Exception("LATITUDE parameter not valid");
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("\n");
+                                        string LatitudeNotValid = "[!] ERROR: LATITUDE parameter not valid, press any key to continue...";
+                                        Console.SetCursorPosition((Console.WindowWidth - LatitudeNotValid.Length) / 2, Console.CursorTop);
+                                        Console.Write(LatitudeNotValid);
+                                        Console.ReadKey();
+                                        continue;
+                                    }
+
+
+                                    string AddLongitudeSelection = "Please, introduce the LONGITUDE parameter <-180, 180>: ";
+                                    Console.SetCursorPosition((Console.WindowWidth - AddLongitudeSelection.Length) / 2, Console.CursorTop);
+                                    Console.Write(AddLongitudeSelection);
+                                    try
+                                    {
+                                        longitude = Convert.ToInt32(Console.ReadLine());
+                                        if (longitude < -180 || longitude > 180)
+                                        {
+                                            throw new Exception("LONGITUDE parameter not valid");
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Console.WriteLine("\n");
+                                        string LongitudeNotValid = "[!] ERROR: LONGITUDE parameter not valid, press any key to continue...";
+                                        Console.SetCursorPosition((Console.WindowWidth - LongitudeNotValid.Length) / 2, Console.CursorTop);
+                                        Console.Write(LongitudeNotValid);
+                                        Console.ReadKey();
+                                        continue;
+                                    }
+                                    auxLabel2.GeographicLocation = new double[] { latitude, longitude };
+                                    break;
+                                }
+                                break;
+                            case 1:
+                                newaux = enterNew + "Address: ";
+                                Console.SetCursorPosition((Console.WindowWidth - newaux.Length) / 2, Console.CursorTop);
+                                Console.Write(newaux);
+                                newaux = Console.ReadLine();
+                                auxLabel2.Address = newaux;
+                                break;
+
+                            case 2:
+                                newaux = enterNew + "Photographer: ";
+                                Console.SetCursorPosition((Console.WindowWidth - newaux.Length) / 2, Console.CursorTop);
+                                Console.Write(newaux);
+                                newaux = Console.ReadLine();
+                                auxLabel2.Photographer = newaux;
+                                break;
+                            case 3:
+                                newaux = enterNew + "PhotoMotive: ";
+                                Console.SetCursorPosition((Console.WindowWidth - newaux.Length) / 2, Console.CursorTop);
+                                Console.Write(newaux);
+                                newaux = Console.ReadLine();
+                                auxLabel2.PhotoMotive = newaux;
+                                break;
+                            case 4:
+                                newaux = enterNew + "Selfie: ";
+                                int usrDec = GenerateMenu(new List<string>() { "It is a Selfie", "It is not a Selfie" }, null, newaux, EditLabelTitle);
+                                if (usrDec == 0)
+                                {
+                                    auxLabel2.Selfie = true;
+                                }
+                                else auxLabel2.Selfie = false;
+                                break;
+                        }
+                        SaveLibrary();
+
+
+                    }
+                    SaveLibrary();
                     break;
             }
         }
@@ -681,7 +818,7 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(AddLabelOptions1, null, description1, AddLabelOptions1);
+            int numberOfTheImage = GenerateMenu(AddLabelOptions1, null, description1, AddLabelTitle);
 
             // If user selects Exit
             if (AddLabelOptions1[numberOfTheImage] == "Exit") return;
