@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class Producer
     {
         private WorkingArea WorkingArea;
@@ -18,9 +19,61 @@ namespace Entrega2_Equipo1
             this.WorkingArea = new WorkingArea();
             this.tools = new List<Tool>() { new Brush(), new Merger(), new Resizer(),
                 new Scissors(), new Zoom(), new AddCensorship(), new AddImage(),
-                new AddShape(), new AddText(), new WatsonAnalizer(), new AutomaticAdjustmentFilter(),
+                new AddShape(), new AddText(), new AutomaticAdjustmentFilter(),
                 new BlackNWhiteFilter(), new BrightnessFilter(), new ColorFilter(), new InvertFilter(),
                 new MirrorFilter(), new OldFilmFilter(), new RotateFlipFilter(), new SepiaFilter(), new WindowsFilter()};
+        }
+
+
+        public List<Image> imagesInTheWorkingArea()
+        {
+            return this.WorkingArea.WorkingAreaImages;
+        }
+
+        public void LoadWatsonAnalyzer()
+        {
+            this.tools.Add(new WatsonAnalizer());
+        }
+
+        public void DeleteWatsonAnalyzer()
+        {
+            this.tools.RemoveAt(19);
+        }
+
+        public void LoadImagesToWorkingArea(List<Image> images)
+        {
+            List<Image> workingAreaImages = new List<Image>();
+            foreach (Image image in images)
+            {
+                List<Label> listLabelCopy = new List<Label>();
+                foreach (Label label in image.Labels)
+                {
+                    if (label.labelType == "SimpleLabel")
+                    {
+                        SimpleLabel label2 = (SimpleLabel)label;
+                        listLabelCopy.Add(new SimpleLabel(label2.Sentence));
+                    }
+                    else if (label.labelType == "PersonLabel")
+                    {
+                        PersonLabel label2 = (PersonLabel)label;
+                        listLabelCopy.Add(new PersonLabel(label2.Name, label2.FaceLocation, label2.Surname, label2.Nationality, label2.EyesColor, label2.HairColor, label2.Sex, label2.BirthDate, label2.SerialNumber));
+                    }
+                    else if (label.labelType == "SpecialLabel")
+                    {
+                        SpecialLabel label2 = (SpecialLabel)label;
+                        listLabelCopy.Add(new SpecialLabel(label2.GeographicLocation, label2.Address, label2.Photographer, label2.PhotoMotive, label2.Selfie, label2.SerialNumber));
+                    }
+                }
+
+                Image newImage = new Image(image.Name, listLabelCopy, image.Calification, image.BitmapImage, image.Resolution, image.AspectRatio, image.DarkClear, image.Exif);
+                workingAreaImages.Add(newImage);
+            }
+            foreach (Image image in workingAreaImages)
+            {
+                this.WorkingArea.WorkingAreaImages.Add(image);
+            }
+
+            return;
         }
 
 
@@ -105,7 +158,7 @@ namespace Entrega2_Equipo1
         }
 
         public System.Drawing.Bitmap ApplyFilter(Image image ,EFilter filtro, Color color = default(Color), int brightness = 0, int noise = 60, 
-            RotateFlipType RFT = RotateFlipType.RotateNoneFlipNone, string Texto = null)
+            RotateFlipType RFT = RotateFlipType.RotateNoneFlipNone)
         {   
             switch (filtro)
             {
@@ -125,7 +178,7 @@ namespace Entrega2_Equipo1
                     ColorFilter CF = new ColorFilter();
                     return CF.ApplyFilter(image.BitmapImage, color);
                 
-                case EFilter.InverFilter:
+                case EFilter.InvertFilter:
                     InvertFilter IF = new InvertFilter();
                     return IF.ApplyFilter(image.BitmapImage);
 

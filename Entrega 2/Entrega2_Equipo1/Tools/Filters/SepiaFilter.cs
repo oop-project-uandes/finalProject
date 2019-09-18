@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class SepiaFilter : Tool
     {
         public SepiaFilter() { }

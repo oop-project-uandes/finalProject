@@ -205,7 +205,7 @@
     <Compile Include="Library.cs" />
     <Compile Include="Producer.cs" />
     <Compile Include="ProgramManager.cs" />
-    <Compile Include="Tools\Brush.cs" />
+    <Compile Include="Tools\Features\Brush.cs" />
     <Compile Include="Tools\Features\AddImage.cs" />
     <Compile Include="Tools\Features\AddShape.cs" />
     <Compile Include="Tools\Features\AddText.cs" />
@@ -219,8 +219,8 @@
     <Compile Include="Tools\Filters\ColorFilter.cs" />
     <Compile Include="Tools\Filters\InvertFilter.cs" />
     <Compile Include="Tools\Filters\RotateFlipFilter.cs" />
-    <Compile Include="Tools\Merger.cs" />
-    <Compile Include="Tools\Resizer.cs" />
+    <Compile Include="Tools\Features\Merger.cs" />
+    <Compile Include="Tools\Features\Resizer.cs" />
     <Compile Include="Tools\Scissors.cs" />
     <Compile Include="Tools\Features\WatsonAnalizer.cs" />
     <Compile Include="Tools\Filters\AutomaticAdjustmentFilter.cs" />
@@ -231,7 +231,7 @@
     <Compile Include="Tools\Filters\WindowsFilter.cs" />
     <Compile Include="Searcher.cs" />
     <Compile Include="Tools\Tool.cs" />
-    <Compile Include="Tools\Zoom.cs" />
+    <Compile Include="Tools\Features\Zoom.cs" />
     <Compile Include="WorkingArea.cs" />
   </ItemGroup>
   <ItemGroup>

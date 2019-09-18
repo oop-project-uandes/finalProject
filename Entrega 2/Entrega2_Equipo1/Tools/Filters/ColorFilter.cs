@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class ColorFilter : Tool
     {
         public Bitmap ApplyFilter(Bitmap image, EColorFilterTypes type)

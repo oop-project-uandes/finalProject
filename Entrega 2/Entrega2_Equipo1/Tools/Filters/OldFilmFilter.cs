@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class OldFilmFilter : Tool
     {
         public OldFilmFilter() { } 

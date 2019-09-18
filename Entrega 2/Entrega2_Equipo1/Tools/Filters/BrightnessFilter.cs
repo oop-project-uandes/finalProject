@@ -7,6 +7,7 @@ using System.Drawing;
 
 namespace Entrega2_Equipo1
 {
+    [Serializable]
     public class BrightnessFilter : Tool
     {
         public BrightnessFilter() { }

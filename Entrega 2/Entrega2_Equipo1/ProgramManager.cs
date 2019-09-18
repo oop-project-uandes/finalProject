@@ -14,6 +14,7 @@ namespace Entrega2_Equipo1
         private Library library;
         private Producer producer;
         private readonly string DEFAULT_LIBRARY_PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\library.bin";
+        private readonly string DEFAULT_PRODUCER_PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\producer.bin";
         private bool _continue = true;
         private int startingOption;
         
@@ -25,7 +26,7 @@ namespace Entrega2_Equipo1
         {
             ShowPresentation();
             LoadingLibraryManager();
-            this.producer = new Producer();
+            LoadingProducerManager();
             while (this._continue == true)
             {
                 this.startingOption = StartingMenu();
@@ -45,10 +46,11 @@ namespace Entrega2_Equipo1
 
                     // Editing Area (Apply filters, features, watson, slideshares, etc)
                     case 2:
-
+                        EditingArea();
                         break;
 
-                    // Show library, add elements or erase elements, add or remove labels. Por ahora solo sirve para mostrar la libreria
+                    // Show library, add elements or erase elements, add or remove labels.
+                    // READY
                     case 3:
                         ManageLibrary();
                         break;
@@ -68,12 +70,273 @@ namespace Entrega2_Equipo1
                 }
             }
             SaveLibrary();
+            SaveProducer();
             ShowGoodbye();
             return;
         }
 
 
-        // TRABAJANDO EN ESTE METODO
+        private void EditingArea()
+        {
+
+            /* ----------------------------------------------------------------------
+             *                  EDITING AREA
+             *                  
+             *    IMAGES IN THE WORKING AREA: lista de imagenes en el working area (DEBE ESTAR EN WORKINGAREA)
+             *    
+             *    1. APPLY FILTERS
+             *    2. APPLY FEATURES
+             *    3. IMPORT IMAGES TO THE EDITING AREA
+             *    4. DELETE IMAGES FROM THE EDITING AREA
+             *    5. EXPORT IMAGES FROM THE EDITING AREA
+             *    6. EXIT
+             *    
+             *    Las fotos editadas deberian agregarse al working area, y desde ahi es que se exportan a la libreria
+             * ----------------------------------------------------------------------
+             * 
+             */
+
+
+            while (true)
+            {
+                // Show the menu of the editing area, with the images currently loaded
+                Console.Clear();
+                List<string> EditingAreaTitle = LoadBannerData("editingarea.txt");
+                string curr = "Images currently in the Working Area: \n";
+                List<string> imagesIntTheWorkingArea = new List<string>();
+                int count = 1;
+
+                // Load the images in the working area
+                foreach (Image image in this.producer.imagesInTheWorkingArea())
+                {
+                    imagesIntTheWorkingArea.Add($"{count}. Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}");
+                    count++;
+                }
+
+
+                List<string> options = new List<string>() { "Apply Filters", "Apply Features", "Import images to the Editing Area", "Delete images from the Editing Area", "Export images from the Editing Area", "Exit" };
+                int selectedOption = 0;
+
+                bool _continue2 = true;
+                // Show the menu and gets the number selected
+                while (_continue2 == true)
+                {
+                    Console.Clear();
+                    int i = 1;
+                    // Show the title
+                    foreach (string titlestring in EditingAreaTitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+
+                    // Show the images in the working area
+                    Console.SetCursorPosition((Console.WindowWidth - curr.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(curr);
+
+                    foreach (string imagestring in imagesIntTheWorkingArea)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - imagestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(imagestring);
+                    }
+
+
+
+                    foreach (string option in options)
+                    {
+                        if (selectedOption == i - 1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            Console.WriteLine("\n");
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
+                    }
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > options.Count - 1)
+                            {
+                                selectedOption = options.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue2 = false;
+                            break;
+                    }
+                }
+
+
+                int usrDecision1 = selectedOption;
+
+
+
+                // If user wants to exit
+                if (usrDecision1 == 5) break;
+
+                // In other case, we enter in the switch
+                switch (usrDecision1)
+                {
+                    // User wants to apply filters
+                    case 0:
+                        break;
+
+                    // User wants to apply features
+                    case 1:
+                        break;
+
+                    // User wants to import images to the editing area => WORKING HERE
+                    case 2:
+                        ImportToEditingArea();
+                        break;
+
+                    // User wants to delete images from the editing area
+                    case 3:
+                        break;
+
+                    // User wants to export images from the editing area
+                    case 4:
+                        break;
+                }
+            }
+        }
+
+
+        private void ImportToEditingArea()
+        {
+            Console.Clear();
+            List<string> EditingAreaTitle = LoadBannerData("editingarea.txt");
+            List<Image> imagesSelected = new List<Image>();
+            List<string> imagesToAdd = new List<string>();
+            string curr = "Images selected: \n";
+
+            foreach (Image image in library.Images)
+            {
+                imagesToAdd.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+            }
+
+            imagesToAdd.Add("Continue");
+            List<string> ImportEditingAreaTitle = LoadBannerData("importeditingarea.txt");
+            
+
+            while (true)
+            {
+                int selectedOption = 1;
+                List<string> imagesIntTheWorkingArea = new List<string>();
+                
+                foreach (Image image in imagesSelected)
+                {
+                    imagesIntTheWorkingArea.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+                }
+
+
+                bool _continue2 = true;
+                // Show the menu and gets the number selected
+                while (_continue2 == true)
+                {
+                    Console.Clear();
+                    int i = 1;
+                    // Show the title
+                    foreach (string titlestring in EditingAreaTitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+
+                    // Show the images in the working area
+                    Console.SetCursorPosition((Console.WindowWidth - curr.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(curr);
+                    Console.WriteLine();
+
+                    foreach (string imagestring in imagesIntTheWorkingArea)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - imagestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(imagestring);
+                    }
+
+
+                    Console.WriteLine("\n\n");
+                    foreach (string option in imagesToAdd)
+                    {
+                        if (selectedOption == i - 1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            Console.WriteLine("\n");
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
+                    }
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > imagesToAdd.Count - 1)
+                            {
+                                selectedOption = imagesToAdd.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue2 = false;
+                            break;
+                    }
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                int usrDecision = selectedOption;
+                
+
+                if (imagesToAdd[usrDecision] == "Continue") break;
+                imagesSelected.Add(library.Images[usrDecision]);
+            }
+
+            this.producer.LoadImagesToWorkingArea(imagesSelected);
+            SaveProducer();
+        }
+
+
         private void ManageLibrary()
         {
             List<string> manageLibraryTitle = LoadBannerData("managelibrary.txt");
@@ -114,7 +377,7 @@ namespace Entrega2_Equipo1
                         DeleteImage();
                         break;
 
-                    // FALTAN LOS DEMAS CASES
+                    
                     case 6:
                         ResetLibrary();
                         break;
@@ -1651,8 +1914,8 @@ namespace Entrega2_Equipo1
             foreach (Image image in library.Images)
             {
                 Console.WriteLine(separator);
-                string titlewithcal = $"          ~ Name: {image.Name} Calification: {image.Calification} ~";
-                string titlewithoutcal = $"          ~ Name: {image.Name} Calification: Not set ~";
+                string titlewithcal = $"          ~ Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                string titlewithoutcal = $"          ~ Name: {image.Name} - Calification: Not set - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
                 if (image.Calification != -1)
                 {
                     Console.SetCursorPosition((Console.WindowWidth - titlewithcal.Length) / 2, Console.CursorTop);
@@ -3513,6 +3776,23 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Manager that verifies if the producer exists and loads it or create a new one
+        private void LoadingProducerManager()
+        {
+            bool exists = ExistsProducer();
+            if (exists == true)
+            {
+                LoadProducer();
+            }
+            else
+            {
+                ShowProducerDoesntExistError();
+                this.producer = new Producer();
+                this.producer.LoadWatsonAnalyzer();
+            }
+        }
+
+
         // Saves the library into library.bin
         private void SaveLibrary()
         {
@@ -3520,6 +3800,18 @@ namespace Entrega2_Equipo1
             Stream stream = new FileStream(DEFAULT_LIBRARY_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this.library);
             stream.Close();
+        }
+
+
+        // Saves the producer into producer.bin
+        private void SaveProducer()
+        {
+            this.producer.DeleteWatsonAnalyzer();
+            BinaryFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(DEFAULT_PRODUCER_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, this.producer);
+            stream.Close();
+            this.producer.LoadWatsonAnalyzer();
         }
 
 
@@ -3534,6 +3826,18 @@ namespace Entrega2_Equipo1
         }
 
 
+        // Loads the producer from producer.bin
+        private void LoadProducer()
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(DEFAULT_PRODUCER_PATH, FileMode.Open, FileAccess.Read, FileShare.None);
+            Producer producer = (Producer)formatter.Deserialize(stream);
+            stream.Close();
+            this.producer = producer;
+            this.producer.LoadWatsonAnalyzer();
+        }
+
+
         // Returns true if the library.bin fil exists, and false in the other case
         private bool ExistsLibrary()
         {
@@ -3541,6 +3845,26 @@ namespace Entrega2_Equipo1
             else return false;
         }
 
+
+        // Returns true if the producer.bin file exists, and false in the other case
+        private bool ExistsProducer()
+        {
+            if (File.Exists(DEFAULT_PRODUCER_PATH)) return true;
+            else return false;
+        }
+
+
+        // Shows an error in case the producer.bin file doesnt exist
+        private void ShowProducerDoesntExistError()
+        {
+            Console.Clear();
+            Console.WriteLine("\n[!] CAUTION: The program didn't find the producer.bin file");
+            Console.WriteLine("[!]          If you added images to the Editing Area, they are gone");
+            Console.WriteLine("\n\nIf this is the first time you run this program, please ignore this advice\n\n");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+        
 
         // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
@@ -3722,10 +4046,10 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(200, 50);
+            Console.SetWindowSize(235,60);
             Console.Clear();
             List<string> startingStrings = LoadBannerData("startmenu.txt");
-            int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "Please, select an option:", startingStrings);
+            int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
             return retorno;
         }
 

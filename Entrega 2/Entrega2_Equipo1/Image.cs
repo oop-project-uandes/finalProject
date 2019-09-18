@@ -45,6 +45,19 @@ namespace Entrega2_Equipo1
             this.exif = LoadExif();
         }
 
+        // Other constructor, used to make copies of other images
+        public Image(string name, List<Label> labels, int calification, Bitmap bitmap, int[] resolution, int[] aspectratio, bool darkclear, Dictionary<int, Dictionary<string, string>> exif)
+        {
+            this.Name = name;
+            this.Labels = labels;
+            this.Calification = calification;
+            this.bitmapImage = bitmap;
+            this.Resolution = resolution;
+            this.aspectRatio = aspectratio;
+            this.darkClear = darkclear;
+            this.exif = exif;
+        }
+
         // Other constructor with DEFAULT_CALIFICATION
         public Image(string name, List<Label> labels) : this(name, labels, DEFAULT_CALIFICATION) { }
 
