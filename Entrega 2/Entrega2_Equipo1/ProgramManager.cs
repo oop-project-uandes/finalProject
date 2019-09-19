@@ -57,7 +57,7 @@ namespace Entrega2_Equipo1
 
                     // Search in the library
                     case 4:
-                        AuxFunction();
+
                         break;
 
                     // Show smart lists, add smartlists or erase elements
@@ -73,20 +73,6 @@ namespace Entrega2_Equipo1
             SaveProducer();
             ShowGoodbye();
             return;
-        }
-
-
-        private void AuxFunction()
-        {
-            foreach (Image image in library.Images)
-            {
-                foreach (Label label in image.Labels)
-                {
-                    Console.WriteLine(label.labelType);
-                }
-                Console.WriteLine("--------------");
-            }
-            Console.ReadKey();
         }
 
 
@@ -211,7 +197,7 @@ namespace Entrega2_Equipo1
                         DeleteFromEditingArea();
                         break;
 
-                    // User wants to export images from the editing area => WORKING HERE
+                    // User wants to export images from the editing area => READY
                     case 4:
                         ExportFromEditingArea();
                         break;
@@ -306,6 +292,7 @@ namespace Entrega2_Equipo1
                 SaveProducer();
             }
 
+            Console.Clear();
             foreach (string titlestring in ExportTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
@@ -738,9 +725,16 @@ namespace Entrega2_Equipo1
             string chosenfiles = "Chosen images: ";
             List<string> chosenImages = new List<string>();
             List<string> possibleToChoose = new List<string>();
+            List<Image> imagesInTheWorkingArea = new List<Image>();
+
+            foreach (Image image in producer.imagesInTheWorkingArea())
+            {
+                imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
+                    image.AspectRatio, image.DarkClear, image.Exif));
+            }
 
             // Load the possibilities for the user
-            foreach (Image image in producer.imagesInTheWorkingArea())
+            foreach (Image image in imagesInTheWorkingArea)
             {
                 possibleToChoose.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
             }
@@ -826,11 +820,12 @@ namespace Entrega2_Equipo1
 
                 // Now, selectedOption has the number of the file that the user wants to apply the filter
                 // Whe add to the chosenImages the name of the file
-                Image image2 = producer.imagesInTheWorkingArea()[selectedOption];
+                Image image2 = imagesInTheWorkingArea[selectedOption];
                 chosenImages.Add($"Name: {image2.Name} - Calification: {image2.Calification} - Resolution: {image2.Resolution[0]}x{image2.Resolution[1]} - AspectRatio: {image2.AspectRatio[0]}x{image2.AspectRatio[1]} - Clear: {image2.DarkClear}\n");
 
                 // And delete the option from the possibleToChoose
                 possibleToChoose.RemoveAt(selectedOption);
+                imagesInTheWorkingArea.RemoveAt(selectedOption);
             }
         }
 
@@ -843,9 +838,16 @@ namespace Entrega2_Equipo1
             string chosenfiles = "Chosen images: ";
             List<string> chosenImages = new List<string>();
             List<string> possibleToChoose = new List<string>();
+            List<Image> imagesInTheWorkingArea = new List<Image>();
+
+            foreach (Image image in producer.imagesInTheWorkingArea())
+            {
+                imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
+                    image.AspectRatio, image.DarkClear, image.Exif));
+            }
 
             // Load the possibilities for the user
-            foreach (Image image in producer.imagesInTheWorkingArea())
+            foreach (Image image in imagesInTheWorkingArea)
             {
                 possibleToChoose.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
             }
@@ -931,11 +933,12 @@ namespace Entrega2_Equipo1
 
                 // Now, selectedOption has the number of the file that the user wants to apply the filter
                 // Whe add to the chosenImages the name of the file
-                Image image2 = producer.imagesInTheWorkingArea()[selectedOption];
+                Image image2 = imagesInTheWorkingArea[selectedOption];
                 chosenImages.Add($"Name: {image2.Name} - Calification: {image2.Calification} - Resolution: {image2.Resolution[0]}x{image2.Resolution[1]} - AspectRatio: {image2.AspectRatio[0]}x{image2.AspectRatio[1]} - Clear: {image2.DarkClear}\n");
 
                 // And delete the option from the possibleToChoose
                 possibleToChoose.RemoveAt(selectedOption);
+                imagesInTheWorkingArea.RemoveAt(selectedOption);
             }
         }
 

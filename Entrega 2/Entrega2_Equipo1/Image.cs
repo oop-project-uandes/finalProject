@@ -87,6 +87,7 @@ namespace Entrega2_Equipo1
             return bitmap;
         }
 
+
         private int[] LoadResolution()
         {
             int v1 = this.bitmapImage.Width;
