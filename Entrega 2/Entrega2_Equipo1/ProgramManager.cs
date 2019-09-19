@@ -57,7 +57,7 @@ namespace Entrega2_Equipo1
 
                     // Search in the library
                     case 4:
-
+                        AuxFunction();
                         break;
 
                     // Show smart lists, add smartlists or erase elements
@@ -74,6 +74,21 @@ namespace Entrega2_Equipo1
             ShowGoodbye();
             return;
         }
+
+
+        private void AuxFunction()
+        {
+            foreach (Image image in library.Images)
+            {
+                foreach (Label label in image.Labels)
+                {
+                    Console.WriteLine(label.labelType);
+                }
+                Console.WriteLine("--------------");
+            }
+            Console.ReadKey();
+        }
+
 
 
         // WORKING ON THIS METHOD
@@ -203,7 +218,7 @@ namespace Entrega2_Equipo1
                 }
             }
         }
-
+ 
 
         private void ExportFromEditingArea()
         {
@@ -3072,12 +3087,45 @@ namespace Entrega2_Equipo1
                             else if (label.labelType == "SpecialLabel")
                             {
                                 SpecialLabel newlabel = (SpecialLabel)label;
-                                if (newlabel.GeographicLocation != null) Console.Write($"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
-                                if (newlabel.Address != null) Console.Write($"Address: {newlabel.Address}");
-                                if (newlabel.Photographer != null) Console.Write($"Photographer: {newlabel.Photographer}");
-                                if (newlabel.PhotoMotive != null) Console.Write($"PhotoMotive: {newlabel.PhotoMotive}");
-                                if (newlabel.Selfie != false) Console.Write($"Selfie: It is a Selfie");
-                                else Console.Write($"Selfie: It is not a Selfie");
+                                if (newlabel.GeographicLocation != null)
+                                {
+                                    string geolocation = $"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - geolocation.Length) / 4, Console.CursorTop);
+                                    Console.Write(geolocation);
+                                }
+                                if (newlabel.Address != null)
+                                {
+                                    string address = $"Address: {newlabel.Address}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - address.Length) / 4, Console.CursorTop);
+                                    Console.Write(address);
+                                }
+
+                                if (newlabel.Photographer != null)
+                                {
+                                    string photographer = $"Photographer: {newlabel.Photographer}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - photographer.Length) / 4, Console.CursorTop);
+                                    Console.Write(photographer);
+                                }
+
+                                if (newlabel.PhotoMotive != null)
+                                {
+                                    string photomotive = $"PhotoMotive: {newlabel.PhotoMotive}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - photomotive.Length) / 4, Console.CursorTop);
+                                    Console.Write(photomotive);
+                                }
+
+                                if (newlabel.Selfie != false)
+                                {
+                                    string isselfie = "Selfie: It is a Selfie\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - isselfie.Length) / 4, Console.CursorTop);
+                                    Console.WriteLine(isselfie);
+                                }
+                                else
+                                {
+                                    string isnotselfie = "Selfie: It is not a Selfie\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - isnotselfie.Length) / 4, Console.CursorTop);
+                                    Console.WriteLine(isnotselfie);
+                                }
                                 Console.WriteLine(separator);
                             }
                         }
@@ -3242,7 +3290,7 @@ namespace Entrega2_Equipo1
 
 
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Exit" };
+                                List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Done" };
                                 userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
                                 if (userSelection == 8) break;
                                 switch (userSelection)
@@ -3594,7 +3642,7 @@ namespace Entrega2_Equipo1
                                 else settedSelfie = "\t\t It is not a Selfie";
 
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Exit" };
+                                List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Done" };
                                 userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
                                 if (userSelection == 5) break;
                                 switch (userSelection)
@@ -3708,8 +3756,32 @@ namespace Entrega2_Equipo1
             int j = 0;
             foreach (string name in names)
             {
+                int auxint = finalCalification;
+                List<Label> auxLabels = new List<Label>();
+                // We do a deep copy of the labels
+                foreach (Label label in imageLabels)
+                {
+                    switch (label.labelType)
+                    {
+                        case "SimpleLabel":
+                            SimpleLabel labelaux1 = (SimpleLabel)label;
+                            auxLabels.Add(new SimpleLabel(labelaux1.Sentence, labelaux1.SerialNumber)) ;
+                            break;
+                        case "PersonLabel":
+                            PersonLabel labelaux2 = (PersonLabel)label;
+                            auxLabels.Add(new PersonLabel(labelaux2.Name, labelaux2.FaceLocation, labelaux2.Surname, labelaux2.Nationality,
+                                labelaux2.EyesColor, labelaux2.HairColor, labelaux2.Sex, labelaux2.BirthDate, labelaux2.SerialNumber));
+                            break;
+                        case "SpecialLabel":
+                            SpecialLabel labelaux3 = (SpecialLabel)label;
+                            auxLabels.Add(new SpecialLabel(labelaux3.GeographicLocation, labelaux3.Address, labelaux3.Photographer,
+                                labelaux3.PhotoMotive, labelaux3.Selfie, labelaux3.SerialNumber));
+                            break;
+                    }
+                }
+
                 if (name == null) break;
-                Image auxImage = new Image(newpaths[j], imageLabels, finalCalification);
+                Image auxImage = new Image(newpaths[j], auxLabels, auxint);
                 auxImage.Name = name;
                 returningListOfImages.Add(auxImage);
                 j++;
@@ -3825,12 +3897,45 @@ namespace Entrega2_Equipo1
                             else if (label.labelType == "SpecialLabel")
                             {
                                 SpecialLabel newlabel = (SpecialLabel)label;
-                                if (newlabel.GeographicLocation != null) Console.Write($"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}");
-                                if (newlabel.Address != null) Console.Write($"Address: {newlabel.Address}");
-                                if (newlabel.Photographer != null) Console.Write($"Photographer: {newlabel.Photographer}");
-                                if (newlabel.PhotoMotive != null) Console.Write($"PhotoMotive: {newlabel.PhotoMotive}");
-                                if (newlabel.Selfie != false) Console.Write($"Selfie: It is a Selfie");
-                                else Console.Write($"Selfie: It is not a Selfie");
+                                if (newlabel.GeographicLocation != null)
+                                {
+                                    string geolocation = $"GeoLocation: {newlabel.GeographicLocation[0]}, {newlabel.GeographicLocation[1]}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - geolocation.Length) / 4, Console.CursorTop);
+                                    Console.Write(geolocation);
+                                }
+                                if (newlabel.Address != null)
+                                {
+                                    string address = $"Address: {newlabel.Address}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - address.Length) / 4, Console.CursorTop);
+                                    Console.Write(address);
+                                }
+
+                                if (newlabel.Photographer != null)
+                                {
+                                    string photographer = $"Photographer: {newlabel.Photographer}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - photographer.Length) / 4, Console.CursorTop);
+                                    Console.Write(photographer);
+                                }
+
+                                if (newlabel.PhotoMotive != null)
+                                {
+                                    string photomotive = $"PhotoMotive: {newlabel.PhotoMotive}\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - photomotive.Length) / 4, Console.CursorTop);
+                                    Console.Write(photomotive);
+                                }
+
+                                if (newlabel.Selfie != false)
+                                {
+                                    string isselfie = "Selfie: It is a Selfie\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - isselfie.Length) / 4, Console.CursorTop);
+                                    Console.WriteLine(isselfie);
+                                }
+                                else
+                                {
+                                    string isnotselfie = "Selfie: It is not a Selfie\n";
+                                    Console.SetCursorPosition((Console.WindowWidth - isnotselfie.Length) / 4, Console.CursorTop);
+                                    Console.WriteLine(isnotselfie);
+                                }
                                 Console.WriteLine(separator);
                             }
                         }
@@ -4013,7 +4118,7 @@ namespace Entrega2_Equipo1
 
 
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Exit" };
+                                List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Done" };
                                 userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
                                 if (userSelection == 8) break;
                                 switch (userSelection)
@@ -4365,7 +4470,7 @@ namespace Entrega2_Equipo1
                                 else settedSelfie = "\t\t It is not a Selfie";
 
                                 Console.Clear();
-                                List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Exit" };
+                                List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Done" };
                                 userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
                                 if (userSelection == 5) break;
                                 switch (userSelection)
