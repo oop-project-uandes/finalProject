@@ -271,9 +271,10 @@ namespace Entrega2_Equipo1
             return result;
         }
 
-        public System.Drawing.Bitmap PixelCensorship(string nombreImagen, double[] posicion)
+        public System.Drawing.Bitmap PixelCensorship(Image image, int[] coordinates)
         {
-            throw new NotImplementedException();
+            AddCensorship AC = new AddCensorship();
+            return AC.pixelCensorship(image, coordinates);
         }
 
         public System.Drawing.Bitmap BlackCensorship(Image image, int[] coordinates)
