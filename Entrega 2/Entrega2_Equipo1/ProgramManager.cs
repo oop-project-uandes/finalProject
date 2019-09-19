@@ -196,15 +196,131 @@ namespace Entrega2_Equipo1
                         DeleteFromEditingArea();
                         break;
 
-                    // User wants to export images from the editing area => Falta esto
+                    // User wants to export images from the editing area => WORKING HERE
                     case 4:
+                        ExportFromEditingArea();
                         break;
                 }
             }
         }
 
 
+        private void ExportFromEditingArea()
+        {
+            // Load the title
+            List<string> ExportTitle = LoadBannerData("exportfromeditingarea.txt");
+            string presskey = "Press any key to continue...";
+            string emptyWorkingArea = "[!] Your Editing Area is empty";
+            string done = "All selected images were exported";
+
+            // Verify that the Editing Area is not empty
+            if (producer.imagesInTheWorkingArea().Count == 0)
+            {
+                Console.WriteLine("\n");
+                Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptyWorkingArea);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return;
+            }
+
+            // We get the images that user wants export
+            List<string> imagesToExport = ChooseWhichImagesWantToExport();
+
+           
+            foreach (string stringimage in imagesToExport)
+            {
+                int i = 0;
+                List<int> removeAt = new List<int>();
+                List<Image> possibleImages = producer.imagesInTheWorkingArea();
+                foreach (Image image in possibleImages)
+                {
+                    if (stringimage == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        // We verify if the library contains the image
+                        int librarycontains = LibraryContains(stringimage);
+                        // If it contains the image, we ask if user wants to replace it
+                        if (librarycontains != -1)
+                        {
+                            string thefollowingimageexists = $"The image {image.Name} exists in your library. Do you want to replace it?";
+                            List<string> options = new List<string>() { "Yes", "No" };
+                            int usrDec = GenerateMenu(options, null, thefollowingimageexists, ExportTitle);
+                            // if user wants to replace it
+                            if (usrDec == 0)
+                            {
+                                library.Images.RemoveAt(librarycontains);
+                                library.Images.Add(image);
+                                removeAt.Add(i);
+                            }
+                            // if user doesnt want to replace it
+                            else
+                            {
+                                // We ask if he wants to change the name of the image
+                                int usrDec2 = GenerateMenu(new List<string>() { "Yes", "No" }, null, "Do you want to change the name of the image?", ExportTitle);
+                                if (usrDec2 == 0)
+                                {
+                                    string introducethenewname = "Please, introduce the new name: ";
+                                    foreach (string titlestring in ExportTitle)
+                                    {
+                                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                                        Console.WriteLine(titlestring);
+                                    }
+                                    Console.WriteLine("\n");
+                                    Console.SetCursorPosition((Console.WindowWidth - introducethenewname.Length) / 2, Console.CursorTop);
+                                    Console.Write(introducethenewname);
+                                    image.Name = Console.ReadLine();
+                                }
+                                library.Images.Add(image);
+                                removeAt.Add(i);
+                            }
+                        }
+                        else
+                        {
+                            library.Images.Add(image);
+                            removeAt.Add(i);
+                        }
+
+                    }
+                    i++;
+                }
+                foreach (int j in removeAt)
+                {
+                    producer.imagesInTheWorkingArea().RemoveAt(j);
+                }
+                SaveProducer();
+            }
+
+            foreach (string titlestring in ExportTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - done.Length) / 2, Console.CursorTop);
+            Console.WriteLine(done);
+            Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskey);
+            Console.ReadKey();
+        }
+
+
+
+        // Method to know if the library contains an image. Returns -1 if image doesnt exists, and
+        // the index of the image if it exists
+        private int LibraryContains(string stringimage)
+        {
+            int count = 0;
+            foreach (Image image in library.Images)
+            {
+                if (stringimage == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") return count;
+                count++;
+            }
+            return -1;
+        }
         
+
         // To apply the filters
         private void ApplyFilters()
         {
@@ -242,6 +358,8 @@ namespace Entrega2_Equipo1
 
 
                 // Switch for the usrDecision
+
+
                 switch (usrDec)
                 {
                     // Apply blacknwhite filter
@@ -250,7 +368,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.BlackNWhiteFilter);
@@ -271,7 +389,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.BrightnessFilter, default(Color), brightnesslevel);
@@ -293,7 +411,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.ColorFilter, usrColor);
@@ -312,7 +430,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.InvertFilter);
@@ -331,7 +449,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.MirrorFilter);
@@ -349,7 +467,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.OldFilmFilter);
@@ -369,7 +487,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.RotateFlipFilter, default(Color), 0, 0, rotateType);
@@ -387,7 +505,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.SepiaFilter);
@@ -405,7 +523,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.WindowsFilter);
@@ -423,7 +541,7 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string filename in filenames)
                             {
-                                if (image.Name == filename)
+                                if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
                                     Bitmap bitmap = producer.ApplyFilter(image, EFilter.AutomaticAdjustmentFilter);
@@ -458,6 +576,7 @@ namespace Entrega2_Equipo1
             int usrDec = GenerateMenu(options, null, "Please, choose the type of Rotation and Flip: ", applyfiltertitle);
             return (RotateFlipType)Enum.Parse(typeof(RotateFlipType), options[usrDec]);
         }
+
 
 
         // To choose the color 
@@ -567,6 +686,7 @@ namespace Entrega2_Equipo1
         }
         
 
+
         // Show the message of done when applying filters
         private void ShowDoneApplyingFor(string name)
         {
@@ -592,6 +712,7 @@ namespace Entrega2_Equipo1
             Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
             Console.WriteLine(dots);
         }
+
 
 
         // Returns the list of the names of the image sthat the user wants to apply the filter
@@ -698,6 +819,110 @@ namespace Entrega2_Equipo1
             }
         }
 
+
+
+        private List<string> ChooseWhichImagesWantToExport()
+        {
+            List<string> applyfiltertitle = LoadBannerData("exportfromeditingarea.txt");
+            string choosefiles = "Please, choose which images you want to export: ";
+            string chosenfiles = "Chosen images: ";
+            List<string> chosenImages = new List<string>();
+            List<string> possibleToChoose = new List<string>();
+
+            // Load the possibilities for the user
+            foreach (Image image in producer.imagesInTheWorkingArea())
+            {
+                possibleToChoose.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+            }
+
+            possibleToChoose.Add("Continue");
+
+            while (true)
+            {
+                int selectedOption = 0;
+                bool _continue = true;
+                while (_continue == true)
+                {
+                    // Clear the screen and show the title
+                    Console.Clear();
+                    int i = 1;
+                    foreach (string titlestring in applyfiltertitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+
+                    // Show the chosen images till the moment
+                    Console.SetCursorPosition((Console.WindowWidth - chosenfiles.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(chosenfiles);
+                    foreach (string chosenimage in chosenImages)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - chosenimage.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(chosenimage);
+                    }
+
+                    // Show the options to the user
+                    Console.WriteLine("\n\n");
+                    Console.SetCursorPosition((Console.WindowWidth - choosefiles.Length) / 10, Console.CursorTop);
+                    Console.WriteLine(choosefiles);
+
+
+                    Console.WriteLine("\n\n");
+                    foreach (string option in possibleToChoose)
+                    {
+                        if (selectedOption == i - 1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            Console.WriteLine("\n");
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
+                    }
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > possibleToChoose.Count - 1)
+                            {
+                                selectedOption = possibleToChoose.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue = false;
+                            break;
+                    }
+
+                }
+
+
+                // If user wants to exit, we return the chosen images
+                if (possibleToChoose[selectedOption] == "Continue") return chosenImages;
+
+
+                // Now, selectedOption has the number of the file that the user wants to apply the filter
+                // Whe add to the chosenImages the name of the file
+                Image image2 = producer.imagesInTheWorkingArea()[selectedOption];
+                chosenImages.Add($"Name: {image2.Name} - Calification: {image2.Calification} - Resolution: {image2.Resolution[0]}x{image2.Resolution[1]} - AspectRatio: {image2.AspectRatio[0]}x{image2.AspectRatio[1]} - Clear: {image2.DarkClear}\n");
+
+                // And delete the option from the possibleToChoose
+                possibleToChoose.RemoveAt(selectedOption);
+            }
+        }
 
 
         private void DeleteFromEditingArea()
@@ -2746,6 +2971,16 @@ namespace Entrega2_Equipo1
             int selectedOption = 0;
             List<string> options = new List<string>() { "Set Calification", "Set new Label", "Continue" };
 
+            List<string> newpaths = new List<string>();
+            // Copy an object into files
+            foreach (string name in names)
+            {
+                string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
+                System.IO.File.Copy(path + name, newpath);
+                newpaths.Add(newpath);
+            }
+            
+
             while (true)
             {
                 bool _continue = true;
@@ -3470,12 +3705,14 @@ namespace Entrega2_Equipo1
                 if (selectedOption == 2) break;
             }
 
+            int j = 0;
             foreach (string name in names)
             {
                 if (name == null) break;
-                Image auxImage = new Image(path + name, imageLabels, finalCalification);
+                Image auxImage = new Image(newpaths[j], imageLabels, finalCalification);
                 auxImage.Name = name;
                 returningListOfImages.Add(auxImage);
+                j++;
             }
             return returningListOfImages;
         }
@@ -3492,6 +3729,10 @@ namespace Entrega2_Equipo1
             string separator = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>\n";
             int selectedOption = 0;
             List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
+
+            // Copy an object into files
+            string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\"+name;
+            System.IO.File.Copy(path+name, newpath);
 
             while (true)
             {
@@ -4234,7 +4475,7 @@ namespace Entrega2_Equipo1
                 // If the user wants to exit
                 if (selectedOption == 2) break;
             }
-            Image returningImage = new Image(path + name, imageLabels, calification);
+            Image returningImage = new Image(newpath, imageLabels, calification);
             returningImage.Name = name;
             return returningImage;
         }

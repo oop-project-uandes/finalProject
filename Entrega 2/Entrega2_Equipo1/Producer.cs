@@ -86,7 +86,7 @@ namespace Entrega2_Equipo1
         public Dictionary<int, Dictionary<string, double>> ClassifyImage(string path)
         {
             Bitmap bitmapImage = new Bitmap(path);
-            WatsonAnalizer myFilter = (WatsonAnalizer)this.tools[9];
+            WatsonAnalizer myFilter = (WatsonAnalizer)this.tools[19];
             Dictionary<int, Dictionary<string, double>> resultadoClasificacion = myFilter.FindClassifiers(bitmapImage);
             return resultadoClasificacion;
         }

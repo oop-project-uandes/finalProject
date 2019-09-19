@@ -83,6 +83,7 @@ namespace Entrega2_Equipo1
                 System.Drawing.Image image = System.Drawing.Image.FromStream(bmpStream);
                 bitmap = new Bitmap(image);
             }
+            System.IO.File.Delete(fileName);
             return bitmap;
         }
 
