@@ -98,7 +98,7 @@ namespace Entrega2_Equipo1
                 }
 
 
-                List<string> options = new List<string>() { "Apply Filters", "Apply Features", "Import images to the Editing Area", "Delete images from the Editing Area", "Export images from the Editing Area", "Exit" };
+                List<string> options = new List<string>() { "Apply Filters", "Use Features", "Import images to the Editing Area", "Delete images from the Editing Area", "Export images from the Editing Area", "Exit" };
                 int selectedOption = 0;
 
                 bool _continue2 = true;
@@ -183,8 +183,9 @@ namespace Entrega2_Equipo1
                         ApplyFilters();
                         break;
 
-                    // User wants to apply features => Falta esto
+                    // User wants to apply features => WORKING HERE
                     case 1:
+                        UseFeatures();
                         break;
 
                     // User wants to import images to the editing area => READY
@@ -204,7 +205,53 @@ namespace Entrega2_Equipo1
                 }
             }
         }
- 
+
+
+
+        // WORKING HERE
+        private void UseFeatures()
+        {
+            /*
+             * FEATURES SON:
+             *      1) Add censorship (black y difuminado)
+             *      2) Watson Face Recognition Analizer
+             *      3) Add text
+             *      4) Merge images
+             *      5) Resizer
+             *      6) Mosaic
+             *      7) Collage (fondo solido y no, posiciones seleccionadas o no)
+             *      8) Album
+             *      9) Calendario
+             */
+
+            while (true)
+            {
+                // Verify that the working area is not empty
+                string presskey = "Press any key to continue...";
+                string emptyWorkingArea = "Your Editing Area is empty";
+                if (producer.imagesInTheWorkingArea().Count == 0)
+                {
+                    Console.WriteLine("\n");
+                    Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(emptyWorkingArea);
+                    Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(presskey);
+                    Console.ReadKey();
+                    return;
+                }
+
+                // Load the title and the options for the menu
+                string choosefeature = "Please, choose the Feature you want to use: ";
+                List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+                List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
+                    "Add text", "Merge images", "Resize image", "Mosaic", "Collage", "Album", "Calendar", "Exit" };
+            }
+        }
+
+
+
+
+
 
         private void ExportFromEditingArea()
         {
@@ -4734,6 +4781,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the producer.bin file doesnt exist
         private void ShowProducerDoesntExistError()
         {
+            Console.SetWindowSize(235, 60);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the producer.bin file");
             Console.WriteLine("[!]          If you added images to the Editing Area, they are gone");
@@ -4746,6 +4794,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
         {
+            Console.SetWindowSize(235, 60);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the library.bin file");
             Console.WriteLine("[!]          If you added images to My Library, they are gone");
