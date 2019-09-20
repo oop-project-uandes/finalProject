@@ -213,6 +213,7 @@ namespace Entrega2_Equipo1
             return image.BitmapImage;
         }
 
+
         public Dictionary<string, int> SexAndAgeRecognition(Image image)
         {
             Dictionary<string, int> result = new Dictionary<string, int>() { };
@@ -271,7 +272,8 @@ namespace Entrega2_Equipo1
             }
 
             return result;
-        }
+        } // => ESTE METODO SE DEBE VOLVER A HACER
+
 
         public System.Drawing.Bitmap PixelCensorship(Image image, int[] coordinates)
         {

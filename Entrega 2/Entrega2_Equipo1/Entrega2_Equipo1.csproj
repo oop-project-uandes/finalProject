@@ -231,7 +231,6 @@
     <Compile Include="Tools\Filters\WindowsFilter.cs" />
     <Compile Include="Searcher.cs" />
     <Compile Include="Tools\Tool.cs" />
-    <Compile Include="Tools\Features\Zoom.cs" />
     <Compile Include="WorkingArea.cs" />
   </ItemGroup>
   <ItemGroup>

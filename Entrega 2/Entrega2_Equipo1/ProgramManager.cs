@@ -211,24 +211,19 @@ namespace Entrega2_Equipo1
         // WORKING HERE
         private void UseFeatures()
         {
-            /*
-             * FEATURES SON:
-             *      1) Add censorship (black y difuminado)
-             *      2) Watson Face Recognition Analizer
-             *      3) Add text
-             *      4) Merge images
-             *      5) Resizer
-             *      6) Mosaic
-             *      7) Collage (fondo solido y no, posiciones seleccionadas o no)
-             *      8) Album
-             *      9) Calendario
-             */
+            string choosefeature = "Please, choose the Feature you want to use: ";
+            string presskey = "Press any key to continue...";
+            string emptyWorkingArea = "Your Editing Area is empty";
+            
+            
+            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
+                                                            "Add text", "Merge images", "Resize image", "Mosaic",
+                                                            "Collage", "Album", "Calendar", "Exit" };
 
             while (true)
             {
                 // Verify that the working area is not empty
-                string presskey = "Press any key to continue...";
-                string emptyWorkingArea = "Your Editing Area is empty";
                 if (producer.imagesInTheWorkingArea().Count == 0)
                 {
                     Console.WriteLine("\n");
@@ -240,16 +235,332 @@ namespace Entrega2_Equipo1
                     return;
                 }
 
-                // Load the title and the options for the menu
-                string choosefeature = "Please, choose the Feature you want to use: ";
-                List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
-                List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
-                    "Add text", "Merge images", "Resize image", "Mosaic", "Collage", "Album", "Calendar", "Exit" };
+                // Ask user what he wants to do, and if he wants to exit, we exit
+                int usrDec = GenerateMenu(options, null, choosefeature, UseFeatureTitle);
+                if (options[usrDec] == "Exit") break; ;
+
+                switch (usrDec)
+                {
+                    // Want to apply censorship => READY
+                    case 0:
+                        ApplyCensorship();
+                        break;
+                    // Want to use Watson Analizer => READY
+                    case 1:
+                        //UseWatson();
+                        throw new NotImplementedException();
+                        break;
+
+                        // TRABAJANDO EN EL RESTO DE CASES
+                }
+            }
+        }
+
+        
+        // Watson no lo vamos a implementar aun, pero deberia ser algo como esto
+        private void UseWatson()
+        {
+            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+
+            // First, we get the names of the images user wants to apply the censorship
+            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+
+            List<Image> inworkingarea = producer.imagesInTheWorkingArea();
+            List<Dictionary<string, int>> results = new List<Dictionary<string, int>>();
+
+            string loading = "Please, wait while Watson analizes the images...";
+            Console.SetCursorPosition((Console.WindowWidth - loading.Length) / 2, Console.CursorTop);
+            Console.WriteLine(loading);
+
+            foreach (string filename in filenames)
+            {
+                foreach (Image image in inworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        Dictionary<string, int> resultanalisis = producer.SexAndAgeRecognition(image); // ESTE METODO SE DEBE VOLVER A HACER
+                        // por lo que el diccionario resultanalisis debe ser de otro tipo
+                        results.Add(resultanalisis);
+                    }
+                }
+            }
+
+            // show the results. esto necesita cambiarse en funcion de lo que s ehaga con watson
+            int i = 0;
+            foreach (Dictionary<string, int> dict in results)
+            {
+                // We show the title
+                foreach (string titlestring in UseFeatureTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+
+                string resultfor = "Result for: ";
+                string name = filenames[i];
+                Console.SetCursorPosition((Console.WindowWidth - resultfor.Length) / 2, Console.CursorTop);
+                Console.WriteLine(resultfor);
+                Console.SetCursorPosition((Console.WindowWidth - name.Length) / 2, Console.CursorTop);
+                Console.WriteLine(name);
+
+                foreach (KeyValuePair<string, int> pair in dict)
+                {
+                    string complete = pair.Key + ": " + Convert.ToString(pair.Value);
+                    Console.SetCursorPosition((Console.WindowWidth - complete.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(complete);
+                }
+                i++;
             }
         }
 
 
+        private void ApplyCensorship()
+        {
+            string choosetypeofcensorship = "Please, choose which type of censorship you want to use";
+            List<string> typesofcensorship = new List<string>() { "Black Censorship", "Pixel Censorship" };
+            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            // First, we get the names of the images user wants to apply the censorship
+            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+            // Then, we get the type of censorship
+            int usrDecCensorship = GenerateMenu(typesofcensorship, null, choosetypeofcensorship, UseFeatureTitle);
+            // Next, we get the coordinates of the censorship for each image
+            Dictionary<string, int[]> coordinates = GetCoordinatesForCensorship(filenames);
+            List<Image> imagesInWorkingArea = producer.imagesInTheWorkingArea();
+            // Next, we do the censorship
+            foreach (KeyValuePair<string, int[]> pair in coordinates)
+            {
+                // We find the bitmap
+                foreach (Image image in imagesInWorkingArea)
+                {
+                    // We found it
+                    if (pair.Key == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    {
+                        // And, depending on the censorship, we apply it
+                        // If user wants black censorship
+                        if (usrDecCensorship == 0)
+                        {
+                            // Apply the censorship and save it
+                            Bitmap censured = producer.BlackCensorship(image, pair.Value);
+                            image.BitmapImage = censured;
+                        }
+                        // If user wants pixel censorship
+                        else
+                        {
+                            // Apply the censorship and save it
+                            
+                            Bitmap censured = producer.PixelCensorship(image, pair.Value);
+                            image.BitmapImage = censured;
+                            
+                        }
 
+                        ShowDoneApplyingForFeatures(image.Name);
+                        break;
+                    }
+                }
+            }
+            SaveProducer();
+            return;
+        }
+
+
+
+        private Dictionary<string, int[]> GetCoordinatesForCensorship(List<string> files)
+        {
+            string presskey = "Press any key to continue...";
+            string notvalid = "Values not valid";
+            string introducecoordinates = "Please, introduce the coordinates of censorship separed by commas (X,Y,TOP,LEFT): ";
+            Dictionary<string, int[]> returningDict = new Dictionary<string, int[]>();
+            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            int width = 0, height=0;
+            List<Image> imagesInWorkingArea = producer.imagesInTheWorkingArea();
+            foreach (string file in files)
+            {
+                string[] separated;
+                // We get the width and height of the image
+                foreach (Image image in imagesInWorkingArea)
+                {
+                    if (file == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    {
+                        width = image.BitmapImage.Width;
+                        height = image.BitmapImage.Height;
+                        break;
+                    }
+                }
+
+                while (true)
+                {
+                    Console.Clear();
+                    // We show the title and the image 
+                    foreach (string titlestring in UseFeatureTitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+                    Console.SetCursorPosition((Console.WindowWidth - file.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(file);
+
+                    // We ask to user the coordinates
+                    Console.WriteLine("\n\n");
+                    Console.SetCursorPosition((Console.WindowWidth - introducecoordinates.Length) / 2, Console.CursorTop);
+                    Console.Write(introducecoordinates);
+                    string values = Console.ReadLine();
+                    bool valid = VerifyIfAreValidCoordinates(values, width, height);
+                    if (valid == true)
+                    {
+                        separated = values.Split(',');
+                        break;
+                    } 
+                    else
+                    {
+                        Console.WriteLine("\n");
+                        Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                        Console.Write(notvalid);
+                        Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                        Console.Write(presskey);
+                        Console.ReadKey();
+                    }
+                }
+
+                returningDict.Add(file, new int[] {Convert.ToInt32(separated[0]), Convert.ToInt32(separated[1]), Convert.ToInt32(separated[2]), Convert.ToInt32(separated[3])});
+            }
+
+            return returningDict; 
+        }
+
+
+
+        private bool VerifyIfAreValidCoordinates(string values, int imageWidth, int imageHeight)
+        {
+            int X, Y, TOP, LEFT;
+            string[] separated = values.Split(',');
+            try
+            {
+                X = Convert.ToInt32(separated[0]);
+                Y = Convert.ToInt32(separated[1]);
+                TOP = Convert.ToInt32(separated[2]);
+                LEFT = Convert.ToInt32(separated[3]);
+                if ((LEFT + X > imageWidth) || (TOP + Y > imageHeight)) return false;
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+
+        private List<string> ChooseWhichImagesWantToApplyFeature()
+        {
+            List<string> applyfiltertitle = LoadBannerData("usefeatures.txt");
+            string choosefiles = "Please, choose to which images you want to apply the feature: ";
+            string chosenfiles = "Chosen images: ";
+            List<string> chosenImages = new List<string>();
+            List<string> possibleToChoose = new List<string>();
+            List<Image> imagesInTheWorkingArea = new List<Image>();
+
+            foreach (Image image in producer.imagesInTheWorkingArea())
+            {
+                imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
+                    image.AspectRatio, image.DarkClear, image.Exif));
+            }
+
+            // Load the possibilities for the user
+            foreach (Image image in imagesInTheWorkingArea)
+            {
+                possibleToChoose.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
+            }
+
+            possibleToChoose.Add("Continue");
+
+            while (true)
+            {
+                int selectedOption = 0;
+                bool _continue = true;
+                while (_continue == true)
+                {
+                    // Clear the screen and show the title
+                    Console.Clear();
+                    int i = 1;
+                    foreach (string titlestring in applyfiltertitle)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(titlestring);
+                    }
+
+                    // Show the chosen images till the moment
+                    Console.SetCursorPosition((Console.WindowWidth - chosenfiles.Length) / 4, Console.CursorTop);
+                    Console.WriteLine(chosenfiles);
+                    foreach (string chosenimage in chosenImages)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - chosenimage.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(chosenimage);
+                    }
+
+                    // Show the options to the user
+                    Console.WriteLine("\n\n");
+                    Console.SetCursorPosition((Console.WindowWidth - choosefiles.Length) / 10, Console.CursorTop);
+                    Console.WriteLine(choosefiles);
+
+
+                    Console.WriteLine("\n\n");
+                    foreach (string option in possibleToChoose)
+                    {
+                        if (selectedOption == i - 1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.WriteLine($"{i}. {option}");
+                            Console.BackgroundColor = ConsoleColor.DarkBlue;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            i++;
+                            Console.WriteLine("\n");
+                            continue;
+                        }
+                        Console.WriteLine($"{i}. {option}");
+                        i++;
+                    }
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            selectedOption -= 1;
+                            if (selectedOption < 0)
+                            {
+                                selectedOption = 0;
+                            }
+                            break;
+                        case ConsoleKey.DownArrow:
+                            selectedOption += 1;
+                            if (selectedOption > possibleToChoose.Count - 1)
+                            {
+                                selectedOption = possibleToChoose.Count - 1;
+                            }
+                            break;
+                        case ConsoleKey.Enter:
+                            _continue = false;
+                            break;
+                    }
+
+                }
+
+
+                // If user wants to exit, we return the chosen images
+                if (possibleToChoose[selectedOption] == "Continue") return chosenImages;
+
+
+                // Now, selectedOption has the number of the file that the user wants to apply the filter
+                // Whe add to the chosenImages the name of the file
+                Image image2 = imagesInTheWorkingArea[selectedOption];
+                chosenImages.Add($"Name: {image2.Name} - Calification: {image2.Calification} - Resolution: {image2.Resolution[0]}x{image2.Resolution[1]} - AspectRatio: {image2.AspectRatio[0]}x{image2.AspectRatio[1]} - Clear: {image2.DarkClear}\n");
+
+                // And delete the option from the possibleToChoose
+                possibleToChoose.RemoveAt(selectedOption);
+                imagesInTheWorkingArea.RemoveAt(selectedOption);
+            }
+
+        }
 
 
 
@@ -276,7 +587,7 @@ namespace Entrega2_Equipo1
             // We get the images that user wants export
             List<string> imagesToExport = ChooseWhichImagesWantToExport();
 
-           
+
             foreach (string stringimage in imagesToExport)
             {
                 int i = 0;
@@ -356,6 +667,34 @@ namespace Entrega2_Equipo1
 
 
 
+        // Message of done for features
+        private void ShowDoneApplyingForFeatures(string name)
+        {
+            string applyed = "Done on ";
+            string dots = "...";
+            List<string> applyfiltertitle = LoadBannerData("usefeatures.txt");
+
+            Console.Clear();
+            string completeMessage = applyed + name + " !";
+
+            foreach (string titlestring in applyfiltertitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - completeMessage.Length) / 2, Console.CursorTop);
+            Console.WriteLine(completeMessage);
+
+            System.Threading.Thread.Sleep(500);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - dots.Length) / 2, Console.CursorTop);
+            Console.WriteLine(dots);
+        }
+
+
+        
         // Method to know if the library contains an image. Returns -1 if image doesnt exists, and
         // the index of the image if it exists
         private int LibraryContains(string stringimage)
@@ -368,8 +707,9 @@ namespace Entrega2_Equipo1
             }
             return -1;
         }
-        
 
+
+        
         // To apply the filters
         private void ApplyFilters()
         {
@@ -697,9 +1037,10 @@ namespace Entrega2_Equipo1
         }
 
 
+        
         // To choose the level of brightness
         private int ChooseLevelOfBrightness()
-        { 
+        {
             List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
             string presskey = "Press any key to continue...";
             string valueNotValid = "[!] ERROR: Brightness value not valid";
@@ -733,7 +1074,7 @@ namespace Entrega2_Equipo1
             }
             return chosen;
         }
-        
+
 
 
         // Show the message of done when applying filters
@@ -990,6 +1331,7 @@ namespace Entrega2_Equipo1
         }
 
 
+
         private void DeleteFromEditingArea()
         {
             string presskey = "Press any key to continue...";
@@ -1045,8 +1387,9 @@ namespace Entrega2_Equipo1
             }
 
             return;
-            
+
         }
+
 
 
         private void ImportToEditingArea()
@@ -1064,13 +1407,13 @@ namespace Entrega2_Equipo1
 
             imagesToAdd.Add("Continue");
             List<string> ImportEditingAreaTitle = LoadBannerData("importeditingarea.txt");
-            
+
 
             while (true)
             {
                 int selectedOption = 1;
                 List<string> imagesIntTheWorkingArea = new List<string>();
-                
+
                 foreach (Image image in imagesSelected)
                 {
                     imagesIntTheWorkingArea.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
@@ -1144,7 +1487,7 @@ namespace Entrega2_Equipo1
                 }
 
                 int usrDecision = selectedOption;
-                
+
 
                 if (imagesToAdd[usrDecision] == "Continue") break;
                 imagesSelected.Add(library.Images[usrDecision]);
@@ -1155,10 +1498,11 @@ namespace Entrega2_Equipo1
         }
 
 
+
         private void ManageLibrary()
         {
             List<string> manageLibraryTitle = LoadBannerData("managelibrary.txt");
-            List<string> manageLibraryOptions = new List<string>() { "Show My Library", "Add Label", "Edit Label", "Delete Label", "Set Calification", "Delete Image", "Reset Library" , "Exit"};
+            List<string> manageLibraryOptions = new List<string>() { "Show My Library", "Add Label", "Edit Label", "Delete Label", "Set Calification", "Delete Image", "Reset Library", "Exit" };
             string manageLibraryDescription = "Please, select an option: ";
             while (true)
             {
@@ -1195,7 +1539,7 @@ namespace Entrega2_Equipo1
                         DeleteImage();
                         break;
 
-                    
+
                     case 6:
                         ResetLibrary();
                         break;
@@ -1204,13 +1548,14 @@ namespace Entrega2_Equipo1
         }
 
 
+
         private void DeleteImage()
         {
             Console.Clear();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
             string description1 = "Please, select wich image you want to delete: ";
-            
+
             List<string> DeleteImageTitle = LoadBannerData("deleteimage.txt");
             List<string> DeleteImageOptions1 = new List<string>();
             foreach (Image image in library.Images)
@@ -1329,7 +1674,7 @@ namespace Entrega2_Equipo1
                     Console.ReadKey();
                 }
             }
-            
+
         }
 
 
@@ -1342,7 +1687,7 @@ namespace Entrega2_Equipo1
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
             string description1 = "Please, select to which image you want to add the Label: ";
             string description2 = "Please, select which label you would like to edit ";
-            
+
             List<string> optionsToEdit = new List<string>();
 
             // We show all the images to the user, so he can choose which image he wants to edit
@@ -1444,7 +1789,7 @@ namespace Entrega2_Equipo1
             switch (labelUsrWants.labelType)
             {
                 case "SimpleLabel":
-                    
+
                     string introduceTheTag = "Please, introduce the new tag: ";
                     SimpleLabel silabel = (SimpleLabel)labelUsrWants;
                     while (true)
@@ -1750,7 +2095,7 @@ namespace Entrega2_Equipo1
                                 break;
                         }
                         SaveLibrary();
-                       
+
 
                     }
                     SaveLibrary();
@@ -1769,7 +2114,7 @@ namespace Entrega2_Equipo1
                         else settedAddress = "Address:\t\t" + auxLabel2.Address;
 
                         string settedPhotographer;
-                        if (auxLabel2.Photographer== null) settedPhotographer = "Photographer:\t[Not set]";
+                        if (auxLabel2.Photographer == null) settedPhotographer = "Photographer:\t[Not set]";
                         else settedPhotographer = "Photographer:\t" + auxLabel2.Photographer;
 
                         string settedPhotoMotive;
@@ -1905,7 +2250,7 @@ namespace Entrega2_Equipo1
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
             string description1 = "Please, select on which image you want to delete a Label: ";
             string description2 = "Please, select which label you want to delete: ";
-            
+
 
             foreach (Image image in library.Images)
             {
@@ -1945,7 +2290,7 @@ namespace Entrega2_Equipo1
                     PersonLabel slabel = (PersonLabel)label;
                     newstring += "\nPersonLabel";
 
-                    if(slabel.Name != null) newstring += $"\n        Name: {slabel.Name}";
+                    if (slabel.Name != null) newstring += $"\n        Name: {slabel.Name}";
                     else newstring += $"\n        Name: [Not set]";
 
                     if (slabel.Surname != null) newstring += $"\n        Surname: {slabel.Surname}";
@@ -1960,7 +2305,7 @@ namespace Entrega2_Equipo1
                     if (slabel.HairColor != EColor.None) newstring += $"\n        HairColor: {slabel.HairColor}";
                     else newstring += $"\n        HairColor: [Not set]";
 
-                    if (slabel.Sex!= ESex.None) newstring += $"\n        Sex: {slabel.Sex}";
+                    if (slabel.Sex != ESex.None) newstring += $"\n        Sex: {slabel.Sex}";
                     else newstring += $"\n        Sex: [Not set]";
 
                     if (slabel.BirthDate != "") newstring += $"\n        BirthDate: {slabel.BirthDate}";
@@ -2005,7 +2350,7 @@ namespace Entrega2_Equipo1
             return;
 
         }
-        
+
 
         private void AddLabel()
         {
@@ -2037,8 +2382,8 @@ namespace Entrega2_Equipo1
 
             // If user selects Exit
             if (AddLabelOptions1[numberOfTheImage] == "Exit") return;
-            
-            
+
+
             Image imageToAddLabel = library.Images[numberOfTheImage];
 
             while (true)
@@ -2076,8 +2421,8 @@ namespace Entrega2_Equipo1
                                 continue;
                             }
                         }
-                        
-                        
+
+
                         Dictionary<int, Dictionary<string, double>> watsonResults = this.producer.ClassifyImage(realpath);
                         List<string> watsonOptions = new List<string>();
                         foreach (Dictionary<string, double> dic in watsonResults.Values)
@@ -2089,7 +2434,7 @@ namespace Entrega2_Equipo1
                         }
                         // Add the option of a personalized Label
                         watsonOptions.Add("Personalized Label");
-                        
+
 
                         int selectedOption2 = GenerateMenu(watsonOptions, null, addlabeldescription, AddLabelTitle);
                         string selected = watsonOptions[selectedOption2];
@@ -2606,7 +2951,7 @@ namespace Entrega2_Equipo1
                         imageToAddLabel.AddLabel(auxLabel2);
                         SaveLibrary();
                         break;
-                    
+
 
                     // User wants to exit
                     case 3:
@@ -2629,7 +2974,7 @@ namespace Entrega2_Equipo1
                 SaveLibrary();
             }
             else return;
-            
+
             string dots = "...\n";
             string success = "Successful library reset!";
             string presskey = "Please, press any key to continue...";
@@ -2929,7 +3274,7 @@ namespace Entrega2_Equipo1
                                 foreach (string file in arrayOfFiles)
                                 {
                                     allFiles[count] = Path.GetFileName(file);
-                                    count ++;
+                                    count++;
                                     if (count == 5000) throw new Exception("Too much images");
                                 }
                             }
@@ -2943,7 +3288,7 @@ namespace Entrega2_Equipo1
                             }
                             break;
                         }
-                        
+
                     }
                     else
                     {
@@ -3044,7 +3389,7 @@ namespace Entrega2_Equipo1
                 System.IO.File.Copy(path + name, newpath);
                 newpaths.Add(newpath);
             }
-            
+
 
             while (true)
             {
@@ -3286,7 +3631,7 @@ namespace Entrega2_Equipo1
                             Console.Clear();
                             Console.WriteLine("\n");
                             List<string> watsonOptions = new List<string>();
-                            
+
                             watsonOptions.Add("Personalized Label");
                             GenerateMenu(watsonOptions, SimpleLabelCreation, donthavewatsonrecommendations);
 
@@ -3815,7 +4160,7 @@ namespace Entrega2_Equipo1
                     {
                         case "SimpleLabel":
                             SimpleLabel labelaux1 = (SimpleLabel)label;
-                            auxLabels.Add(new SimpleLabel(labelaux1.Sentence, labelaux1.SerialNumber)) ;
+                            auxLabels.Add(new SimpleLabel(labelaux1.Sentence, labelaux1.SerialNumber));
                             break;
                         case "PersonLabel":
                             PersonLabel labelaux2 = (PersonLabel)label;
@@ -3838,7 +4183,7 @@ namespace Entrega2_Equipo1
             }
             return returningListOfImages;
         }
-        
+
 
         // User interaction during the import files, and creates an image to add to the library
         private Image CreatingImageMenu(string name, string path)
@@ -3850,11 +4195,11 @@ namespace Entrega2_Equipo1
             string lab = "Labels: ";
             string separator = "<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>\n";
             int selectedOption = 0;
-            List<string> options = new List<string>() {"Set Calification", "Set new Label", "Continue"};
+            List<string> options = new List<string>() { "Set Calification", "Set new Label", "Continue" };
 
             // Copy an object into files
-            string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\"+name;
-            System.IO.File.Copy(path+name, newpath);
+            string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
+            System.IO.File.Copy(path + name, newpath);
 
             while (true)
             {
@@ -4138,7 +4483,7 @@ namespace Entrega2_Equipo1
                         {
                             int userSelection;
                             PersonLabel auxLabel = new PersonLabel();
-                            
+
                             while (true)
                             {
                                 string settedFaceLocation;
@@ -4480,7 +4825,7 @@ namespace Entrega2_Equipo1
                                             }
 
 
-                                            auxLabel.BirthDate = Convert.ToString(day) +"-"+ Convert.ToString(month) +"-"+ Convert.ToString(year);
+                                            auxLabel.BirthDate = Convert.ToString(day) + "-" + Convert.ToString(month) + "-" + Convert.ToString(year);
                                             break;
                                         }
                                         break;
@@ -4635,7 +4980,7 @@ namespace Entrega2_Equipo1
             return returningImage;
         }
 
-        
+
         // Verify if the files given by the user exists
         private bool FilesExists(string[] files, string path)
         {
@@ -4789,7 +5134,7 @@ namespace Entrega2_Equipo1
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
-        
+
 
         // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
@@ -4807,7 +5152,7 @@ namespace Entrega2_Equipo1
         // Shows presentation message
         private void ShowPresentation()
         {
-            Console.BackgroundColor = ConsoleColor.DarkBlue ;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetWindowSize(60, 28);
@@ -4972,7 +5317,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(235,60);
+            Console.SetWindowSize(235, 60);
             Console.Clear();
             List<string> startingStrings = LoadBannerData("startmenu.txt");
             int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
@@ -4984,7 +5329,7 @@ namespace Entrega2_Equipo1
         private List<string> LoadBannerData(string filename)
         {
             List<string> returningList = new List<string>();
-            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\banners\"+filename;
+            string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\banners\" + filename;
             StreamReader file = new StreamReader(path);
             string line;
             while ((line = file.ReadLine()) != null)
@@ -4994,6 +5339,6 @@ namespace Entrega2_Equipo1
             file.Close();
             return returningList;
         }
- 
+
     }
 }
