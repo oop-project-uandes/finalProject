@@ -18,7 +18,7 @@ namespace Entrega2_Equipo1
         {
             this.WorkingArea = new WorkingArea();
             this.tools = new List<Tool>() { new Brush(), new Merger(), new Resizer(),
-                new Scissors(), new Zoom(), new AddCensorship(), new AddImage(),
+                new Scissors(), new AddCensorship(), new AddImage(),
                 new AddShape(), new AddText(), new AutomaticAdjustmentFilter(),
                 new BlackNWhiteFilter(), new BrightnessFilter(), new ColorFilter(), new InvertFilter(),
                 new MirrorFilter(), new OldFilmFilter(), new RotateFlipFilter(), new SepiaFilter(), new WindowsFilter()};
@@ -43,7 +43,7 @@ namespace Entrega2_Equipo1
 
         public void DeleteWatsonAnalyzer()
         {
-            this.tools.RemoveAt(19);
+            this.tools.RemoveAt(18);
         }
 
         public void LoadImagesToWorkingArea(List<Image> images)
@@ -86,7 +86,7 @@ namespace Entrega2_Equipo1
         public Dictionary<int, Dictionary<string, double>> ClassifyImage(string path)
         {
             Bitmap bitmapImage = new Bitmap(path);
-            WatsonAnalizer myFilter = (WatsonAnalizer)this.tools[19];
+            WatsonAnalizer myFilter = (WatsonAnalizer)this.tools[18];
             Dictionary<int, Dictionary<string, double>> resultadoClasificacion = myFilter.FindClassifiers(bitmapImage);
             return resultadoClasificacion;
         }
@@ -97,10 +97,12 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
+
         public bool Slideshow(List<Image> images)
         {
             throw new NotImplementedException();
         }
+
 
         public System.Drawing.Bitmap Merge(List<Image> images)
         {
@@ -211,6 +213,7 @@ namespace Entrega2_Equipo1
             return image.BitmapImage;
         }
 
+
         public Dictionary<string, int> SexAndAgeRecognition(Image image)
         {
             Dictionary<string, int> result = new Dictionary<string, int>() { };
@@ -269,7 +272,8 @@ namespace Entrega2_Equipo1
             }
 
             return result;
-        }
+        } // => ESTE METODO SE DEBE VOLVER A HACER
+
 
         public System.Drawing.Bitmap PixelCensorship(Image image, int[] coordinates)
         {

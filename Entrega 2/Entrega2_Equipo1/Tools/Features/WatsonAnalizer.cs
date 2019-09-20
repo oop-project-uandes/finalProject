@@ -101,8 +101,10 @@ namespace Entrega2_Equipo1
         {
             Dictionary<int, Dictionary<string, object>> returningDic = new Dictionary<int, Dictionary<string, object>>();
             string path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\WatsonTempFiles\faces.jpg";
+            /*
             EncoderParameters encoderParameters = new EncoderParameters(1);
             encoderParameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 100L);
+            */
             image.Save(path);
             returningDic = ClassifyFaces(path);
             File.Delete(path);
