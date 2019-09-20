@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Entrega2_Equipo1
 {
@@ -17,42 +14,42 @@ namespace Entrega2_Equipo1
         private readonly string DEFAULT_PRODUCER_PATH = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\producer.bin";
         private bool _continue = true;
         private int startingOption;
-        
-        
+
+
         // TODO: AL FINAL EL USUARIO DEBE SER CAPAZ DE DEJAR PARAMETROS EN LOS LABELS SIN DEFINIR (POR EJEMPLO, 
         // EN ADD LABEL Y EN EDIT LABEL, SI SE INTRODUCE None EN CUALQUIERA DE LOS PARAMETROS ESTE DEBE QUEDAR SIN DEFINIR
 
         public void Run()
         {
-            ShowPresentation();
-            LoadingLibraryManager();
-            LoadingProducerManager();
+            this.ShowPresentation();
+            this.LoadingLibraryManager();
+            this.LoadingProducerManager();
             while (this._continue == true)
             {
-                this.startingOption = StartingMenu();
+                this.startingOption = this.StartingMenu();
                 switch (this.startingOption)
                 {
                     // Import a file to My Library from a path defined by the user
                     // READY
                     case 0:
-                        ImportImageFromPath();
+                        this.ImportImageFromPath();
                         break;
 
                     // Export a file from My Library to a path defined by the user
                     // READY
                     case 1:
-                        ExportFileToPath();
+                        this.ExportFileToPath();
                         break;
 
                     // Editing Area (Apply filters, features, watson, slideshares, etc)
                     case 2:
-                        EditingArea();
+                        this.EditingArea();
                         break;
 
                     // Show library, add elements or erase elements, add or remove labels.
                     // READY
                     case 3:
-                        ManageLibrary();
+                        this.ManageLibrary();
                         break;
 
                     // Search in the library
@@ -69,9 +66,9 @@ namespace Entrega2_Equipo1
                         break;
                 }
             }
-            SaveLibrary();
-            SaveProducer();
-            ShowGoodbye();
+            this.SaveLibrary();
+            this.SaveProducer();
+            this.ShowGoodbye();
             return;
         }
 
@@ -85,7 +82,7 @@ namespace Entrega2_Equipo1
             {
                 // Show the menu of the editing area, with the images currently loaded
                 Console.Clear();
-                List<string> EditingAreaTitle = LoadBannerData("editingarea.txt");
+                List<string> EditingAreaTitle = this.LoadBannerData("editingarea.txt");
                 string curr = "Images currently in the Working Area: \n";
                 List<string> imagesIntTheWorkingArea = new List<string>();
                 int count = 1;
@@ -180,27 +177,27 @@ namespace Entrega2_Equipo1
                 {
                     // User wants to apply filters => READY
                     case 0:
-                        ApplyFilters();
+                        this.ApplyFilters();
                         break;
 
                     // User wants to apply features => WORKING HERE
                     case 1:
-                        UseFeatures();
+                        this.UseFeatures();
                         break;
 
                     // User wants to import images to the editing area => READY
                     case 2:
-                        ImportToEditingArea();
+                        this.ImportToEditingArea();
                         break;
 
                     // User wants to delete images from the editing area => READY
                     case 3:
-                        DeleteFromEditingArea();
+                        this.DeleteFromEditingArea();
                         break;
 
                     // User wants to export images from the editing area => READY
                     case 4:
-                        ExportFromEditingArea();
+                        this.ExportFromEditingArea();
                         break;
                 }
             }
@@ -214,9 +211,9 @@ namespace Entrega2_Equipo1
             string choosefeature = "Please, choose the Feature you want to use: ";
             string presskey = "Press any key to continue...";
             string emptyWorkingArea = "Your Editing Area is empty";
-            
-            
-            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+
+
+            List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
             List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
                                                             "Add text", "Merge images", "Resize image", "Mosaic",
                                                             "Collage", "Album", "Calendar", "Exit" };
@@ -224,7 +221,7 @@ namespace Entrega2_Equipo1
             while (true)
             {
                 // Verify that the working area is not empty
-                if (producer.imagesInTheWorkingArea().Count == 0)
+                if (this.producer.imagesInTheWorkingArea().Count == 0)
                 {
                     Console.WriteLine("\n");
                     Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
@@ -236,25 +233,25 @@ namespace Entrega2_Equipo1
                 }
 
                 // Ask user what he wants to do, and if he wants to exit, we exit
-                int usrDec = GenerateMenu(options, null, choosefeature, UseFeatureTitle);
+                int usrDec = this.GenerateMenu(options, null, choosefeature, UseFeatureTitle);
                 if (options[usrDec] == "Exit") break; ;
 
                 switch (usrDec)
                 {
                     // Want to apply censorship => READY
                     case 0:
-                        ApplyCensorship();
+                        this.ApplyCensorship();
                         break;
 
                     // Want to use Watson Analizer => READY
                     case 1:
                         //UseWatson(); => NOT IMPLEMENTED YET
-                        ShowWatsonNotImplemented();
+                        this.ShowWatsonNotImplemented();
                         break;
 
                     // Add text feature
                     case 2:
-                        AddText();
+                        this.AddText();
                         break;
 
                 }
@@ -265,32 +262,43 @@ namespace Entrega2_Equipo1
 
         private void AddText()
         {
-            /*
-         * OPCIONES: TEXTO, POSICIONX, POSICIONY, FONTSIZE, COLORNAME1, FONTSTYLE, FONTNAME, COLORNAME2
-         * TEXTO: lo define el usuario
-         * POSICIONX Y POSICIONY: lo define el usuario (pero debe estar dentro del tamano de la imagen)
-         * FONTSIZE: es un float, por defecto es 10. (10.0F) (Debe ser mayor que cero)
-         * COLORNAME1: es un string del color inicial para el degradad. El string debe poderse parsear a System.Drawing.KnownColor
-         * FONTSTYLE: es un string, puede ser bold, italic, underline o strikeout
-         * FONTNAME: es un string, que representa el tipo de letra. Esta debe estar instalada en el equipo.
-         * Si no es asi, no se puede hacer nada. Es mejor hacer un try, probando el fontname , usando Font font = new Font(fontName, fontSize);
-         * Si tira error, no esta instalada la fuente en el equipo.
-         * COLORNAME2: es un string del color final para el degradado. El string debe poderse parsear a System.Drawing.KnownColor
-         */
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
 
             // First, we get the names of the images user wants to add the text
-            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
 
             // We get the images currently in the working area
-            List<Image> imagesinworkingarea = producer.imagesInTheWorkingArea();
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
 
             // Now, we need the text, Xpos, Ypos, fontsize, fontstyle, fontname and color1 and color2 for each image
             foreach (string filename in filenames)
             {
+                // First, we get the data
                 Dictionary<string, string> DataToAddText = GetDataToAddText(filename, imagesinworkingarea);
+                if (DataToAddText.Count == 0) return;
+                // Now that we have all the data of the text to add to each image, we add the text
+                string doneon = "Done on ";
+                foreach (string titlestring in AddTextTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        string completestring = doneon + image.Name + "!";
+                        Bitmap modifiedbitmap = this.producer.AddText(image.BitmapImage, DataToAddText["text"], Convert.ToInt32(DataToAddText["X"]),
+                            Convert.ToInt32(DataToAddText["Y"]), (float)Convert.ToDouble(DataToAddText["fontsize"]), DataToAddText["color1"], DataToAddText["fontstyle"], DataToAddText["fontname"],
+                            DataToAddText["color2"]);
+                        image.BitmapImage = modifiedbitmap;
+                        Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(completestring);
+                        System.Threading.Thread.Sleep(500);
+                    }
+                }
             }
-            
         }
 
 
@@ -298,7 +306,7 @@ namespace Entrega2_Equipo1
         {
             // Load the banner data
             string currentText = "[Not set]", currentY = "[Not set]", currentX = "[Not set]", currentFontSize = "[Not set]", currentFontStyle = "[Not set]", currentFontName = "[Not set]", currentColor1 = "[Not set]", currentColor2 = "[Not set]";
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
             string name = "";
             // We find the image name
             foreach (Image image in listofimages)
@@ -310,6 +318,7 @@ namespace Entrega2_Equipo1
             }
 
             string chooseOption = $"Please, customize the parameters as you want for {name} and then select continue: ";
+            int empty = 0;
             while (true)
             {
                 List<string> options = new List<string>() { "Text:\t\t" + currentText, "Y Position:\t\t" + currentY, "X Position:\t\t" +currentX,
@@ -317,12 +326,16 @@ namespace Entrega2_Equipo1
                                                             "Color1:\t\t" + currentColor1, "Color2:\t\t" + currentColor2, "Done"};
 
                 // Let user edit the parameters
-                int usrDec1 = GenerateMenu(options, null, chooseOption, AddTextTitle);
+                int usrDec1 = this.GenerateMenu(options, null, chooseOption, AddTextTitle);
                 // If press Done while text, Xpos and Ypos are not setted, and doesnt want to return to Add Text
                 if (usrDec1 == 8 && (currentText == "[Not set]" || currentY == "[Not set]" || currentX == "[Not set]"))
                 {
-                    int usrDec2 = GenerateMenu(new List<string>() { "Exit", "Return to Add Text" }, null, "[!] ERROR: The minimum parameters to Add Text are [Text], [Y Position] and [X Position]", AddTextTitle);
-                    if (usrDec1 == 0) return new Dictionary<string, string>();
+                    int usrDec2 = this.GenerateMenu(new List<string>() { "Exit", "Return to Add Text" }, null, "[!] ERROR: The minimum parameters to Add Text are [Text], [Y Position] and [X Position]", AddTextTitle);
+                    if (usrDec2 == 0)
+                    {
+                        empty = 1;
+                        break;
+                    }
                     else continue;
                 }
                 else if (usrDec1 == 8) break;
@@ -332,28 +345,54 @@ namespace Entrega2_Equipo1
                 {
                     // Wants to edit text parameter
                     case 0:
-                        currentText = ChooseText();
+                        currentText = this.ChooseText();
                         break;
                     // Wants to enter Y Position
                     case 1:
-                        string yvalue = ChooseY(filename);
-                        if(yvalue != "-1") currentY = yvalue;
+                        string yvalue = this.ChooseY(filename);
+                        if (yvalue != "-1") currentY = yvalue;
                         break;
                     // Wants to enter X Position
                     case 2:
-                        string xvalue = ChooseX(filename);
+                        string xvalue = this.ChooseX(filename);
                         if (xvalue != "-1") currentX = xvalue;
                         break;
                     // Wants to select a new fontsize
                     case 3:
-                        string chosenfontsize = ChooseFontSize();
+                        string chosenfontsize = this.ChooseFontSize();
                         if (chosenfontsize != "-1") currentFontSize = chosenfontsize;
                         break;
-                    // Working on case 4
+                    // Wants to select a new font style
                     case 4:
+                        string chosenfontstyle = this.ChooseFontStyle();
+                        if (chosenfontstyle != "-1") currentFontStyle = chosenfontstyle;
+                        break;
+                    //Wants to select a new font name
+                    case 5:
+                        string chosenfontname = this.ChooseFontName();
+                        if (chosenfontname != "-1") currentFontName = chosenfontname;
+                        break;
+                    // Wants to select color1
+                    case 6:
+                        string chosencolor1 = this.ChooseColor(1);
+                        if (chosencolor1 != "-1") currentColor1 = chosencolor1;
+                        break;
+                    // Wants to select color2
+                    case 7:
+                        string chosencolor2 = this.ChooseColor(2);
+                        if (chosencolor2 != "-1") currentColor2 = chosencolor2;
                         break;
                 }
             }
+
+
+            if (empty == 1) return new Dictionary<string, string>();
+
+            if (currentFontSize == "[Not set]") currentFontSize = "10.0";
+            if (currentFontStyle == "[Not set]") currentFontStyle = "bold";
+            if (currentFontName == "[Not set]") currentFontName = "Times New Roman";
+            if (currentColor1 == "[Not set]") currentColor1 = null;
+            if (currentColor2 == "[Not set]") currentColor2 = null;
 
             Dictionary<string, string> returningDict = new Dictionary<string, string>();
             returningDict.Add("text", currentText);
@@ -368,10 +407,107 @@ namespace Entrega2_Equipo1
         }
 
 
+        private string ChooseColor(int numberOfTheColor)
+        {
+            Console.Clear();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
+            string choosetext = "Please, introduce the color" + Convert.ToString(numberOfTheColor) + " of the text that you want to add to the image: ";
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: Color Parameter not valid";
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - choosetext.Length) / 2, Console.CursorTop);
+            Console.Write(choosetext);
+            string chosencolor = Console.ReadLine();
+            try
+            {
+                // Try to parse it to KnownColor. If throws error, the color isnt in the KnownClor enum
+                System.Drawing.KnownColor color = (System.Drawing.KnownColor)Enum.Parse(typeof(System.Drawing.KnownColor), chosencolor);
+                return chosencolor;
+            }
+            catch
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+        }
+
+
+        private string ChooseFontName()
+        {
+            Console.Clear();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
+            string choosetext = "Please, introduce the fontname of the text that you want to add to the image: ";
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: FontName Parameter not valid, or not installed in your computer";
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - choosetext.Length) / 2, Console.CursorTop);
+            Console.Write(choosetext);
+            string chosenfontname = Console.ReadLine();
+            try
+            {
+                // Try to create a font object. If throws error, the font is not installed 
+                Font font = new Font(chosenfontname, 10.0F);
+                return chosenfontname;
+            }
+            catch
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+        }
+
+
+        private string ChooseFontStyle()
+        {
+            Console.Clear();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
+            string choosetext = "Please, introduce the fontstyle of the text that you want to add to the image <bold-underline-italic-strikeout>: ";
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: FontStyle Parameter not valid";
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - choosetext.Length) / 2, Console.CursorTop);
+            Console.Write(choosetext);
+            string chosenfontstyle = Console.ReadLine();
+            if (chosenfontstyle == "bold" || chosenfontstyle == "underline" || chosenfontstyle == "italic" || chosenfontstyle == "strikeout")
+            {
+                return chosenfontstyle;
+            }
+            else
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+        }
+
 
         private string ChooseFontSize()
         {
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            Console.Clear();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
             string choosetext = "Please, introduce the fontsize of the text that you want to add to the image: ";
             string presskey = "Press any key to continue...";
             string notvalid = "[!] ERROR: FontSize Parameter not valid";
@@ -403,9 +539,10 @@ namespace Entrega2_Equipo1
 
         private string ChooseX(string filename)
         {
+            Console.Clear();
             int width = 0;
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
-            List<Image> listofimages = producer.imagesInTheWorkingArea();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
+            List<Image> listofimages = this.producer.imagesInTheWorkingArea();
             string presskey = "Press any key to continue...";
             string notvalid = "[!] ERROR: X Parameter not valid";
             string chooseX = "Please, enter the X parameter: ";
@@ -448,9 +585,10 @@ namespace Entrega2_Equipo1
 
         private string ChooseY(string filename)
         {
+            Console.Clear();
             int height = 0;
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
-            List<Image> listofimages = producer.imagesInTheWorkingArea();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
+            List<Image> listofimages = this.producer.imagesInTheWorkingArea();
             string presskey = "Press any key to continue...";
             string notvalid = "[!] ERROR: Y Parameter not valid";
             string chooseY = "Please, enter the Y parameter: ";
@@ -492,7 +630,8 @@ namespace Entrega2_Equipo1
 
         private string ChooseText()
         {
-            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            Console.Clear();
+            List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
             string choosetext = "Please, introduce the text you want to add to the image: ";
             foreach (string titlestring in AddTextTitle)
             {
@@ -511,7 +650,7 @@ namespace Entrega2_Equipo1
             string presskey = "Press any key to continue...";
             string notimplemented = "[!] ERROR: Watson Face Recognition not implement yet";
             // Show the title
-            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
             foreach (string titlestring in UseFeatureTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
@@ -524,17 +663,17 @@ namespace Entrega2_Equipo1
             Console.ReadKey();
             return;
         }
-        
+
 
         // Watson no lo vamos a implementar aun, pero deberia ser algo como esto, usando Watson Analyzer (Find faces)
         private void UseWatson()
         {
-            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
 
             // First, we get the names of the images user wants to apply the censorship
-            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
 
-            List<Image> inworkingarea = producer.imagesInTheWorkingArea();
+            List<Image> inworkingarea = this.producer.imagesInTheWorkingArea();
             List<Dictionary<string, int>> results = new List<Dictionary<string, int>>();
 
             string loading = "Please, wait while Watson analizes the images...";
@@ -547,7 +686,7 @@ namespace Entrega2_Equipo1
                 {
                     if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
                     {
-                        Dictionary<string, int> resultanalisis = producer.SexAndAgeRecognition(image); // ESTE METODO SE DEBE VOLVER A HACER
+                        Dictionary<string, int> resultanalisis = this.producer.SexAndAgeRecognition(image); // ESTE METODO SE DEBE VOLVER A HACER
                         // por lo que el diccionario resultanalisis debe ser de otro tipo
                         results.Add(resultanalisis);
                     }
@@ -588,14 +727,14 @@ namespace Entrega2_Equipo1
         {
             string choosetypeofcensorship = "Please, choose which type of censorship you want to use";
             List<string> typesofcensorship = new List<string>() { "Black Censorship", "Pixel Censorship" };
-            List<string> UseCensorshipTitle = LoadBannerData("usecensorhip.txt");
+            List<string> UseCensorshipTitle = this.LoadBannerData("usecensorhip.txt");
             // First, we get the names of the images user wants to apply the censorship
-            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
             // Then, we get the type of censorship
-            int usrDecCensorship = GenerateMenu(typesofcensorship, null, choosetypeofcensorship, UseCensorshipTitle);
+            int usrDecCensorship = this.GenerateMenu(typesofcensorship, null, choosetypeofcensorship, UseCensorshipTitle);
             // Next, we get the coordinates of the censorship for each image
-            Dictionary<string, int[]> coordinates = GetCoordinatesForCensorship(filenames);
-            List<Image> imagesInWorkingArea = producer.imagesInTheWorkingArea();
+            Dictionary<string, int[]> coordinates = this.GetCoordinatesForCensorship(filenames);
+            List<Image> imagesInWorkingArea = this.producer.imagesInTheWorkingArea();
             // Next, we do the censorship
             foreach (KeyValuePair<string, int[]> pair in coordinates)
             {
@@ -610,25 +749,25 @@ namespace Entrega2_Equipo1
                         if (usrDecCensorship == 0)
                         {
                             // Apply the censorship and save it
-                            Bitmap censured = producer.BlackCensorship(image, pair.Value);
+                            Bitmap censured = this.producer.BlackCensorship(image, pair.Value);
                             image.BitmapImage = censured;
                         }
                         // If user wants pixel censorship
                         else
                         {
                             // Apply the censorship and save it
-                            
-                            Bitmap censured = producer.PixelCensorship(image, pair.Value);
+
+                            Bitmap censured = this.producer.PixelCensorship(image, pair.Value);
                             image.BitmapImage = censured;
-                            
+
                         }
 
-                        ShowDoneApplyingForFeatures(image.Name);
+                        this.ShowDoneApplyingForFeatures(image.Name);
                         break;
                     }
                 }
             }
-            SaveProducer();
+            this.SaveProducer();
             return;
         }
 
@@ -640,9 +779,9 @@ namespace Entrega2_Equipo1
             string notvalid = "Values not valid";
             string introducecoordinates = "Please, introduce the coordinates of censorship separed by commas (X,Y,TOP,LEFT): ";
             Dictionary<string, int[]> returningDict = new Dictionary<string, int[]>();
-            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
-            int width = 0, height=0;
-            List<Image> imagesInWorkingArea = producer.imagesInTheWorkingArea();
+            List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
+            int width = 0, height = 0;
+            List<Image> imagesInWorkingArea = this.producer.imagesInTheWorkingArea();
             foreach (string file in files)
             {
                 string[] separated;
@@ -674,12 +813,12 @@ namespace Entrega2_Equipo1
                     Console.SetCursorPosition((Console.WindowWidth - introducecoordinates.Length) / 2, Console.CursorTop);
                     Console.Write(introducecoordinates);
                     string values = Console.ReadLine();
-                    bool valid = VerifyIfAreValidCoordinates(values, width, height);
+                    bool valid = this.VerifyIfAreValidCoordinates(values, width, height);
                     if (valid == true)
                     {
                         separated = values.Split(',');
                         break;
-                    } 
+                    }
                     else
                     {
                         Console.WriteLine("\n");
@@ -691,10 +830,10 @@ namespace Entrega2_Equipo1
                     }
                 }
 
-                returningDict.Add(file, new int[] {Convert.ToInt32(separated[0]), Convert.ToInt32(separated[1]), Convert.ToInt32(separated[2]), Convert.ToInt32(separated[3])});
+                returningDict.Add(file, new int[] { Convert.ToInt32(separated[0]), Convert.ToInt32(separated[1]), Convert.ToInt32(separated[2]), Convert.ToInt32(separated[3]) });
             }
 
-            return returningDict; 
+            return returningDict;
         }
 
 
@@ -722,14 +861,14 @@ namespace Entrega2_Equipo1
 
         private List<string> ChooseWhichImagesWantToApplyFeature()
         {
-            List<string> applyfiltertitle = LoadBannerData("usefeatures.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("usefeatures.txt");
             string choosefiles = "Please, choose to which images you want to apply the feature: ";
             string chosenfiles = "Chosen images: ";
             List<string> chosenImages = new List<string>();
             List<string> possibleToChoose = new List<string>();
             List<Image> imagesInTheWorkingArea = new List<Image>();
 
-            foreach (Image image in producer.imagesInTheWorkingArea())
+            foreach (Image image in this.producer.imagesInTheWorkingArea())
             {
                 imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
                     image.AspectRatio, image.DarkClear, image.Exif));
@@ -837,13 +976,13 @@ namespace Entrega2_Equipo1
         private void ExportFromEditingArea()
         {
             // Load the title
-            List<string> ExportTitle = LoadBannerData("exportfromeditingarea.txt");
+            List<string> ExportTitle = this.LoadBannerData("exportfromeditingarea.txt");
             string presskey = "Press any key to continue...";
             string emptyWorkingArea = "[!] Your Editing Area is empty";
             string done = "All selected images were exported";
 
             // Verify that the Editing Area is not empty
-            if (producer.imagesInTheWorkingArea().Count == 0)
+            if (this.producer.imagesInTheWorkingArea().Count == 0)
             {
                 Console.WriteLine("\n");
                 Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
@@ -855,38 +994,38 @@ namespace Entrega2_Equipo1
             }
 
             // We get the images that user wants export
-            List<string> imagesToExport = ChooseWhichImagesWantToExport();
+            List<string> imagesToExport = this.ChooseWhichImagesWantToExport();
 
 
             foreach (string stringimage in imagesToExport)
             {
                 int i = 0;
                 List<int> removeAt = new List<int>();
-                List<Image> possibleImages = producer.imagesInTheWorkingArea();
+                List<Image> possibleImages = this.producer.imagesInTheWorkingArea();
                 foreach (Image image in possibleImages)
                 {
                     if (stringimage == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
                     {
                         // We verify if the library contains the image
-                        int librarycontains = LibraryContains(stringimage);
+                        int librarycontains = this.LibraryContains(stringimage);
                         // If it contains the image, we ask if user wants to replace it
                         if (librarycontains != -1)
                         {
                             string thefollowingimageexists = $"The image {image.Name} exists in your library. Do you want to replace it?";
                             List<string> options = new List<string>() { "Yes", "No" };
-                            int usrDec = GenerateMenu(options, null, thefollowingimageexists, ExportTitle);
+                            int usrDec = this.GenerateMenu(options, null, thefollowingimageexists, ExportTitle);
                             // if user wants to replace it
                             if (usrDec == 0)
                             {
-                                library.Images.RemoveAt(librarycontains);
-                                library.Images.Add(image);
+                                this.library.Images.RemoveAt(librarycontains);
+                                this.library.Images.Add(image);
                                 removeAt.Add(i);
                             }
                             // if user doesnt want to replace it
                             else
                             {
                                 // We ask if he wants to change the name of the image
-                                int usrDec2 = GenerateMenu(new List<string>() { "Yes", "No" }, null, "Do you want to change the name of the image?", ExportTitle);
+                                int usrDec2 = this.GenerateMenu(new List<string>() { "Yes", "No" }, null, "Do you want to change the name of the image?", ExportTitle);
                                 if (usrDec2 == 0)
                                 {
                                     string introducethenewname = "Please, introduce the new name: ";
@@ -900,13 +1039,13 @@ namespace Entrega2_Equipo1
                                     Console.Write(introducethenewname);
                                     image.Name = Console.ReadLine();
                                 }
-                                library.Images.Add(image);
+                                this.library.Images.Add(image);
                                 removeAt.Add(i);
                             }
                         }
                         else
                         {
-                            library.Images.Add(image);
+                            this.library.Images.Add(image);
                             removeAt.Add(i);
                         }
 
@@ -915,9 +1054,9 @@ namespace Entrega2_Equipo1
                 }
                 foreach (int j in removeAt)
                 {
-                    producer.imagesInTheWorkingArea().RemoveAt(j);
+                    this.producer.imagesInTheWorkingArea().RemoveAt(j);
                 }
-                SaveProducer();
+                this.SaveProducer();
             }
 
             Console.Clear();
@@ -942,7 +1081,7 @@ namespace Entrega2_Equipo1
         {
             string applyed = "Done on ";
             string dots = "...";
-            List<string> applyfiltertitle = LoadBannerData("usefeatures.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("usefeatures.txt");
 
             Console.Clear();
             string completeMessage = applyed + name + " !";
@@ -964,13 +1103,13 @@ namespace Entrega2_Equipo1
         }
 
 
-        
+
         // Method to know if the library contains an image. Returns -1 if image doesnt exists, and
         // the index of the image if it exists
         private int LibraryContains(string stringimage)
         {
             int count = 0;
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 if (stringimage == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") return count;
                 count++;
@@ -979,7 +1118,7 @@ namespace Entrega2_Equipo1
         }
 
 
-        
+
         // To apply the filters
         private void ApplyFilters()
         {
@@ -988,7 +1127,7 @@ namespace Entrega2_Equipo1
                 // Verify that the working area is not empty
                 string presskey = "Press any key to continue...";
                 string emptyWorkingArea = "Your Editing Area is empty";
-                if (producer.imagesInTheWorkingArea().Count == 0)
+                if (this.producer.imagesInTheWorkingArea().Count == 0)
                 {
                     Console.WriteLine("\n");
                     Console.SetCursorPosition((Console.WindowWidth - emptyWorkingArea.Length) / 2, Console.CursorTop);
@@ -1002,18 +1141,18 @@ namespace Entrega2_Equipo1
 
                 // Load the title and the options for the menu
                 string choosefilter = "Please, choose the Filter you want to apply: ";
-                List<string> ApplyFiltersTitle = LoadBannerData("applyfilters.txt");
+                List<string> ApplyFiltersTitle = this.LoadBannerData("applyfilters.txt");
                 List<string> options = new List<string>() { "BlackNWhiteFilter", "BrightnessFilter", "ColorFilter",
                                                         "InvertFiler", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
                                                         "SepiaFilter", "WindowsFilter","AutomaticAdjustmentFilter", "Exit"};
 
                 // Ask user what he wants to do, and if he wants to exit, we exit
-                int usrDec = GenerateMenu(options, null, choosefilter, ApplyFiltersTitle);
+                int usrDec = this.GenerateMenu(options, null, choosefilter, ApplyFiltersTitle);
                 if (options[usrDec] == "Exit") break; ;
 
 
                 // First, we get the names of the images user wants to apply the filter
-                List<string> filenames = ChooseWhichImagesWantToApplyFilter();
+                List<string> filenames = this.ChooseWhichImagesWantToApplyFilter();
 
 
                 // Switch for the usrDecision
@@ -1023,17 +1162,17 @@ namespace Entrega2_Equipo1
                 {
                     // Apply blacknwhite filter
                     case 0:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.BlackNWhiteFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.BlackNWhiteFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1043,18 +1182,18 @@ namespace Entrega2_Equipo1
                     // Apply brightness filter
                     case 1:
                         // We get the level of brightness to apply
-                        int brightnesslevel = ChooseLevelOfBrightness();
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        int brightnesslevel = this.ChooseLevelOfBrightness();
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.BrightnessFilter, default(Color), brightnesslevel);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.BrightnessFilter, default(Color), brightnesslevel);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1064,19 +1203,19 @@ namespace Entrega2_Equipo1
                     // Apply color filter
                     case 2:
                         // We get the color that user wants
-                        Color usrColor = ChooseColor();
+                        Color usrColor = this.ChooseColor();
                         // We apply the filter
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.ColorFilter, usrColor);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.ColorFilter, usrColor);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1085,17 +1224,17 @@ namespace Entrega2_Equipo1
 
                     // Apply invert filter
                     case 3:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.InvertFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.InvertFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1104,17 +1243,17 @@ namespace Entrega2_Equipo1
 
                     // Apply mirror filter
                     case 4:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.MirrorFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.MirrorFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1122,17 +1261,17 @@ namespace Entrega2_Equipo1
 
                     // Apply OldFilm Filter
                     case 5:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.OldFilmFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.OldFilmFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1141,18 +1280,18 @@ namespace Entrega2_Equipo1
                     // Apply RotateFlip filter
                     case 6:
                         // We get the rotateFlip type
-                        RotateFlipType rotateType = ChooseRotateFlipType();
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        RotateFlipType rotateType = this.ChooseRotateFlipType();
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.RotateFlipFilter, default(Color), 0, 0, rotateType);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.RotateFlipFilter, default(Color), 0, 0, rotateType);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1160,17 +1299,17 @@ namespace Entrega2_Equipo1
 
                     // Apply SepiaFilter
                     case 7:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.SepiaFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.SepiaFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1178,17 +1317,17 @@ namespace Entrega2_Equipo1
 
                     // Apply WindowsFilter
                     case 8:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.WindowsFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.WindowsFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1196,17 +1335,17 @@ namespace Entrega2_Equipo1
 
                     // Apply AutomaticAdjustmentFilter
                     case 9:
-                        foreach (Image image in producer.imagesInTheWorkingArea())
+                        foreach (Image image in this.producer.imagesInTheWorkingArea())
                         {
                             foreach (string filename in filenames)
                             {
                                 if ($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n" == filename)
                                 {
                                     // First, we apply the filter to the image
-                                    Bitmap bitmap = producer.ApplyFilter(image, EFilter.AutomaticAdjustmentFilter);
+                                    Bitmap bitmap = this.producer.ApplyFilter(image, EFilter.AutomaticAdjustmentFilter);
                                     // And then, we change the bitmap of the selectedImage
                                     image.BitmapImage = bitmap;
-                                    ShowDoneApplyingFor(image.Name);
+                                    this.ShowDoneApplyingFor(image.Name);
                                 }
                             }
                         }
@@ -1225,14 +1364,14 @@ namespace Entrega2_Equipo1
         // To choose the rotateFlipType
         private RotateFlipType ChooseRotateFlipType()
         {
-            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("applyfilters.txt");
             List<string> options = new List<string>() { "Rotate180FlipXY", "Rotate90FlipNone", "Rotate270FlipXY",
                                                         "Rotate180FlipNone", "RotateNoneFlipXY", "Rotate270FlipNone",
                                                         "Rotate90FlipXY", "RotateNoneFlipX", "Rotate180FlipY", "Rotate90FlipX",
                                                         "Rotate270FlipY", "Rotate180FlipX", "RotateNoneFlipY", "Rotate270FlipX",
                                                         "Rotate90FlipY" };
 
-            int usrDec = GenerateMenu(options, null, "Please, choose the type of Rotation and Flip: ", applyfiltertitle);
+            int usrDec = this.GenerateMenu(options, null, "Please, choose the type of Rotation and Flip: ", applyfiltertitle);
             return (RotateFlipType)Enum.Parse(typeof(RotateFlipType), options[usrDec]);
         }
 
@@ -1241,13 +1380,13 @@ namespace Entrega2_Equipo1
         // To choose the color 
         private Color ChooseColor()
         {
-            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("applyfilters.txt");
             Color returningColor = Color.FromArgb(0, 0, 0);
-            int usrWants = GenerateMenu(new List<string>() { "Select color from list", "Select a custom color" }, null, "Please, select an option: ", applyfiltertitle);
+            int usrWants = this.GenerateMenu(new List<string>() { "Select color from list", "Select a custom color" }, null, "Please, select an option: ", applyfiltertitle);
             switch (usrWants)
             {
                 case 0:
-                    int numberOfTheColor = GenerateMenu(new List<string>() { "Red", "Green", "Yellow", "Blue" }, null, "Please, select a color", applyfiltertitle);
+                    int numberOfTheColor = this.GenerateMenu(new List<string>() { "Red", "Green", "Yellow", "Blue" }, null, "Please, select a color", applyfiltertitle);
                     switch (numberOfTheColor)
                     {
                         case 0:
@@ -1307,11 +1446,11 @@ namespace Entrega2_Equipo1
         }
 
 
-        
+
         // To choose the level of brightness
         private int ChooseLevelOfBrightness()
         {
-            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("applyfilters.txt");
             string presskey = "Press any key to continue...";
             string valueNotValid = "[!] ERROR: Brightness value not valid";
             string chooselevel = "Please, introduce the level of brightness <-255, 255>: ";
@@ -1352,7 +1491,7 @@ namespace Entrega2_Equipo1
         {
             string applyed = "Done on ";
             string dots = "...";
-            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("applyfilters.txt");
 
             Console.Clear();
             string completeMessage = applyed + name + " !";
@@ -1378,14 +1517,14 @@ namespace Entrega2_Equipo1
         // Returns the list of the names of the image sthat the user wants to apply the filter
         private List<string> ChooseWhichImagesWantToApplyFilter()
         {
-            List<string> applyfiltertitle = LoadBannerData("applyfilters.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("applyfilters.txt");
             string choosefiles = "Please, choose to which images you want to apply the filter";
             string chosenfiles = "Chosen images: ";
             List<string> chosenImages = new List<string>();
             List<string> possibleToChoose = new List<string>();
             List<Image> imagesInTheWorkingArea = new List<Image>();
 
-            foreach (Image image in producer.imagesInTheWorkingArea())
+            foreach (Image image in this.producer.imagesInTheWorkingArea())
             {
                 imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
                     image.AspectRatio, image.DarkClear, image.Exif));
@@ -1491,14 +1630,14 @@ namespace Entrega2_Equipo1
 
         private List<string> ChooseWhichImagesWantToExport()
         {
-            List<string> applyfiltertitle = LoadBannerData("exportfromeditingarea.txt");
+            List<string> applyfiltertitle = this.LoadBannerData("exportfromeditingarea.txt");
             string choosefiles = "Please, choose which images you want to export: ";
             string chosenfiles = "Chosen images: ";
             List<string> chosenImages = new List<string>();
             List<string> possibleToChoose = new List<string>();
             List<Image> imagesInTheWorkingArea = new List<Image>();
 
-            foreach (Image image in producer.imagesInTheWorkingArea())
+            foreach (Image image in this.producer.imagesInTheWorkingArea())
             {
                 imagesInTheWorkingArea.Add(new Image(image.Name, image.Labels, image.Calification, image.BitmapImage, image.Resolution,
                     image.AspectRatio, image.DarkClear, image.Exif));
@@ -1607,11 +1746,11 @@ namespace Entrega2_Equipo1
             string presskey = "Press any key to continue...";
             string donthaveimages = "You dont have any images to delete in the Editing Area";
             Console.Clear();
-            List<string> deletefromeditingareatitle = LoadBannerData("deletefromeditingarea.txt");
+            List<string> deletefromeditingareatitle = this.LoadBannerData("deletefromeditingarea.txt");
             while (true)
             {
                 List<string> options = new List<string>();
-                foreach (Image image in producer.imagesInTheWorkingArea())
+                foreach (Image image in this.producer.imagesInTheWorkingArea())
                 {
                     options.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
                 }
@@ -1626,11 +1765,11 @@ namespace Entrega2_Equipo1
                     Console.ReadKey();
                     return;
                 }
-                int usrWants = GenerateMenu(options, null, "Please, select which image you want to delete: ", deletefromeditingareatitle);
+                int usrWants = this.GenerateMenu(options, null, "Please, select which image you want to delete: ", deletefromeditingareatitle);
                 if (options[usrWants] == "Exit") break;
                 else
                 {
-                    producer.DeleteImageInTheWorkingArea(usrWants);
+                    this.producer.DeleteImageInTheWorkingArea(usrWants);
                 }
                 string dots = "...\n";
                 string success = "Image successfully eliminated from Editing Area!";
@@ -1665,18 +1804,18 @@ namespace Entrega2_Equipo1
         private void ImportToEditingArea()
         {
             Console.Clear();
-            List<string> EditingAreaTitle = LoadBannerData("importeditingarea.txt");
+            List<string> EditingAreaTitle = this.LoadBannerData("importeditingarea.txt");
             List<Image> imagesSelected = new List<Image>();
             List<string> imagesToAdd = new List<string>();
             string curr = "Images selected: \n";
 
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 imagesToAdd.Add($"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n");
             }
 
             imagesToAdd.Add("Continue");
-            List<string> ImportEditingAreaTitle = LoadBannerData("importeditingarea.txt");
+            List<string> ImportEditingAreaTitle = this.LoadBannerData("importeditingarea.txt");
 
 
             while (true)
@@ -1760,58 +1899,58 @@ namespace Entrega2_Equipo1
 
 
                 if (imagesToAdd[usrDecision] == "Continue") break;
-                imagesSelected.Add(library.Images[usrDecision]);
+                imagesSelected.Add(this.library.Images[usrDecision]);
             }
 
             this.producer.LoadImagesToWorkingArea(imagesSelected);
-            SaveProducer();
+            this.SaveProducer();
         }
 
 
 
         private void ManageLibrary()
         {
-            List<string> manageLibraryTitle = LoadBannerData("managelibrary.txt");
+            List<string> manageLibraryTitle = this.LoadBannerData("managelibrary.txt");
             List<string> manageLibraryOptions = new List<string>() { "Show My Library", "Add Label", "Edit Label", "Delete Label", "Set Calification", "Delete Image", "Reset Library", "Exit" };
             string manageLibraryDescription = "Please, select an option: ";
             while (true)
             {
-                int usrDecision = GenerateMenu(manageLibraryOptions, null, manageLibraryDescription, manageLibraryTitle);
+                int usrDecision = this.GenerateMenu(manageLibraryOptions, null, manageLibraryDescription, manageLibraryTitle);
                 if (usrDecision == 7) break;
                 switch (usrDecision)
                 {
                     // User wants to see his library => READY
                     case 0:
-                        ShowLibrary();
+                        this.ShowLibrary();
                         break;
 
                     // User wants to add a label => READY
                     case 1:
-                        AddLabel();
+                        this.AddLabel();
                         break;
 
                     // User wants to edit a label => READY
                     case 2:
-                        EditLabel();
+                        this.EditLabel();
                         break;
 
                     // User wants to delete a label => READY
                     case 3:
-                        DeleteLabel();
+                        this.DeleteLabel();
                         break;
 
                     // User wants to set a new calification => READY
                     case 4:
-                        SetCalification();
+                        this.SetCalification();
                         break;
 
                     case 5:
-                        DeleteImage();
+                        this.DeleteImage();
                         break;
 
 
                     case 6:
-                        ResetLibrary();
+                        this.ResetLibrary();
                         break;
                 }
             }
@@ -1826,9 +1965,9 @@ namespace Entrega2_Equipo1
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
             string description1 = "Please, select wich image you want to delete: ";
 
-            List<string> DeleteImageTitle = LoadBannerData("deleteimage.txt");
+            List<string> DeleteImageTitle = this.LoadBannerData("deleteimage.txt");
             List<string> DeleteImageOptions1 = new List<string>();
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 DeleteImageOptions1.Add(image.Name);
             }
@@ -1842,12 +1981,12 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(DeleteImageOptions1, null, description1, DeleteImageTitle);
+            int numberOfTheImage = this.GenerateMenu(DeleteImageOptions1, null, description1, DeleteImageTitle);
             // If user selects Exit
             if (DeleteImageOptions1[numberOfTheImage] == "Exit") return;
 
-            library.Images.RemoveAt(numberOfTheImage);
-            SaveLibrary();
+            this.library.Images.RemoveAt(numberOfTheImage);
+            this.SaveLibrary();
 
             string dots = "...\n";
             string success = "Image successfully eliminated!";
@@ -1883,9 +2022,9 @@ namespace Entrega2_Equipo1
             string description1 = "Please, select to which image you want to edit the Calification: ";
             string calificationNotValid = "[!] ERROR: Calification not valid";
             string presskey = "Press any key to continue...";
-            List<string> SetCalificationTitle = LoadBannerData("setcalification.txt");
+            List<string> SetCalificationTitle = this.LoadBannerData("setcalification.txt");
             List<string> SetCalificationOptions1 = new List<string>();
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 SetCalificationOptions1.Add(image.Name);
             }
@@ -1899,12 +2038,12 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(SetCalificationOptions1, null, description1, SetCalificationTitle);
+            int numberOfTheImage = this.GenerateMenu(SetCalificationOptions1, null, description1, SetCalificationTitle);
             // If user selects Exit
             if (SetCalificationOptions1[numberOfTheImage] == "Exit") return;
 
             // We get the image he wants to edit
-            Image imageToEditCalification = library.Images[numberOfTheImage];
+            Image imageToEditCalification = this.library.Images[numberOfTheImage];
 
             while (true)
             {
@@ -1931,7 +2070,7 @@ namespace Entrega2_Equipo1
                         throw new Exception("[!] ERROR: Calification not valid");
                     }
                     imageToEditCalification.Calification = newcal;
-                    SaveLibrary();
+                    this.SaveLibrary();
                     break;
                 }
                 catch
@@ -1951,7 +2090,7 @@ namespace Entrega2_Equipo1
         private void EditLabel()
         {
             Console.Clear();
-            List<string> EditLabelTitle = LoadBannerData("editlabel.txt");
+            List<string> EditLabelTitle = this.LoadBannerData("editlabel.txt");
             List<string> EditLabelOptions1 = new List<string>();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
@@ -1961,7 +2100,7 @@ namespace Entrega2_Equipo1
             List<string> optionsToEdit = new List<string>();
 
             // We show all the images to the user, so he can choose which image he wants to edit
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 EditLabelOptions1.Add(image.Name);
             }
@@ -1976,13 +2115,13 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(EditLabelOptions1, null, description1, EditLabelTitle);
+            int numberOfTheImage = this.GenerateMenu(EditLabelOptions1, null, description1, EditLabelTitle);
 
             // If user selects Exit
             if (EditLabelOptions1[numberOfTheImage] == "Exit") return;
 
             // We get the image he wants to edit
-            Image imageToEditLabel = library.Images[numberOfTheImage];
+            Image imageToEditLabel = this.library.Images[numberOfTheImage];
 
             foreach (Label label in imageToEditLabel.Labels)
             {
@@ -2050,7 +2189,7 @@ namespace Entrega2_Equipo1
             }
             optionsToEdit.Add("Exit");
 
-            int intUsrWantsToEdit = GenerateMenu(optionsToEdit, null, description2, EditLabelTitle);
+            int intUsrWantsToEdit = this.GenerateMenu(optionsToEdit, null, description2, EditLabelTitle);
 
             if (optionsToEdit[intUsrWantsToEdit] == "Exit") return;
 
@@ -2069,7 +2208,7 @@ namespace Entrega2_Equipo1
                         string sentence = $"Sentence: {silabel.Sentence}";
                         optionsToEditSimpleLabel.Add(sentence);
                         optionsToEditSimpleLabel.Add("Done");
-                        int usrWants = GenerateMenu(optionsToEditSimpleLabel, null, chooseWhatToDo, EditLabelTitle);
+                        int usrWants = this.GenerateMenu(optionsToEditSimpleLabel, null, chooseWhatToDo, EditLabelTitle);
                         if (usrWants == 1) break;
                         else
                         {
@@ -2083,10 +2222,10 @@ namespace Entrega2_Equipo1
                             Console.Write(introduceTheTag);
                             string newtag = Console.ReadLine();
                             silabel.Sentence = newtag;
-                            SaveLibrary();
+                            this.SaveLibrary();
                         }
                     }
-                    SaveLibrary();
+                    this.SaveLibrary();
                     break;
 
                 case "PersonLabel":
@@ -2126,7 +2265,7 @@ namespace Entrega2_Equipo1
                         else settedBirthDate = "BirthDate:\t\t" + auxLabel.BirthDate;
 
                         List<string> optionsToEditPersonLabel = new List<string>() { settedName, settedSurname, settedSex, settedNationality, settedHairColor, settedEyesColor, settedBirthDate, settedFaceLocation, "Done" };
-                        int usrWants2 = GenerateMenu(optionsToEditPersonLabel, null, chooseWhatToDo, EditLabelTitle);
+                        int usrWants2 = this.GenerateMenu(optionsToEditPersonLabel, null, chooseWhatToDo, EditLabelTitle);
                         if (optionsToEditPersonLabel[usrWants2] == "Done") break;
 
                         // Ya sabemos cual opcion quiere editar el usuario, ahora hacemos clear y mostramos el titulo
@@ -2364,11 +2503,11 @@ namespace Entrega2_Equipo1
 
                                 break;
                         }
-                        SaveLibrary();
+                        this.SaveLibrary();
 
 
                     }
-                    SaveLibrary();
+                    this.SaveLibrary();
                     break;
 
                 case "SpecialLabel":
@@ -2396,7 +2535,7 @@ namespace Entrega2_Equipo1
                         else settedSelfie = "Selfie:\t\tIt is a Selfie";
 
                         List<string> optionsToEditSpecialLabel = new List<string>() { settedGeographicLocation, settedAddress, settedPhotographer, settedPhotoMotive, settedSelfie, "Done" };
-                        int usrWants2 = GenerateMenu(optionsToEditSpecialLabel, null, chooseWhatToDo, EditLabelTitle);
+                        int usrWants2 = this.GenerateMenu(optionsToEditSpecialLabel, null, chooseWhatToDo, EditLabelTitle);
                         if (optionsToEditSpecialLabel[usrWants2] == "Done") break;
 
                         // Ya sabemos cual opcion quiere editar el usuario, ahora hacemos clear y mostramos el titulo
@@ -2493,7 +2632,7 @@ namespace Entrega2_Equipo1
                                 break;
                             case 4:
                                 newaux = enterNew + "Selfie: ";
-                                int usrDec = GenerateMenu(new List<string>() { "It is a Selfie", "It is not a Selfie" }, null, newaux, EditLabelTitle);
+                                int usrDec = this.GenerateMenu(new List<string>() { "It is a Selfie", "It is not a Selfie" }, null, newaux, EditLabelTitle);
                                 if (usrDec == 0)
                                 {
                                     auxLabel2.Selfie = true;
@@ -2501,11 +2640,11 @@ namespace Entrega2_Equipo1
                                 else auxLabel2.Selfie = false;
                                 break;
                         }
-                        SaveLibrary();
+                        this.SaveLibrary();
 
 
                     }
-                    SaveLibrary();
+                    this.SaveLibrary();
                     break;
             }
         }
@@ -2514,7 +2653,7 @@ namespace Entrega2_Equipo1
         private void DeleteLabel()
         {
             Console.Clear();
-            List<string> DeleteLabelTitle = LoadBannerData("deletelabel.txt");
+            List<string> DeleteLabelTitle = this.LoadBannerData("deletelabel.txt");
             List<string> DeleteLabelOptions1 = new List<string>();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
@@ -2522,7 +2661,7 @@ namespace Entrega2_Equipo1
             string description2 = "Please, select which label you want to delete: ";
 
 
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 DeleteLabelOptions1.Add(image.Name);
             }
@@ -2536,11 +2675,11 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(DeleteLabelOptions1, null, description1, DeleteLabelTitle);
+            int numberOfTheImage = this.GenerateMenu(DeleteLabelOptions1, null, description1, DeleteLabelTitle);
 
             // If user selects Exit
             if (DeleteLabelOptions1[numberOfTheImage] == "Exit") return;
-            Image imageToDeleteLabel = library.Images[numberOfTheImage];
+            Image imageToDeleteLabel = this.library.Images[numberOfTheImage];
 
 
             List<string> optionsToDelete = new List<string>();
@@ -2612,7 +2751,7 @@ namespace Entrega2_Equipo1
 
 
             optionsToDelete.Add("Exit");
-            int intUsrWantsToDelete = GenerateMenu(optionsToDelete, null, description2, DeleteLabelTitle);
+            int intUsrWantsToDelete = this.GenerateMenu(optionsToDelete, null, description2, DeleteLabelTitle);
 
             if (optionsToDelete[intUsrWantsToDelete] == "Exit") return;
 
@@ -2625,7 +2764,7 @@ namespace Entrega2_Equipo1
         private void AddLabel()
         {
             Console.Clear();
-            List<string> AddLabelTitle = LoadBannerData("addlabel.txt");
+            List<string> AddLabelTitle = this.LoadBannerData("addlabel.txt");
             List<string> AddLabelOptions1 = new List<string>();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you don't have any images in your library";
@@ -2634,7 +2773,7 @@ namespace Entrega2_Equipo1
             string addlabeldescription = "Please, select an option: ";
             List<string> AddLabelOptions2 = new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Done" };
 
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 AddLabelOptions1.Add(image.Name);
             }
@@ -2648,17 +2787,17 @@ namespace Entrega2_Equipo1
                 Console.ReadKey();
                 return;
             }
-            int numberOfTheImage = GenerateMenu(AddLabelOptions1, null, description1, AddLabelTitle);
+            int numberOfTheImage = this.GenerateMenu(AddLabelOptions1, null, description1, AddLabelTitle);
 
             // If user selects Exit
             if (AddLabelOptions1[numberOfTheImage] == "Exit") return;
 
 
-            Image imageToAddLabel = library.Images[numberOfTheImage];
+            Image imageToAddLabel = this.library.Images[numberOfTheImage];
 
             while (true)
             {
-                int usrLabel = GenerateMenu(AddLabelOptions2, null, description2, AddLabelTitle);
+                int usrLabel = this.GenerateMenu(AddLabelOptions2, null, description2, AddLabelTitle);
                 switch (usrLabel)
                 {
                     // If user wants to add a SimpleLabel
@@ -2683,7 +2822,7 @@ namespace Entrega2_Equipo1
                             realpath = temppath + number + ".jpg";
                             try
                             {
-                                library.Images[numberOfTheImage].BitmapImage.Save(realpath);
+                                this.library.Images[numberOfTheImage].BitmapImage.Save(realpath);
                                 break;
                             }
                             catch
@@ -2706,13 +2845,13 @@ namespace Entrega2_Equipo1
                         watsonOptions.Add("Personalized Label");
 
 
-                        int selectedOption2 = GenerateMenu(watsonOptions, null, addlabeldescription, AddLabelTitle);
+                        int selectedOption2 = this.GenerateMenu(watsonOptions, null, addlabeldescription, AddLabelTitle);
                         string selected = watsonOptions[selectedOption2];
                         if (selected != "Personalized Label")
                         {
                             SimpleLabel sauxLabel = new SimpleLabel(selected);
                             imageToAddLabel.AddLabel(sauxLabel);
-                            SaveLibrary();
+                            this.SaveLibrary();
                         }
                         else
                         {
@@ -2727,7 +2866,7 @@ namespace Entrega2_Equipo1
                             string userTag = Console.ReadLine();
                             SimpleLabel sauxLabel = new SimpleLabel(userTag);
                             imageToAddLabel.AddLabel(sauxLabel);
-                            SaveLibrary();
+                            this.SaveLibrary();
                         }
                         break;
 
@@ -2768,7 +2907,7 @@ namespace Entrega2_Equipo1
 
                             Console.Clear();
                             List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Exit" };
-                            userSelection = GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
+                            userSelection = this.GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
                             if (userSelection == 8) break;
                             switch (userSelection)
                             {
@@ -3086,7 +3225,7 @@ namespace Entrega2_Equipo1
                             }
                         }
                         imageToAddLabel.AddLabel(auxLabel);
-                        SaveLibrary();
+                        this.SaveLibrary();
                         break;
 
 
@@ -3119,7 +3258,7 @@ namespace Entrega2_Equipo1
 
                             Console.Clear();
                             List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Exit" };
-                            userSelection2 = GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
+                            userSelection2 = this.GenerateMenu(personOptions, null, addlabeldescription, AddLabelTitle);
                             if (userSelection2 == 5) break;
                             switch (userSelection2)
                             {
@@ -3212,20 +3351,20 @@ namespace Entrega2_Equipo1
                                 case 4:
                                     string AddSelfieTitle = "~ Add Selfie to SpecialLabel ~\n\n";
                                     string AddSelfieSelection = "Please, introduce the Selfie: ";
-                                    int usrSelection2 = GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
+                                    int usrSelection2 = this.GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
                                     if (usrSelection2 == 0) auxLabel2.Selfie = true;
                                     else auxLabel2.Selfie = false;
                                     break;
                             }
                         }
                         imageToAddLabel.AddLabel(auxLabel2);
-                        SaveLibrary();
+                        this.SaveLibrary();
                         break;
 
 
                     // User wants to exit
                     case 3:
-                        SaveLibrary();
+                        this.SaveLibrary();
                         break;
                 }
                 break;
@@ -3235,13 +3374,13 @@ namespace Entrega2_Equipo1
 
         private void ResetLibrary()
         {
-            List<string> ResetLibraryTitle = LoadBannerData("resetlibrary.txt");
+            List<string> ResetLibraryTitle = this.LoadBannerData("resetlibrary.txt");
             string description = "Are you sure that you want to reset your library?: ";
-            int usrDecision = GenerateMenu(new List<string>() { "Yes, reset My Library", "Exit" }, null, description, ResetLibraryTitle);
+            int usrDecision = this.GenerateMenu(new List<string>() { "Yes, reset My Library", "Exit" }, null, description, ResetLibraryTitle);
             if (usrDecision == 0)
             {
-                library.ResetImages();
-                SaveLibrary();
+                this.library.ResetImages();
+                this.SaveLibrary();
             }
             else return;
 
@@ -3273,18 +3412,18 @@ namespace Entrega2_Equipo1
 
         private void ExportFileToPath()
         {
-            List<string> bannerTitle = LoadBannerData("export.txt");
+            List<string> bannerTitle = this.LoadBannerData("export.txt");
             List<string> options = new List<string>();
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 options.Add(image.Name);
             }
             options.Add("Exit");
             while (true)
             {
-                int usrOption = GenerateMenu(options, null, "Please, select the file you want to export: ", bannerTitle);
+                int usrOption = this.GenerateMenu(options, null, "Please, select the file you want to export: ", bannerTitle);
                 if (usrOption == options.Count - 1) return;
-                Image usrWants = library.Images[usrOption];
+                Image usrWants = this.library.Images[usrOption];
                 Console.Clear();
                 foreach (string linestring in bannerTitle)
                 {
@@ -3306,7 +3445,7 @@ namespace Entrega2_Equipo1
 
                 string introduceFormat = "Please, select the exporting format: ";
                 List<string> formats = new List<string>() { ".jpg", ".jpeg", ".bmp", ".png" };
-                int usrIntFormat = GenerateMenu(formats, null, introduceFormat, bannerTitle);
+                int usrIntFormat = this.GenerateMenu(formats, null, introduceFormat, bannerTitle);
                 string selectedFormat = formats[usrIntFormat];
 
                 Bitmap copyUsrWants = (Bitmap)usrWants.BitmapImage.Clone();
@@ -3335,7 +3474,7 @@ namespace Entrega2_Equipo1
             // Show the title
             Console.Clear();
             string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
-            List<string> ShowLibraryTitle = LoadBannerData("mylibrary.txt");
+            List<string> ShowLibraryTitle = this.LoadBannerData("mylibrary.txt");
             string presskeytocontinue = "Please, press any key to continue...";
             foreach (string titlestring in ShowLibraryTitle)
             {
@@ -3344,7 +3483,7 @@ namespace Entrega2_Equipo1
             }
 
             // Show all images and their labels
-            foreach (Image image in library.Images)
+            foreach (Image image in this.library.Images)
             {
                 Console.WriteLine(separator);
                 string titlewithcal = $"          ~ Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
@@ -3485,7 +3624,7 @@ namespace Entrega2_Equipo1
 
             while (true)
             {
-                string[] userImportingSettings = ChoosePathAndImages();
+                string[] userImportingSettings = this.ChoosePathAndImages();
                 if (userImportingSettings[1] == "all")
                 {
                     string[] jpgfiles = Directory.GetFiles(@userImportingSettings[0], "*.jpg");
@@ -3509,7 +3648,7 @@ namespace Entrega2_Equipo1
                         int usrDecision;
                         if (totalLength > 1)
                         {
-                            usrDecision = GenerateMenu(new List<string>() { "Calificate or add labels individually", "Calificate or add labels to all images" }, "~ Importing options ~", "Please, choose an option: ");
+                            usrDecision = this.GenerateMenu(new List<string>() { "Calificate or add labels individually", "Calificate or add labels to all images" }, "~ Importing options ~", "Please, choose an option: ");
                         }
                         else
                         {
@@ -3525,9 +3664,9 @@ namespace Entrega2_Equipo1
                                     string path = Path.GetDirectoryName(file);
                                     path += @"\";
                                     string filename = Path.GetFileName(file);
-                                    Image newImage = CreatingImageMenu(filename, path);
-                                    library.AddImage(newImage);
-                                    SaveLibrary();
+                                    Image newImage = this.CreatingImageMenu(filename, path);
+                                    this.library.AddImage(newImage);
+                                    this.SaveLibrary();
                                 }
                             }
                             break;
@@ -3550,11 +3689,11 @@ namespace Entrega2_Equipo1
                             }
                             string path = Path.GetDirectoryName(allimages[0][0]);
                             path += @"\";
-                            List<Image> allUserImages = CreatingImageMenu(allFiles, path);
+                            List<Image> allUserImages = this.CreatingImageMenu(allFiles, path);
                             foreach (Image imagen in allUserImages)
                             {
-                                library.AddImage(imagen);
-                                SaveLibrary();
+                                this.library.AddImage(imagen);
+                                this.SaveLibrary();
                             }
                             break;
                         }
@@ -3569,14 +3708,14 @@ namespace Entrega2_Equipo1
                         Console.WriteLine(pressKey);
                         Console.ReadKey();
                         List<string> auxList = new List<string>() { option1, option2 };
-                        int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
+                        int userChoice = this.GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
                     }
                 }
                 else
                 {
                     string path = userImportingSettings[0];
                     string[] files = userImportingSettings[1].Split(',');
-                    bool analisysResult = FilesExists(files, path);
+                    bool analisysResult = this.FilesExists(files, path);
                     Console.WriteLine("\n");
                     if (analisysResult == true)
                     {
@@ -3590,7 +3729,7 @@ namespace Entrega2_Equipo1
                         int usrDecision;
                         if (files.Length > 1)
                         {
-                            usrDecision = GenerateMenu(new List<string>() { "Calificate or add labels individually", "Calificate or add labels to all images" }, "~ Importing options ~", "Please, choose an option: ");
+                            usrDecision = this.GenerateMenu(new List<string>() { "Calificate or add labels individually", "Calificate or add labels to all images" }, "~ Importing options ~", "Please, choose an option: ");
                         }
                         else
                         {
@@ -3601,20 +3740,20 @@ namespace Entrega2_Equipo1
                         {
                             foreach (string file in files)
                             {
-                                Image newImage = CreatingImageMenu(file, path);
-                                library.AddImage(newImage);
-                                SaveLibrary();
+                                Image newImage = this.CreatingImageMenu(file, path);
+                                this.library.AddImage(newImage);
+                                this.SaveLibrary();
                             }
                             break;
                         }
                         else
                         {
                             // Asumimos que no se pueden importar 5000 imagenes de un solo tiro
-                            List<Image> allUserImages = CreatingImageMenu(files, path);
+                            List<Image> allUserImages = this.CreatingImageMenu(files, path);
                             foreach (Image imagen in allUserImages)
                             {
-                                library.AddImage(imagen);
-                                SaveLibrary();
+                                this.library.AddImage(imagen);
+                                this.SaveLibrary();
                             }
                             break;
                         }
@@ -3629,7 +3768,7 @@ namespace Entrega2_Equipo1
                         Console.WriteLine(pressKey);
                         Console.ReadKey();
                         List<string> auxList = new List<string>() { option1, option2 };
-                        int userChoice = GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
+                        int userChoice = this.GenerateMenu(auxList, "~ [!] ERROR ~", "Please, select an option: ");
                         if (userChoice == 1) break;
                     }
                 }
@@ -3885,7 +4024,7 @@ namespace Entrega2_Equipo1
                         string SpecialLabelSelection = "Please, select the attribute you want to add: ";
                         string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
                         string donthavewatsonrecommendations = "In this case we don't have Watson's recommendations";
-                        int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
+                        int selectedOption1 = this.GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
 
 
 
@@ -3903,7 +4042,7 @@ namespace Entrega2_Equipo1
                             List<string> watsonOptions = new List<string>();
 
                             watsonOptions.Add("Personalized Label");
-                            GenerateMenu(watsonOptions, SimpleLabelCreation, donthavewatsonrecommendations);
+                            this.GenerateMenu(watsonOptions, SimpleLabelCreation, donthavewatsonrecommendations);
 
 
                             Console.Clear();
@@ -3956,7 +4095,7 @@ namespace Entrega2_Equipo1
 
                                 Console.Clear();
                                 List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Done" };
-                                userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
+                                userSelection = this.GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
                                 if (userSelection == 8) break;
                                 switch (userSelection)
                                 {
@@ -4308,7 +4447,7 @@ namespace Entrega2_Equipo1
 
                                 Console.Clear();
                                 List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Done" };
-                                userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
+                                userSelection = this.GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
                                 if (userSelection == 5) break;
                                 switch (userSelection)
                                 {
@@ -4401,7 +4540,7 @@ namespace Entrega2_Equipo1
                                     case 4:
                                         string AddSelfieTitle = "~ Add Selfie to SpecialLabel ~\n\n";
                                         string AddSelfieSelection = "Please, introduce the Selfie: ";
-                                        int usrSelection2 = GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
+                                        int usrSelection2 = this.GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
                                         if (usrSelection2 == 0) auxLabel.Selfie = true;
                                         else auxLabel.Selfie = false;
                                         break;
@@ -4696,7 +4835,7 @@ namespace Entrega2_Equipo1
                         string SpecialLabelSelection = "Please, select the attribute you want to add: ";
                         string SimpleLabelSelection = "Please, introduce the tag for this new SimpleLabel: ";
                         string SelectOption = "Down you can see Watson recommended labels. Choose your option: ";
-                        int selectedOption1 = GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
+                        int selectedOption1 = this.GenerateMenu(new List<string>() { "SimpleLabel", "PersonLabel", "SpecialLabel", "Exit" }, setCalificationTitle, introduceCalification);
 
 
 
@@ -4724,7 +4863,7 @@ namespace Entrega2_Equipo1
                                 }
                             }
                             watsonOptions.Add("Personalized Label");
-                            int selectedOption2 = GenerateMenu(watsonOptions, SimpleLabelCreation, SelectOption);
+                            int selectedOption2 = this.GenerateMenu(watsonOptions, SimpleLabelCreation, SelectOption);
                             string selected = watsonOptions[selectedOption2];
                             if (selected != "Personalized Label")
                             {
@@ -4784,7 +4923,7 @@ namespace Entrega2_Equipo1
 
                                 Console.Clear();
                                 List<string> personOptions = new List<string>() { "Name: " + settedName, "Surname: " + settedSurname, "FaceLocation: " + settedFaceLocation, "Nationality: " + settedNationality, "EyesColor: " + settedEyesColor, "HairColor: " + settedHairColor, "Sex: " + settedSex, "Birthdate: " + settedBirthDate, "Done" };
-                                userSelection = GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
+                                userSelection = this.GenerateMenu(personOptions, PersonLabelCreation, PersonLabelSelection);
                                 if (userSelection == 8) break;
                                 switch (userSelection)
                                 {
@@ -5136,7 +5275,7 @@ namespace Entrega2_Equipo1
 
                                 Console.Clear();
                                 List<string> personOptions = new List<string>() { "GeographicLocation: " + settedGeographicLocation, "Address: " + settedAddress, "Photographer: " + settedPhotographer, "PhotoMotive: " + settedPhotoMotive, "Selfie: " + settedSelfie, "Done" };
-                                userSelection = GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
+                                userSelection = this.GenerateMenu(personOptions, SpecialLabelCreation, SpecialLabelSelection);
                                 if (userSelection == 5) break;
                                 switch (userSelection)
                                 {
@@ -5229,7 +5368,7 @@ namespace Entrega2_Equipo1
                                     case 4:
                                         string AddSelfieTitle = "~ Add Selfie to SpecialLabel ~\n\n";
                                         string AddSelfieSelection = "Please, introduce the Selfie: ";
-                                        int usrSelection2 = GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
+                                        int usrSelection2 = this.GenerateMenu(new List<string>() { "Is a selfie", "Is not a selfie" }, AddSelfieTitle, AddSelfieSelection);
                                         if (usrSelection2 == 0) auxLabel.Selfie = true;
                                         else auxLabel.Selfie = false;
                                         break;
@@ -5270,7 +5409,7 @@ namespace Entrega2_Equipo1
         private string[] ChoosePathAndImages()
         {
             Console.Clear();
-            List<string> bannerTitle = LoadBannerData("import.txt");
+            List<string> bannerTitle = this.LoadBannerData("import.txt");
 
             string description = "Please, introduce the path to the files you want to import: ";
             Console.WriteLine("\n");
@@ -5302,14 +5441,14 @@ namespace Entrega2_Equipo1
         // Manager that verifies if the library exists and loads it or create a new one
         private void LoadingLibraryManager()
         {
-            bool exists = ExistsLibrary();
+            bool exists = this.ExistsLibrary();
             if (exists == true)
             {
-                LoadLibrary();
+                this.LoadLibrary();
             }
             else
             {
-                ShowLibraryDoesntExistError();
+                this.ShowLibraryDoesntExistError();
                 this.library = new Library();
             }
         }
@@ -5318,14 +5457,14 @@ namespace Entrega2_Equipo1
         // Manager that verifies if the producer exists and loads it or create a new one
         private void LoadingProducerManager()
         {
-            bool exists = ExistsProducer();
+            bool exists = this.ExistsProducer();
             if (exists == true)
             {
-                LoadProducer();
+                this.LoadProducer();
             }
             else
             {
-                ShowProducerDoesntExistError();
+                this.ShowProducerDoesntExistError();
                 this.producer = new Producer();
                 this.producer.LoadWatsonAnalyzer();
             }
@@ -5336,7 +5475,7 @@ namespace Entrega2_Equipo1
         private void SaveLibrary()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(DEFAULT_LIBRARY_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(this.DEFAULT_LIBRARY_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this.library);
             stream.Close();
         }
@@ -5347,7 +5486,7 @@ namespace Entrega2_Equipo1
         {
             this.producer.DeleteWatsonAnalyzer();
             BinaryFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(DEFAULT_PRODUCER_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(this.DEFAULT_PRODUCER_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this.producer);
             stream.Close();
             this.producer.LoadWatsonAnalyzer();
@@ -5358,7 +5497,7 @@ namespace Entrega2_Equipo1
         private void LoadLibrary()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(DEFAULT_LIBRARY_PATH, FileMode.Open, FileAccess.Read, FileShare.None);
+            Stream stream = new FileStream(this.DEFAULT_LIBRARY_PATH, FileMode.Open, FileAccess.Read, FileShare.None);
             Library library = (Library)formatter.Deserialize(stream);
             stream.Close();
             this.library = library;
@@ -5369,7 +5508,7 @@ namespace Entrega2_Equipo1
         private void LoadProducer()
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(DEFAULT_PRODUCER_PATH, FileMode.Open, FileAccess.Read, FileShare.None);
+            Stream stream = new FileStream(this.DEFAULT_PRODUCER_PATH, FileMode.Open, FileAccess.Read, FileShare.None);
             Producer producer = (Producer)formatter.Deserialize(stream);
             stream.Close();
             this.producer = producer;
@@ -5380,7 +5519,7 @@ namespace Entrega2_Equipo1
         // Returns true if the library.bin fil exists, and false in the other case
         private bool ExistsLibrary()
         {
-            if (File.Exists(DEFAULT_LIBRARY_PATH)) return true;
+            if (File.Exists(this.DEFAULT_LIBRARY_PATH)) return true;
             else return false;
         }
 
@@ -5388,7 +5527,7 @@ namespace Entrega2_Equipo1
         // Returns true if the producer.bin file exists, and false in the other case
         private bool ExistsProducer()
         {
-            if (File.Exists(DEFAULT_PRODUCER_PATH)) return true;
+            if (File.Exists(this.DEFAULT_PRODUCER_PATH)) return true;
             else return false;
         }
 
@@ -5426,7 +5565,7 @@ namespace Entrega2_Equipo1
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetWindowSize(60, 28);
-            List<string> presentationStrings = LoadBannerData("presentation.txt");
+            List<string> presentationStrings = this.LoadBannerData("presentation.txt");
             foreach (string presentationString in presentationStrings)
             {
                 Console.SetCursorPosition((Console.WindowWidth - presentationString.Length) / 2, Console.CursorTop);
@@ -5443,7 +5582,7 @@ namespace Entrega2_Equipo1
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetWindowSize(70, 27);
-            List<string> presentationStrings = LoadBannerData("goodbye.txt");
+            List<string> presentationStrings = this.LoadBannerData("goodbye.txt");
             foreach (string presentationString in presentationStrings)
             {
                 Console.SetCursorPosition((Console.WindowWidth - presentationString.Length) / 2, Console.CursorTop);
@@ -5589,8 +5728,8 @@ namespace Entrega2_Equipo1
         {
             Console.SetWindowSize(235, 60);
             Console.Clear();
-            List<string> startingStrings = LoadBannerData("startmenu.txt");
-            int retorno = GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
+            List<string> startingStrings = this.LoadBannerData("startmenu.txt");
+            int retorno = this.GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
             return retorno;
         }
 
