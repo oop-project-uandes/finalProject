@@ -25,6 +25,15 @@ namespace Entrega2_Equipo1
         }
 
 
+        public Bitmap AddText(Bitmap bitmap, string text, int xAxis, int yAxis, float fontSize = 10.0F,
+            string colorName1 = null, string fontStyle = "bold", string fontName = "Times New Roman"
+            , string colorName2 = null)
+        {
+            AddText addtext = (AddText)this.tools[7];
+            return addtext.InsertText(bitmap, text, xAxis, yAxis, fontSize, colorName1, fontStyle, fontName, colorName2);
+        }
+
+
         public void DeleteImageInTheWorkingArea(int position)
         {
             WorkingArea.WorkingAreaImages.RemoveAt(position);
