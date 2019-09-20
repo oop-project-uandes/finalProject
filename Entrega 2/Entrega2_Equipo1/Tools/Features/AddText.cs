@@ -14,6 +14,7 @@ namespace Entrega2_Equipo1
     {
         public AddText() { }
 
+
         public Bitmap InsertText(Bitmap bitmap, string text, int xAxis, int yAxis, float fontSize = 10.0F, 
             string colorName1 = null, string fontStyle = "bold", string fontName = "Times New Roman" 
             , string colorName2 = null)

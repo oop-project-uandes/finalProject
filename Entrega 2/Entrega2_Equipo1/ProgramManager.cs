@@ -245,19 +245,288 @@ namespace Entrega2_Equipo1
                     case 0:
                         ApplyCensorship();
                         break;
+
                     // Want to use Watson Analizer => READY
                     case 1:
-                        //UseWatson();
-                        throw new NotImplementedException();
+                        //UseWatson(); => NOT IMPLEMENTED YET
+                        ShowWatsonNotImplemented();
                         break;
 
-                        // TRABAJANDO EN EL RESTO DE CASES
+                    // Add text feature
+                    case 2:
+                        AddText();
+                        break;
+
                 }
             }
         }
 
+
+
+        private void AddText()
+        {
+            /*
+         * OPCIONES: TEXTO, POSICIONX, POSICIONY, FONTSIZE, COLORNAME1, FONTSTYLE, FONTNAME, COLORNAME2
+         * TEXTO: lo define el usuario
+         * POSICIONX Y POSICIONY: lo define el usuario (pero debe estar dentro del tamano de la imagen)
+         * FONTSIZE: es un float, por defecto es 10. (10.0F) (Debe ser mayor que cero)
+         * COLORNAME1: es un string del color inicial para el degradad. El string debe poderse parsear a System.Drawing.KnownColor
+         * FONTSTYLE: es un string, puede ser bold, italic, underline o strikeout
+         * FONTNAME: es un string, que representa el tipo de letra. Esta debe estar instalada en el equipo.
+         * Si no es asi, no se puede hacer nada. Es mejor hacer un try, probando el fontname , usando Font font = new Font(fontName, fontSize);
+         * Si tira error, no esta instalada la fuente en el equipo.
+         * COLORNAME2: es un string del color final para el degradado. El string debe poderse parsear a System.Drawing.KnownColor
+         */
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+
+            // First, we get the names of the images user wants to add the text
+            List<string> filenames = ChooseWhichImagesWantToApplyFeature();
+
+            // We get the images currently in the working area
+            List<Image> imagesinworkingarea = producer.imagesInTheWorkingArea();
+
+            // Now, we need the text, Xpos, Ypos, fontsize, fontstyle, fontname and color1 and color2 for each image
+            foreach (string filename in filenames)
+            {
+                Dictionary<string, string> DataToAddText = GetDataToAddText(filename, imagesinworkingarea);
+            }
+            
+        }
+
+
+        private Dictionary<string, string> GetDataToAddText(string filename, List<Image> listofimages)
+        {
+            // Load the banner data
+            string currentText = "[Not set]", currentY = "[Not set]", currentX = "[Not set]", currentFontSize = "[Not set]", currentFontStyle = "[Not set]", currentFontName = "[Not set]", currentColor1 = "[Not set]", currentColor2 = "[Not set]";
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            string name = "";
+            // We find the image name
+            foreach (Image image in listofimages)
+            {
+                if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                {
+                    name = image.Name;
+                }
+            }
+
+            string chooseOption = $"Please, customize the parameters as you want for {name} and then select continue: ";
+            while (true)
+            {
+                List<string> options = new List<string>() { "Text:\t\t" + currentText, "Y Position:\t\t" + currentY, "X Position:\t\t" +currentX,
+                                                            "FontSize:\t\t" + currentFontSize, "FontStyle:\t\t"+currentFontStyle, "FontName:\t\t" + currentFontName,
+                                                            "Color1:\t\t" + currentColor1, "Color2:\t\t" + currentColor2, "Done"};
+
+                // Let user edit the parameters
+                int usrDec1 = GenerateMenu(options, null, chooseOption, AddTextTitle);
+                // If press Done while text, Xpos and Ypos are not setted, and doesnt want to return to Add Text
+                if (usrDec1 == 8 && (currentText == "[Not set]" || currentY == "[Not set]" || currentX == "[Not set]"))
+                {
+                    int usrDec2 = GenerateMenu(new List<string>() { "Exit", "Return to Add Text" }, null, "[!] ERROR: The minimum parameters to Add Text are [Text], [Y Position] and [X Position]", AddTextTitle);
+                    if (usrDec1 == 0) return new Dictionary<string, string>();
+                    else continue;
+                }
+                else if (usrDec1 == 8) break;
+
+                // Else, user wants to edit a parameter
+                switch (usrDec1)
+                {
+                    // Wants to edit text parameter
+                    case 0:
+                        currentText = ChooseText();
+                        break;
+                    // Wants to enter Y Position
+                    case 1:
+                        string yvalue = ChooseY(filename);
+                        if(yvalue != "-1") currentY = yvalue;
+                        break;
+                    // Wants to enter X Position
+                    case 2:
+                        string xvalue = ChooseX(filename);
+                        if (xvalue != "-1") currentX = xvalue;
+                        break;
+                    // Wants to select a new fontsize
+                    case 3:
+                        string chosenfontsize = ChooseFontSize();
+                        if (chosenfontsize != "-1") currentFontSize = chosenfontsize;
+                        break;
+                    // Working on case 4
+                    case 4:
+                        break;
+                }
+            }
+
+            Dictionary<string, string> returningDict = new Dictionary<string, string>();
+            returningDict.Add("text", currentText);
+            returningDict.Add("Y", currentY);
+            returningDict.Add("X", currentX);
+            returningDict.Add("fontsize", currentFontSize);
+            returningDict.Add("fontstyle", currentFontStyle);
+            returningDict.Add("fontname", currentFontName);
+            returningDict.Add("color1", currentColor1);
+            returningDict.Add("color2", currentColor2);
+            return returningDict;
+        }
+
+
+
+        private string ChooseFontSize()
+        {
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            string choosetext = "Please, introduce the fontsize of the text that you want to add to the image: ";
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: FontSize Parameter not valid";
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - choosetext.Length) / 2, Console.CursorTop);
+            Console.Write(choosetext);
+            string chosenfontsize = Console.ReadLine();
+            try
+            {
+                double convert = Convert.ToDouble(chosenfontsize);
+                if (convert == 0.0) throw new Exception("Not valid parameter");
+                return chosenfontsize;
+            }
+            catch
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+        }
+
+
+        private string ChooseX(string filename)
+        {
+            int width = 0;
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            List<Image> listofimages = producer.imagesInTheWorkingArea();
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: X Parameter not valid";
+            string chooseX = "Please, enter the X parameter: ";
+            // We need the Height of the image
+            foreach (Image image in listofimages)
+            {
+                if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                {
+                    width = image.BitmapImage.Height;
+                }
+            }
+            // Show the title
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - chooseX.Length) / 2, Console.CursorTop);
+            Console.Write(chooseX);
+            string sx = Console.ReadLine();
+            try
+            {
+                int ix = Convert.ToInt32(sx);
+                if (ix > width) throw new Exception("Not valid parameter");
+                return Convert.ToString(ix);
+            }
+            catch
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+
+        }
+
+
+
+        private string ChooseY(string filename)
+        {
+            int height = 0;
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            List<Image> listofimages = producer.imagesInTheWorkingArea();
+            string presskey = "Press any key to continue...";
+            string notvalid = "[!] ERROR: Y Parameter not valid";
+            string chooseY = "Please, enter the Y parameter: ";
+            // We need the Height of the image
+            foreach (Image image in listofimages)
+            {
+                if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                {
+                    height = image.BitmapImage.Height;
+                }
+            }
+            // Show the title
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - chooseY.Length) / 2, Console.CursorTop);
+            Console.Write(chooseY);
+            string sy = Console.ReadLine();
+            try
+            {
+                int iy = Convert.ToInt32(sy);
+                if (iy > height) throw new Exception("Not valid paramter");
+                return Convert.ToString(iy);
+            }
+            catch
+            {
+                Console.SetCursorPosition((Console.WindowWidth - notvalid.Length) / 2, Console.CursorTop);
+                Console.WriteLine(notvalid);
+                Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+                Console.WriteLine(presskey);
+                Console.ReadKey();
+                return "-1";
+            }
+
+        }
+
+
+        private string ChooseText()
+        {
+            List<string> AddTextTitle = LoadBannerData("addtext.txt");
+            string choosetext = "Please, introduce the text you want to add to the image: ";
+            foreach (string titlestring in AddTextTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - choosetext.Length) / 2, Console.CursorTop);
+            Console.Write(choosetext);
+            return Console.ReadLine();
+        }
+
+
+        // Method to show that Watson find faces is not implemented yet
+        private void ShowWatsonNotImplemented()
+        {
+            string presskey = "Press any key to continue...";
+            string notimplemented = "[!] ERROR: Watson Face Recognition not implement yet";
+            // Show the title
+            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            foreach (string titlestring in UseFeatureTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            Console.SetCursorPosition((Console.WindowWidth - notimplemented.Length) / 2, Console.CursorTop);
+            Console.WriteLine(notimplemented);
+            Console.SetCursorPosition((Console.WindowWidth - presskey.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskey);
+            Console.ReadKey();
+            return;
+        }
         
-        // Watson no lo vamos a implementar aun, pero deberia ser algo como esto
+
+        // Watson no lo vamos a implementar aun, pero deberia ser algo como esto, usando Watson Analyzer (Find faces)
         private void UseWatson()
         {
             List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
@@ -314,15 +583,16 @@ namespace Entrega2_Equipo1
         }
 
 
+
         private void ApplyCensorship()
         {
             string choosetypeofcensorship = "Please, choose which type of censorship you want to use";
             List<string> typesofcensorship = new List<string>() { "Black Censorship", "Pixel Censorship" };
-            List<string> UseFeatureTitle = LoadBannerData("usefeatures.txt");
+            List<string> UseCensorshipTitle = LoadBannerData("usecensorhip.txt");
             // First, we get the names of the images user wants to apply the censorship
             List<string> filenames = ChooseWhichImagesWantToApplyFeature();
             // Then, we get the type of censorship
-            int usrDecCensorship = GenerateMenu(typesofcensorship, null, choosetypeofcensorship, UseFeatureTitle);
+            int usrDecCensorship = GenerateMenu(typesofcensorship, null, choosetypeofcensorship, UseCensorshipTitle);
             // Next, we get the coordinates of the censorship for each image
             Dictionary<string, int[]> coordinates = GetCoordinatesForCensorship(filenames);
             List<Image> imagesInWorkingArea = producer.imagesInTheWorkingArea();
