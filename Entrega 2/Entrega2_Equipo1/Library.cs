@@ -94,6 +94,19 @@ namespace Entrega2_Equipo1
 
         }
 
+        public bool RemoveSmartList(string patron)
+        {
+            try
+            {
+                smartList.Remove(patron);
+                return true;      
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public bool ChangeRating (string nameImage, int rating)
 
         {
