@@ -3522,7 +3522,12 @@ namespace Entrega2_Equipo1
             List<string> AddSmartListTitle = this.LoadBannerData("addsmartlist.txt");
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you already have that search pattern";
-            Console.WriteLine("Please, insert the search pattern you want to add: ");
+			foreach (string titlestring in AddSmartListTitle)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+				Console.WriteLine(titlestring);
+			}
+			Console.WriteLine("Please, insert the search pattern you want to add: ");
             string description1 = Console.ReadLine();
 
             foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
@@ -3556,7 +3561,12 @@ namespace Entrega2_Equipo1
             List<string> SearchPattern = new List<string>();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, the search pattern you selected was not found";
-            Console.WriteLine("Please, insert the search pattern you want to add: ");
+			foreach (string titlestring in AddSmartListTitle)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+				Console.WriteLine(titlestring);
+			}
+			Console.WriteLine("Please, insert the search pattern you want to add: ");
 
             string description1 = Console.ReadLine();
             foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
@@ -4224,7 +4234,7 @@ namespace Entrega2_Equipo1
                                 if (auxLabel.HairColor != EColor.None) settedHairColor = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.HairColor);
                                 else settedHairColor = "\t\t [Not set]";
                                 string settedSex;
-                                if (auxLabel.Sex != ESex.None) settedSex = "\t\t " + Enum.GetName(typeof(EColor), auxLabel.Sex);
+                                if (auxLabel.Sex != ESex.None) settedSex = "\t\t " + Enum.GetName(typeof(ESex), auxLabel.Sex);
                                 else settedSex = "\t\t [Not set]";
                                 string settedName;
                                 if (auxLabel.Name == null) settedName = "\t\t [Not set]";
