@@ -3509,6 +3509,7 @@ namespace Entrega2_Equipo1
 
             }
             Console.WriteLine("\n");
+			Console.WriteLine("Debug: List Size = "+ this.library.SmartList.Count);
             Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);
             Console.Write(presskeytocontinue);
             Console.ReadKey();
@@ -3532,7 +3533,7 @@ namespace Entrega2_Equipo1
 
             foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
             {
-                if (pattern.Key== description1)
+				if (pattern.Key== description1)
                 {
                     Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
                     Console.WriteLine(emptylibraryerror);
