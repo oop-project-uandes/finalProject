@@ -10,7 +10,7 @@ namespace Entrega2_Equipo1
     public class WatsonAnalizer : Tool
     {
         // WatsonFilter's attributes
-        private const string APIKEY = "jL9phS26mYRAEf8iJ3yZEdnHKr1NNaZ5H97oWpJ_EtyJ";
+        private const string APIKEY = "J";
         private const string ENDPOINT = "https://gateway.watsonplatform.net/visual-recognition/api";
         private const string VERSION_DATE = "2018-03-19";
         private IBM.WatsonDeveloperCloud.VisualRecognition.v3.VisualRecognitionService _visualRecognition;
