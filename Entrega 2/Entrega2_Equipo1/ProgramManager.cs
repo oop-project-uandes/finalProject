@@ -3592,7 +3592,7 @@ namespace Entrega2_Equipo1
 
         private void ManageSmartList()
         {
-            List<string> manageSmartListTitle = this.LoadBannerData("managelibrary.txt");
+            List<string> manageSmartListTitle = this.LoadBannerData("managesmartlist.txt");
             List<string> manageSmartListOptions = new List<string>() { "Show My SmartList", "Add SmartList", "Delete SmartList","Exit" };
             string manageLibraryDescription = "Please, select an option: ";
             while (true)
