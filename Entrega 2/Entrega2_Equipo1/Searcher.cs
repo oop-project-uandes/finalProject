@@ -209,9 +209,6 @@ namespace Entrega2_Equipo1
 
 			return Final;
 		}
-            
-
-        
 
         public List<System.Drawing.Bitmap> FaceSearcher(string PersonName, List<Image> images)
         {

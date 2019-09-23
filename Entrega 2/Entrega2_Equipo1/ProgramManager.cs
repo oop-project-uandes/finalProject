@@ -3469,6 +3469,21 @@ namespace Entrega2_Equipo1
             return;
         }
 
+        private void Search()
+        {
+            Console.Clear();
+            List<string> ShowSmarListTitle = this.LoadBannerData("mysmartList.txt");
+            string presskeytocontinue = "Please, press any key to continue...";
+            Console.WriteLine("Please, write the declaration you want to search");
+            string declaration = Console.ReadLine();
+            foreach (string titlestring in ShowSmarListTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+
+
+        }
    
         private void ShowSmartList()
         {
@@ -3500,13 +3515,15 @@ namespace Entrega2_Equipo1
 
         }
 
+
         private void AddSmartList()
         {
             Console.Clear();
             List<string> AddSmartListTitle = this.LoadBannerData("addsmartlist.txt");
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, you already have that search pattern";
-            string description1 = "Please, insert the search pattern you want to add: ";
+            Console.WriteLine("Please, insert the search pattern you want to add: ");
+            string description1 = Console.ReadLine();
 
             foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
             {
@@ -3531,6 +3548,7 @@ namespace Entrega2_Equipo1
 
         }
 
+
         private void RemoveSmartList()
         {
             Console.Clear();
@@ -3538,8 +3556,9 @@ namespace Entrega2_Equipo1
             List<string> SearchPattern = new List<string>();
             string presskeytocontinue = "Please, press any key to continue...";
             string emptylibraryerror = "[!] ERROR: Sorry, the search pattern you selected was not found";
-            string description1 = "Please, insert the search pattern you want to add: ";
+            Console.WriteLine("Please, insert the search pattern you want to add: ");
 
+            string description1 = Console.ReadLine();
             foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
             {
                 SearchPattern.Add(pattern.Key);
@@ -3557,9 +3576,9 @@ namespace Entrega2_Equipo1
             {
                 library.RemoveSmartList(description1);
                 this.SaveLibrary();
-                break;
             }
         }
+
 
         private void ManageSmartList()
         {
