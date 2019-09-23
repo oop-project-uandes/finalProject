@@ -53,8 +53,9 @@ namespace Entrega2_Equipo1
                         break;
 
                     // Search in the library
+                    //READY
                     case 4:
-
+                        this.ManageSearch();
                         break;
 
                     // Show smart lists, add smartlists or erase elements
@@ -3469,19 +3470,82 @@ namespace Entrega2_Equipo1
             return;
         }
 
+
+        private void ManageSearch()
+        {
+            List<string> manageSearchTitle = this.LoadBannerData("searcher.txt");
+            List<string> manageSearchOptions = new List<string>() { "Searcher", "Face Searcher", "Exit" };
+            string manageLibraryDescription = "Please, select an option: ";
+            while (true)
+            {
+                int usrDecision = this.GenerateMenu(manageSearchOptions, null, manageLibraryDescription, manageSearchTitle);
+                if (usrDecision == 2) break;
+                switch (usrDecision)
+                {
+                    // User wants to see his smart list => READY
+                    case 0:
+                        this.Search();
+                        break;
+
+                    // User wants to add a search pattern => READY
+                    case 1:
+                        this.FaceSearch();
+                        break;
+
+                }
+            }
+        }
+
+
         private void Search()
         {
             Console.Clear();
-            List<string> ShowSmarListTitle = this.LoadBannerData("mysmartList.txt");
+            List<string> ShowSearchTitle = this.LoadBannerData("search.txt");
+            string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
             string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, no image was found with that search pattern";
             Console.WriteLine("Please, write the declaration you want to search");
             string declaration = Console.ReadLine();
-            foreach (string titlestring in ShowSmarListTitle)
+            foreach (string titlestring in ShowSearchTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
                 Console.WriteLine(titlestring);
             }
+            Searcher searcher= new Searcher();
+            List<Image> images = searcher.Search(library.Images, declaration);
+            if (images.Count == 0)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+            }
+            else
+            {
+                foreach (Image image in images)
+                {
+                    Console.WriteLine(separator);
+                    string patternImage = $"    ~ Pattern:{declaration} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                    Console.WriteLine(patternImage);
+                }
+                Console.WriteLine(separator);
+            }
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);
+            Console.Write(presskeytocontinue);
+            Console.ReadKey();
 
+        }
+
+
+        private void FaceSearch()
+        {
+            Console.Clear();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, this method is not working";
+            Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+            Console.WriteLine(emptylibraryerror);
+            Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskeytocontinue);
+            Console.ReadKey();
 
         }
    
@@ -3503,7 +3567,7 @@ namespace Entrega2_Equipo1
                 foreach(Image image in pattern.Value)
                 {
                     Console.WriteLine(separator);
-                    string patternImage = $"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                    Console.WriteLine($"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~");
                 }
                 Console.WriteLine(separator);
 
@@ -3531,8 +3595,10 @@ namespace Entrega2_Equipo1
 			Console.WriteLine("Please, insert the search pattern you want to add: ");
             string description1 = Console.ReadLine();
 
-            foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
+            
+            if (this.library.SmartList.Count == 0)
             {
+<<<<<<< HEAD
 				if (pattern.Key== description1)
                 {
                     Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
@@ -3543,14 +3609,35 @@ namespace Entrega2_Equipo1
                     return;
                 }
                 else
+=======
+                library.AddSmartList(description1, library.Images);
+                this.SaveLibrary();
+                
+            }
+            else
+            {
+                foreach (KeyValuePair<string, List<Image>> pattern in  this.library.SmartList)
+>>>>>>> e7dbfa25ee667f74080b6fd1a9bb3853ce3f135e
                 {
-                    library.AddSmartList(description1, library.Images);
-                    this.SaveLibrary();
-                    break;
+                    if (pattern.Key == description1)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(emptylibraryerror);
+                        Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(presskeytocontinue);
+                        Console.ReadKey();
+                        return;
+                    }
+                    else
+                    {
+                        library.AddSmartList(description1, library.Images);
+                        this.SaveLibrary();
+                        break;
+                    }
                 }
             }
 
-            
+
 
         }
 
@@ -5881,7 +5968,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             List<string> startingStrings = this.LoadBannerData("startmenu.txt");
             int retorno = this.GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
