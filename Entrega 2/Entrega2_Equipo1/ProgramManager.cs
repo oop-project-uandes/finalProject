@@ -53,8 +53,9 @@ namespace Entrega2_Equipo1
                         break;
 
                     // Search in the library
+                    //READY
                     case 4:
-
+                        this.ManageSearch();
                         break;
 
                     // Show smart lists, add smartlists or erase elements
@@ -3469,19 +3470,81 @@ namespace Entrega2_Equipo1
             return;
         }
 
+
+        private void ManageSearch()
+        {
+            List<string> manageSearchTitle = this.LoadBannerData("managesearch.txt");
+            List<string> manageSearchOptions = new List<string>() { "Searcher", "Face Searcher", "Exit" };
+            string manageLibraryDescription = "Please, select an option: ";
+            while (true)
+            {
+                int usrDecision = this.GenerateMenu(manageSearchOptions, null, manageLibraryDescription, manageSearchTitle);
+                if (usrDecision == 2) break;
+                switch (usrDecision)
+                {
+                    // User wants to see his smart list => READY
+                    case 0:
+                        this.Search();
+                        break;
+
+                    // User wants to add a search pattern => READY
+                    case 1:
+                        this.FaceSearch();
+                        break;
+
+                }
+            }
+        }
+
+
         private void Search()
         {
             Console.Clear();
-            List<string> ShowSmarListTitle = this.LoadBannerData("mysmartList.txt");
+            List<string> ShowSearchTitle = this.LoadBannerData("search.txt");
+            string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
             string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, no image was found with that search pattern";
             Console.WriteLine("Please, write the declaration you want to search");
             string declaration = Console.ReadLine();
-            foreach (string titlestring in ShowSmarListTitle)
+            foreach (string titlestring in ShowSearchTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
                 Console.WriteLine(titlestring);
             }
+            Searcher searcher= new Searcher();
+            List<Image> images = searcher.Search(library.Images, declaration);
+            if (images.Count == 0)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                Console.WriteLine(emptylibraryerror);
+            }
+            else
+            {
+                foreach (Image image in images)
+                {
+                    Console.WriteLine(separator);
+                    string patternImage = $"    ~ Pattern:{declaration} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                }
+                Console.WriteLine(separator);
+            }
+            Console.WriteLine("\n");
+            Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);
+            Console.Write(presskeytocontinue);
+            Console.ReadKey();
 
+        }
+
+
+        private void FaceSearch()
+        {
+            Console.Clear();
+            string presskeytocontinue = "Please, press any key to continue...";
+            string emptylibraryerror = "[!] ERROR: Sorry, this method is not working";
+            Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+            Console.WriteLine(emptylibraryerror);
+            Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+            Console.WriteLine(presskeytocontinue);
+            Console.ReadKey();
 
         }
    
