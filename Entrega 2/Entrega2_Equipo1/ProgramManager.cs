@@ -3524,6 +3524,7 @@ namespace Entrega2_Equipo1
                 {
                     Console.WriteLine(separator);
                     string patternImage = $"    ~ Pattern:{declaration} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                    Console.WriteLine(patternImage);
                 }
                 Console.WriteLine(separator);
             }
@@ -3566,7 +3567,7 @@ namespace Entrega2_Equipo1
                 foreach(Image image in pattern.Value)
                 {
                     Console.WriteLine(separator);
-                    string patternImage = $"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                    Console.WriteLine($"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~");
                 }
                 Console.WriteLine(separator);
 
@@ -3593,26 +3594,36 @@ namespace Entrega2_Equipo1
 			Console.WriteLine("Please, insert the search pattern you want to add: ");
             string description1 = Console.ReadLine();
 
-            foreach (KeyValuePair<string, List<Image>> pattern in this.library.SmartList)
+            
+            if (this.library.SmartList.Count == 0)
             {
-                if (pattern.Key== description1)
+                library.AddSmartList(description1, library.Images);
+                this.SaveLibrary();
+                
+            }
+            else
+            {
+                foreach (KeyValuePair<string, List<Image>> pattern in  this.library.SmartList)
                 {
-                    Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(emptylibraryerror);
-                    Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(presskeytocontinue);
-                    Console.ReadKey();
-                    return;
-                }
-                else
-                {
-                    library.AddSmartList(description1, library.Images);
-                    this.SaveLibrary();
-                    break;
+                    if (pattern.Key == description1)
+                    {
+                        Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(emptylibraryerror);
+                        Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(presskeytocontinue);
+                        Console.ReadKey();
+                        return;
+                    }
+                    else
+                    {
+                        library.AddSmartList(description1, library.Images);
+                        this.SaveLibrary();
+                        break;
+                    }
                 }
             }
 
-            
+
 
         }
 
