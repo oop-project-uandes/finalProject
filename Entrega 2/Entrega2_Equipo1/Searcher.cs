@@ -8,7 +8,7 @@ namespace Entrega2_Equipo1
 {
     public class Searcher
     {
-		//private Scissors scissors;
+		private Scissors scissors;
 
         public Searcher() { }
 

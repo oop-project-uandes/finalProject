@@ -3473,7 +3473,7 @@ namespace Entrega2_Equipo1
 
         private void ManageSearch()
         {
-            List<string> manageSearchTitle = this.LoadBannerData("managesearch.txt");
+            List<string> manageSearchTitle = this.LoadBannerData("searcher.txt");
             List<string> manageSearchOptions = new List<string>() { "Searcher", "Face Searcher", "Exit" };
             string manageLibraryDescription = "Please, select an option: ";
             while (true)
@@ -5943,7 +5943,7 @@ namespace Entrega2_Equipo1
         // Shows to the user all the options, and returns the selected one, starting at 0
         private int StartingMenu()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             List<string> startingStrings = this.LoadBannerData("startmenu.txt");
             int retorno = this.GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
