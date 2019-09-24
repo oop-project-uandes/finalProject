@@ -255,14 +255,72 @@ namespace Entrega2_Equipo1
                     case 2:
                         this.AddText();
                         break;
+					case 3:
+						//Merge
+						this.Merge();
+						break;
+					case 4:
+						//Resize
+						break;
+					case 5:
+						//Mosaic
+						break;
+					case 6:
+						//Collage
+						break;
+					case 7:
+						//Album
+						break;
+					case 8:
+						//Calendar
+						break;
 
-                }
+				}
             }
         }
 
+		private void Merge()
+		{
+			List<string> mergeTitle = this.LoadBannerData("merge.txt");
+
+			// First, we get the names of the images user wants to add the text
+			List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+			// We get the images currently in the working area
+			List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+			List<Image> MergingImages = new List<Image>();
+
+			string done = "Finish merging Images!";
+			string file = "";
+			foreach (string titlestring in mergeTitle)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+				Console.WriteLine(titlestring);
+			}
+			foreach (string filename in filenames)
+			{
+				foreach (Image image in imagesinworkingarea)
+				{
+					if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+					{
+						MergingImages.Add(image);
+						file += image.Name+"/";
+					}
+				}
+			}
+			Image finalImage = MergingImages[0];
+			Bitmap modifiedbitmap = this.producer.Merge(MergingImages);
+			finalImage.BitmapImage = modifiedbitmap;
+			finalImage.Name = file;
+			Console.SetCursorPosition((Console.WindowWidth - done.Length) / 2, Console.CursorTop);
+			Console.WriteLine(done);
+			System.Threading.Thread.Sleep(500);
+
+		}
 
 
-        private void AddText()
+		private void AddText()
         {
             List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
 
@@ -3573,7 +3631,6 @@ namespace Entrega2_Equipo1
 
             }
             Console.WriteLine("\n");
-			Console.WriteLine("Debug: List Size = "+ this.library.SmartList.Count);
             Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);
             Console.Write(presskeytocontinue);
             Console.ReadKey();
@@ -3598,26 +3655,14 @@ namespace Entrega2_Equipo1
             
             if (this.library.SmartList.Count == 0)
             {
-<<<<<<< HEAD
-				if (pattern.Key== description1)
-                {
-                    Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(emptylibraryerror);
-                    Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
-                    Console.WriteLine(presskeytocontinue);
-                    Console.ReadKey();
-                    return;
-                }
-                else
-=======
-                library.AddSmartList(description1, library.Images);
-                this.SaveLibrary();
-                
+					library.AddSmartList(description1, library.Images);
+					this.SaveLibrary();
+					return;
             }
             else
             {
                 foreach (KeyValuePair<string, List<Image>> pattern in  this.library.SmartList)
->>>>>>> e7dbfa25ee667f74080b6fd1a9bb3853ce3f135e
+
                 {
                     if (pattern.Key == description1)
                     {
