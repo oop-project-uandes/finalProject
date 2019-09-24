@@ -260,7 +260,8 @@ namespace Entrega2_Equipo1
 						this.Merge();
 						break;
 					case 4:
-						//Resize
+                        //Resize
+                        this.Resize();
 						break;
 					case 5:
 						//Mosaic
@@ -279,7 +280,46 @@ namespace Entrega2_Equipo1
             }
         }
 
-		private void Merge()
+        private void Resize()
+        {
+            Resizer resizer = new Resizer();
+
+            List<string> ResizeTitle = this.LoadBannerData("resize.txt");
+
+            // First, we get the names of the images user wants to add the text
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+            // We get the images currently in the working area
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+            foreach (string filename in filenames)
+            {
+                string doneon = "Done on ";
+                foreach (string titlestring in ResizeTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        Console.WriteLine("Escriba el ancho y la altura separada por coma");
+                        string completestring = doneon + image.Name + "!";
+                        string size = Console.ReadLine();
+                        string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
+                        Bitmap modifiedbitmap = resizer.ResizeImage(image.BitmapImage, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]));
+                        image.BitmapImage = modifiedbitmap;
+                        Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(completestring);
+                        System.Threading.Thread.Sleep(500);
+                    }
+                }
+            }
+        }
+
+        private void Merge()
 		{
 			List<string> mergeTitle = this.LoadBannerData("merge.txt");
 
