@@ -729,7 +729,7 @@ namespace Entrega2_Equipo1
         {
             string choosetypeofcensorship = "Please, choose which type of censorship you want to use";
             List<string> typesofcensorship = new List<string>() { "Black Censorship", "Pixel Censorship" };
-            List<string> UseCensorshipTitle = this.LoadBannerData("usecensorhip.txt");
+            List<string> UseCensorshipTitle = this.LoadBannerData("usecensorship.txt");
             // First, we get the names of the images user wants to apply the censorship
             List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
             // Then, we get the type of censorship
