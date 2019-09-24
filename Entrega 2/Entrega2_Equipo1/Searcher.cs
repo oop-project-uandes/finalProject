@@ -35,7 +35,7 @@ namespace Entrega2_Equipo1
                                     cont++;
 								}
 								break;
-							case "EyeColor":
+							case "EyesColor":
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
 								{
                                     cont++;
@@ -230,7 +230,7 @@ namespace Entrega2_Equipo1
 			return scissors.Crop(imageDict); //returns a List<System.Drawing.Bitmap>
         }
     
-        private List<List<List<string>>> Declaration(string Declaration)
+        public List<List<List<string>>> Declaration(string Declaration)
         {
             List<List<List<string>>> Total = new List<List<List<string>>>();
             
