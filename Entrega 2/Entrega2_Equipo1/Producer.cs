@@ -159,9 +159,10 @@ namespace Entrega2_Equipo1
             throw new NotImplementedException();
         }
 
-        public System.Drawing.Bitmap Collage(List<string> nombresImágenes, double[] tamanoFondo, double[] tamanosImagenes, System.Drawing.Bitmap imagenFondo)
+        public System.Drawing.Bitmap Collage(List<Image> images, int baseWidth, int baseHeight, int insertWidth, int insertHeight, System.Drawing.Bitmap backgroundImage = null)
         {
-            throw new NotImplementedException();
+            AddImage AI = new AddImage();
+            return AI.ImageCollage(images, baseWidth, baseHeight, insertWidth, insertHeight, backgroundImage);
         }
 
         public System.Drawing.Bitmap Album(List<string> nombresImagenes, int cantFotosXPagina)
