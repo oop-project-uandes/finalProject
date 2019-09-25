@@ -218,7 +218,7 @@ namespace Entrega2_Equipo1
             List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
             List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
                                                             "Add text", "Merge images", "Resize image", "Mosaic",
-                                                            "Collage", "Album", "Calendar", "Exit" };
+                                                            "Collage", "Exit" };
 
             while (true)
             {
@@ -268,12 +268,6 @@ namespace Entrega2_Equipo1
 						break;
 					case 6:
 						//Collage
-						break;
-					case 7:
-						//Album
-						break;
-					case 8:
-						//Calendar
 						break;
 
 				}
