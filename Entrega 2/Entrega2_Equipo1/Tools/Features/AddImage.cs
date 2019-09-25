@@ -24,20 +24,25 @@ namespace Entrega2_Equipo1
             return baseIm;
         }
 
-        public Bitmap ImageCollage(List<Image> images, List<int[]> positions, int widthImage = 1000, int heightImage = 1000,
-            int widthInsertImage = 100, int heightInsertImage = 100)
+        public Bitmap ImageCollage(List<Image> images, int widthImage = 1000, int heightImage = 1000,
+            int widthInsertImage = 100, int heightInsertImage = 100, Bitmap backgroundImage= null)
         {
-            Bitmap baseImage = new Bitmap(widthImage, heightImage);
-            Graphics gr = Graphics.FromImage(baseImage);
-
-            for (int i= 0; i<images.Count;i++)
+            Random rnd = new Random();
+            Resizer resizer = new Resizer();
+            List<int[]> positions = new List<int[]>();
+            int position = 0;
+            for (int i = 0; i < images.Count; i++)
             {
-                Rectangle rect = new Rectangle(positions[i][0], positions[i][1],
-             widthImage, heightImage);
-                gr.DrawImage(images[i].BitmapImage, rect);
+                int[] coordRandom = { rnd.Next(0, widthImage), rnd.Next(0, heightImage) };
+                positions.Add(coordRandom);
             }
-
-            return baseImage;
+            Bitmap Collage = new Bitmap(widthImage, heightImage);
+            foreach (Image image in images) {
+                Collage = InsertImage(Collage, resizer.ResizeImage(image.BitmapImage, widthInsertImage, heightInsertImage),
+                    positions[position][0], positions[position][1],widthInsertImage,heightInsertImage);
+                position++;
+                    }
+            return Collage;
         }
 
 

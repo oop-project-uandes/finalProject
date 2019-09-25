@@ -218,7 +218,7 @@ namespace Entrega2_Equipo1
             List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
             List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
                                                             "Add text", "Merge images", "Resize image", "Mosaic",
-                                                            "Collage", "Album", "Calendar", "Exit" };
+                                                            "Collage", "Exit" };
 
             while (true)
             {
@@ -267,17 +267,52 @@ namespace Entrega2_Equipo1
 						//Mosaic
 						break;
 					case 6:
-						//Collage
-						break;
-					case 7:
-						//Album
-						break;
-					case 8:
-						//Calendar
+                        //Collage
+                        this.Collage();
 						break;
 
 				}
             }
+        }
+
+        private void Collage()
+        {
+            List<string> CollageTitle = this.LoadBannerData("collage.txt");
+
+            // First, we get the names of the images user wants to add the text
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+            // We get the images currently in the working area
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+            string completestring = "Collage Finished!";
+
+            List<Image> collageImages = new List<Image>();
+            foreach (string titlestring in CollageTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            foreach (string filename in filenames)
+            {
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        collageImages.Add(image);
+                    }
+                }
+            }
+            Console.WriteLine("Ingrese ancho la altura de la imagen base y de las imágenes a introducir");
+            string size = Console.ReadLine();
+            string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
+            Bitmap modifiedbitmap = this.producer.Collage(collageImages,Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]), 
+                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]));
+            Image Final = collageImages[0];
+            Final.BitmapImage = modifiedbitmap;
+            Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
+            Console.WriteLine(completestring);
+            System.Threading.Thread.Sleep(500);
         }
 
         private void Resize()
