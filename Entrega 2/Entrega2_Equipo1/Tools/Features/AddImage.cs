@@ -30,7 +30,6 @@ namespace Entrega2_Equipo1
             Random rnd = new Random();
             Resizer resizer = new Resizer();
             Bitmap Collage = new Bitmap(widthImage, heightImage);
-            backgroundImage = images[0].BitmapImage;
             if (backgroundImage != null)
             {
                 backgroundImage = resizer.ResizeImage(backgroundImage, widthImage, heightImage);
