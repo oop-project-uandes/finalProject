@@ -29,14 +29,20 @@ namespace Entrega2_Equipo1
         {
             Random rnd = new Random();
             Resizer resizer = new Resizer();
+            Bitmap Collage = new Bitmap(widthImage, heightImage);
+            backgroundImage = images[0].BitmapImage;
+            if (backgroundImage != null)
+            {
+                backgroundImage = resizer.ResizeImage(backgroundImage, widthImage, heightImage);
+                Collage = backgroundImage;
+            }
             List<int[]> positions = new List<int[]>();
             int position = 0;
             for (int i = 0; i < images.Count; i++)
             {
-                int[] coordRandom = { rnd.Next(0, widthImage), rnd.Next(0, heightImage) };
+                int[] coordRandom = { rnd.Next(0, widthImage-widthInsertImage), rnd.Next(0, heightImage-heightInsertImage) };
                 positions.Add(coordRandom);
             }
-            Bitmap Collage = new Bitmap(widthImage, heightImage);
             foreach (Image image in images) {
                 Collage = InsertImage(Collage, resizer.ResizeImage(image.BitmapImage, widthInsertImage, heightInsertImage),
                     positions[position][0], positions[position][1],widthInsertImage,heightInsertImage);

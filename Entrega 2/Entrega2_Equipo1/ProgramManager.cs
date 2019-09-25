@@ -310,6 +310,7 @@ namespace Entrega2_Equipo1
                 Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]));
             Image Final = collageImages[0];
             Final.BitmapImage = modifiedbitmap;
+            Final.Name = "Collage:" + Final.Name;
             Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
             Console.WriteLine(completestring);
             System.Threading.Thread.Sleep(500);
