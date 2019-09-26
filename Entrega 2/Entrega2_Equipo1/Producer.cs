@@ -115,39 +115,40 @@ namespace Entrega2_Equipo1
 
         public System.Drawing.Bitmap Merge(List<Image> images)
         {
-            List<Image> Final = new List<Image>();
-            while (images.Count != 0)
+			Resizer resizer = new Resizer();
+            List<Bitmap> Final = new List<Bitmap>();
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < images.Count; i++)
             {
-                int x = 0;
-                int y = 0;
-                Image final = images[0];
-                for (int i = 0; i < images.Count; i++)
-                {
-                    if ((x >= images[i].Resolution[0] && y >= images[i].Resolution[1]) || (x == 0 && y == 0))
+                if ((x >= images[i].Resolution[0] && y >= images[i].Resolution[1]) || (x == 0 && y == 0))
                     {
                         x = images[i].Resolution[0];
                         y = images[i].Resolution[1];
-                        final = images[i];
+                        
                     }
                 }
-                Final.Add(final);
-                images.Remove(final);
-            }
-            return MergeRecursive(Final, Final[0].BitmapImage, 2);
+			foreach (Image image in images)
+			{
+				Bitmap bitmap = resizer.ResizeImage(image.BitmapImage,x,y);
+				Final.Add(bitmap);
+			}
+
+            return MergeRecursive(Final, Final[0], 2);
         }
 
-        public System.Drawing.Bitmap MergeRecursive(List<Image> images, Bitmap merged = null, int cont = 2)
+        public System.Drawing.Bitmap MergeRecursive(List<Bitmap> images, Bitmap merged = null, int cont = 2)
         {
             Merger merger = new Merger();
             if (images.Count == 2 && cont == 2)
             {
                 cont++;
-                return MergeRecursive(images, merger.Merge(images[0].BitmapImage, images[1].BitmapImage), cont);
+                return MergeRecursive(images, merger.Merge(images[0], images[1]), cont);
             }
             else if (cont < images.Count)
             {
                 cont++;
-                return MergeRecursive(images, merger.Merge(merged, images[cont-1].BitmapImage), cont);
+                return MergeRecursive(images, merger.Merge(merged, images[cont-1]), cont);
 
             }
             return merged;

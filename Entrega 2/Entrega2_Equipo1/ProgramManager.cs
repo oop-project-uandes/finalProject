@@ -269,7 +269,6 @@ namespace Entrega2_Equipo1
 					case 6:
                         //Collage
                         this.Collage();
-
 						break;
 
 				}
