@@ -52,13 +52,13 @@ namespace Entrega2_Equipo1
         }
 
 
-		public Bitmap ReadColors(Image image, int width =192, int height = 108)
+		public Bitmap ReadColors(Image image, int width =10, int height = 10)
 		{
 			//Converting loaded image into bitmap
 			Resizer resizer = new Resizer();
 			Bitmap imageBit = image.BitmapImage;
 			Bitmap bmp = (Bitmap)imageBit.Clone();
-			bmp = resizer.ResizeImage(bmp, 1920, 1080);
+			bmp = resizer.ResizeImage(bmp, 1000, 1000);
 
 
 			List<int[]> TotalRGB= new List<int[]>();
@@ -68,26 +68,20 @@ namespace Entrega2_Equipo1
 				for (int j = 0; j < bmp.Width; j++)
 				{
 					Color now_color = bmp.GetPixel(j, i);
-					//Console.WriteLine("RGB: {0},{1},{2}", now_color.R, now_color.G, now_color.B);
 
 					int[] RGB = { (int)now_color.R, (int)now_color.G, (int)now_color.B };
 					TotalRGB.Add(RGB);
 
 				}
 			}
-			/*
-			foreach (int[] rgbSize in TotalRGB)
-			{
-				Console.WriteLine("Size: {0}, RGB: {1},{2},{3}",rgbSize.Length,rgbSize[0], rgbSize[1], rgbSize[2]);
-			}
-			*/
+
 			int wCont = 0;
 
 			List<List<int[]>> RGBbyBlocks = new List<List<int[]>>();
 			List<int[]> subBlock = new List<int[]>();
 			for (int i=0; i<TotalRGB.Count; i++)
 			{
-				if ((wCont % width)==0)
+				if ((wCont % width)==0 && wCont != 0)
 				{
 					List<int[]> cloneList = subBlock.ToList();
 					RGBbyBlocks.Add(cloneList);
@@ -100,12 +94,13 @@ namespace Entrega2_Equipo1
 					wCont++;
 				
 			}
+
 			int hCont = 0;
 			List<List<List<int[]>>> Cells = new List<List<List<int[]>>>();
 			List<List<int[]>> temp = new List<List<int[]>>();
 			foreach (List<int[]> subList in RGBbyBlocks)
 			{
-				if ((hCont % height) == 0)
+				if ((hCont % height) == 0 && hCont != 0)
 				{
 					List<List<int[]>> cloneList = temp.ToList();
 					Cells.Add(cloneList);
@@ -117,21 +112,37 @@ namespace Entrega2_Equipo1
 
 			}
 
+			int R = 0;
+			int G = 0;
+			int B = 0;
+
+			List<int[]> avgRGB = new List<int[]>();
 			foreach (List<List<int[]>> Altura in Cells)
 			{
-				
 				foreach(List<int[]> Ancho in Altura)
 				{
-					string fila = "";
 					foreach (int[] rgb in Ancho)
-					{
-						string rgbs = "("+Convert.ToString(rgb[0])+","+Convert.ToString(rgb[1]) + "," + Convert.ToString(rgb[2]) + ")";
-						fila += Convert.ToString(rgbs);
+					{ 
+						R += rgb[0];
+						G += rgb[1];
+						B += rgb[2];
+
 					}
-					Console.WriteLine(fila+"\n");
 				}
+				R = R / (width * height);
+				G = G / (width * height);
+				B = B / (width * height);
+				int[] rgbs = { R, G, B };
+				avgRGB.Add(rgbs);
+				R = 0;
+				G = 0;
+				B = 0;
 			}
-			Console.WriteLine(Cells.Count);
+
+			foreach(int[] avgRGBS in avgRGB)
+			{
+				Console.WriteLine("{0},{1},{2}", avgRGBS[0], avgRGBS[1], avgRGBS[2]);
+			}
 			return null;
 		}
 
