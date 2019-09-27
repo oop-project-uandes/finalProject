@@ -302,7 +302,7 @@ namespace Entrega2_Equipo1
                     }
                 }
             }
-            Console.WriteLine("Ingrese ancho la altura de las imágenes que crean el mosaico");
+            Console.Write("Ingrese ancho la altura de las imágenes que crean el mosaico");
             string size = Console.ReadLine();
             string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
             width = Convert.ToInt32(sizeArray[0]);
@@ -3707,7 +3707,6 @@ namespace Entrega2_Equipo1
 
         private void Search()
         {
-            Console.Clear();
             List<string> ShowSearchTitle = this.LoadBannerData("search.txt");
             string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
             string presskeytocontinue = "Please, press any key to continue...";
