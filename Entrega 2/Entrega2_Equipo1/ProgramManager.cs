@@ -75,32 +75,6 @@ namespace Entrega2_Equipo1
         }
 
 
-        private void BarraCarga(string title, double porcentaje)
-        {
-            Console.Clear();
-            Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
-            Console.WriteLine(title);
-            int cantidadLlaves = Convert.ToInt32(porcentaje * 20);
-            int cantidadEspacios = 20 - cantidadLlaves;
-            double porcentajefinal = porcentaje * 100;
-            string barra = "[";
-            for (int i = 0; i < cantidadLlaves; i++)
-            {
-                barra += "#";
-            }
-            for (int b = 0; b < cantidadEspacios; b++)
-            {
-                barra += " ";
-            }
-            barra += $"] {porcentajefinal}%";
-            Console.SetCursorPosition((Console.WindowWidth - barra.Length) / 2, Console.CursorTop);
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(barra);
-            Console.BackgroundColor = ConsoleColor.DarkBlue;
-            Console.BackgroundColor = ConsoleColor.White;
-        }
-
 
         private void EditingArea()
         {
