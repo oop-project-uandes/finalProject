@@ -11,8 +11,8 @@ namespace Entrega2_Equipo1
     [Serializable]
     public class AddShape : Tool
     {
-        public Bitmap InsertShape(Bitmap bitmap,string shapeType, int xAxis,
-    int yAxis, int width=150, int height=100, string colorName= null)
+        public AddShape() { }
+        public Bitmap InsertShape(Bitmap bitmap,string shapeType, int xAxis, int yAxis, int width = 150, int height = 100, string colorName = null)
         {
             Bitmap temp = (Bitmap)bitmap.Clone();
             Graphics gr = Graphics.FromImage(temp);
