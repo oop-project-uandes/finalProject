@@ -6001,7 +6001,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the producer.bin file doesnt exist
         private void ShowProducerDoesntExistError()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the producer.bin file");
             Console.WriteLine("[!]          If you added images to the Editing Area, they are gone");
@@ -6014,7 +6014,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the library.bin file");
             Console.WriteLine("[!]          If you added images to My Library, they are gone");
