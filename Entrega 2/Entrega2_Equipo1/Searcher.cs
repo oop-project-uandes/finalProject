@@ -35,7 +35,7 @@ namespace Entrega2_Equipo1
                                     cont++;
 								}
 								break;
-							case "EyeColor":
+							case "EyesColor":
 								if (image.SomePersonLabelContains(atributes[0], null, ENationality.None, (EColor)Enum.Parse(typeof(EColor), atributes[1])))
 								{
                                     cont++;

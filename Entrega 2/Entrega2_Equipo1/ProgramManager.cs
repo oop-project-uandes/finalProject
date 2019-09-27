@@ -218,7 +218,7 @@ namespace Entrega2_Equipo1
             List<string> UseFeatureTitle = this.LoadBannerData("usefeatures.txt");
             List<string> options = new List<string>() { "Add Censorship", "Watson Face Recognition Analizer",
                                                             "Add text", "Merge images", "Resize image", "Mosaic",
-                                                            "Collage", "Album", "Calendar", "Exit" };
+                                                            "Collage", "Exit" };
 
             while (true)
             {
@@ -255,14 +255,222 @@ namespace Entrega2_Equipo1
                     case 2:
                         this.AddText();
                         break;
+					case 3:
+						//Merge
+						this.Merge();
+						break;
+					case 4:
+                        //Resize
+                        this.Resize();
+						break;
+					case 5:
+                        //Mosaic
+                        this.Mosaic();
+						break;
+					case 6:
+                        //Collage
+                        this.Collage();
+						break;
 
+				}
+            }
+        }
+
+        private void Mosaic()
+        {
+            Console.Clear();
+            List<string> MosaicTitle = this.LoadBannerData("mosaic.txt");
+            string completemosaic = "Mosaic Finished!";
+            List<string> imageMosaic = this.ChooseWhichImagesWantToApplyFeature();
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+            List<Image> mosaicImages = new List<Image>();
+            int width;
+            int height;
+
+            foreach (string titlestring in MosaicTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            foreach (string image in imageMosaic)
+            {
+                foreach (Image image1 in imagesinworkingarea)
+                {
+                    if (image == $"Name: {image1.Name} - Calification: {image1.Calification} - Resolution: {image1.Resolution[0]}x{image1.Resolution[1]} - AspectRatio: {image1.AspectRatio[0]}x{image1.AspectRatio[1]} - Clear: {image1.DarkClear}\n")
+                    {
+                        mosaicImages.Add(image1);
+                    }
+                }
+            }
+            Console.WriteLine("Ingrese ancho la altura de las imágenes que crean el mosaico");
+            string size = Console.ReadLine();
+            string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
+            width = Convert.ToInt32(sizeArray[0]);
+            height = Convert.ToInt32(sizeArray[1]);
+            Image imageBase = mosaicImages[0];
+            mosaicImages.Remove(imageBase);
+
+            producer.Mosaic(imageBase, mosaicImages, width, height);
+            Console.SetCursorPosition((Console.WindowWidth -  completemosaic.Length) / 2, Console.CursorTop);
+            Console.WriteLine(completemosaic);
+
+
+        }
+
+        private void Collage()
+        {
+            List<string> CollageTitle = this.LoadBannerData("collage.txt");
+
+            // First, we get the names of the images user wants to add the text
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+            // We get the images currently in the working area
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+            string completestring = "Collage Finished!";
+
+            List<Image> collageImages = new List<Image>();
+            foreach (string titlestring in CollageTitle)
+            {
+                Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                Console.WriteLine(titlestring);
+            }
+            foreach (string filename in filenames)
+            {
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        collageImages.Add(image);
+                    }
+                }
+            }
+
+            Console.WriteLine("Ingrese ancho la altura de la imagen base y de las imágenes a introducir");
+            string size = Console.ReadLine();
+            string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
+            Console.WriteLine("Background Image: Y/N");
+            string choice = Console.ReadLine();
+            int cont = 0;
+            string imageFile;
+            if (choice.ToLower() == "y")
+            {
+                foreach (string filename in filenames)
+                {
+                    Console.WriteLine("{0}) {1}", cont, filename);
+                    cont++;
+                }
+                Console.WriteLine("Choose an image file");
+                imageFile = Console.ReadLine();
+                Bitmap backgroundImage = imagesinworkingarea[0].BitmapImage;
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (imageFile == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        backgroundImage = image.BitmapImage;
+                    }
+                }
+                Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
+                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]),backgroundImage);
+                Image Final = collageImages[0];
+                Final.BitmapImage = modifiedbitmap;
+                Final.Name = "Collage:" + Final.Name;
+            }
+            else
+            {
+                Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
+                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]));
+                Image Final = collageImages[0];
+                Final.BitmapImage = modifiedbitmap;
+                Final.Name = "Collage:" + Final.Name;
+            }
+            
+            Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
+            Console.WriteLine(completestring);
+            System.Threading.Thread.Sleep(500);
+        }
+
+        private void Resize()
+        {
+            Resizer resizer = new Resizer();
+
+            List<string> ResizeTitle = this.LoadBannerData("resize.txt");
+
+            // First, we get the names of the images user wants to add the text
+            List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+            // We get the images currently in the working area
+            List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+            foreach (string filename in filenames)
+            {
+                string doneon = "Done on ";
+                foreach (string titlestring in ResizeTitle)
+                {
+                    Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+                    Console.WriteLine(titlestring);
+                }
+
+                foreach (Image image in imagesinworkingarea)
+                {
+                    if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                    {
+                        Console.WriteLine("Escriba el ancho y la altura separada por coma");
+                        string completestring = doneon + image.Name + "!";
+                        string size = Console.ReadLine();
+                        string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
+                        Bitmap modifiedbitmap = resizer.ResizeImage(image.BitmapImage, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]));
+                        image.BitmapImage = modifiedbitmap;
+                        Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
+                        Console.WriteLine(completestring);
+                        System.Threading.Thread.Sleep(500);
+                    }
                 }
             }
         }
 
+        private void Merge()
+		{
+			List<string> mergeTitle = this.LoadBannerData("merge.txt");
+
+			// First, we get the names of the images user wants to add the text
+			List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
+
+			// We get the images currently in the working area
+			List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
+
+			List<Image> MergingImages = new List<Image>();
+
+			string done = "Finish merging Images!";
+			string file = "";
+			foreach (string titlestring in mergeTitle)
+			{
+				Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
+				Console.WriteLine(titlestring);
+			}
+			foreach (string filename in filenames)
+			{
+				foreach (Image image in imagesinworkingarea)
+				{
+					if (filename == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+					{
+						MergingImages.Add(image);
+						file += image.Name+"/";
+					}
+				}
+			}
+			Image finalImage = MergingImages[0];
+			Bitmap modifiedbitmap = this.producer.Merge(MergingImages);
+			finalImage.BitmapImage = modifiedbitmap;
+			finalImage.Name = file;
+			Console.SetCursorPosition((Console.WindowWidth - done.Length) / 2, Console.CursorTop);
+			Console.WriteLine(done);
+			System.Threading.Thread.Sleep(500);
+
+		}
 
 
-        private void AddText()
+		private void AddText()
         {
             List<string> AddTextTitle = this.LoadBannerData("addtext.txt");
 
@@ -729,7 +937,7 @@ namespace Entrega2_Equipo1
         {
             string choosetypeofcensorship = "Please, choose which type of censorship you want to use";
             List<string> typesofcensorship = new List<string>() { "Black Censorship", "Pixel Censorship" };
-            List<string> UseCensorshipTitle = this.LoadBannerData("usecensorhip.txt");
+            List<string> UseCensorshipTitle = this.LoadBannerData("usecensorship.txt");
             // First, we get the names of the images user wants to apply the censorship
             List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
             // Then, we get the type of censorship
@@ -3597,13 +3805,14 @@ namespace Entrega2_Equipo1
             
             if (this.library.SmartList.Count == 0)
             {
-                library.AddSmartList(description1, library.Images);
-                this.SaveLibrary();
-                
+					library.AddSmartList(description1, library.Images);
+					this.SaveLibrary();
+					return;
             }
             else
             {
                 foreach (KeyValuePair<string, List<Image>> pattern in  this.library.SmartList)
+
                 {
                     if (pattern.Key == description1)
                     {
