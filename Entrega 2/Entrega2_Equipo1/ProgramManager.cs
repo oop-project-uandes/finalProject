@@ -76,7 +76,6 @@ namespace Entrega2_Equipo1
 
 
 
-        // WORKING ON THIS METHOD
         private void EditingArea()
         {
 
@@ -182,7 +181,7 @@ namespace Entrega2_Equipo1
                         this.ApplyFilters();
                         break;
 
-                    // User wants to apply features => WORKING HERE
+                    // User wants to apply features =>  READY
                     case 1:
                         this.UseFeatures();
                         break;
@@ -205,9 +204,6 @@ namespace Entrega2_Equipo1
             }
         }
 
-
-
-        // WORKING HERE
         private void UseFeatures()
         {
             string choosefeature = "Please, choose the Feature you want to use: ";
@@ -251,24 +247,24 @@ namespace Entrega2_Equipo1
                         this.ShowWatsonNotImplemented();
                         break;
 
-                    // Add text feature
+                    // Add text feature => READY
                     case 2:
                         this.AddText();
                         break;
 					case 3:
-						//Merge
+						//Merge => READY
 						this.Merge();
 						break;
 					case 4:
-                        //Resize
+                        //Resize => READY
                         this.Resize();
 						break;
 					case 5:
-                        //Mosaic
+                        //Mosaic => READY
                         this.Mosaic();
 						break;
 					case 6:
-                        //Collage
+                        //Collage => READY
                         this.Collage();
 						break;
 
@@ -286,7 +282,7 @@ namespace Entrega2_Equipo1
             List<Image> mosaicImages = new List<Image>();
             int width;
             int height;
-
+            Console.Clear();
             foreach (string titlestring in MosaicTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
@@ -302,7 +298,11 @@ namespace Entrega2_Equipo1
                     }
                 }
             }
+<<<<<<< HEAD
             Console.Write("Ingrese ancho la altura de las imágenes que crean el mosaico");
+=======
+            Console.WriteLine("Ingrese ancho y la altura de las imágenes que crean el mosaico");
+>>>>>>> bc790221c5bbffc73950cc509462c2bf8252f5e0
             string size = Console.ReadLine();
             string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
             width = Convert.ToInt32(sizeArray[0]);
@@ -310,15 +310,17 @@ namespace Entrega2_Equipo1
             Image imageBase = mosaicImages[0];
             mosaicImages.Remove(imageBase);
 
-            producer.Mosaic(imageBase, mosaicImages, width, height);
+            Bitmap mosaic = producer.Mosaic(imageBase, mosaicImages, width, height);
+            imageBase.BitmapImage = mosaic;
+            imageBase.Name = "Mosaic" + imageBase.Name;
             Console.SetCursorPosition((Console.WindowWidth -  completemosaic.Length) / 2, Console.CursorTop);
             Console.WriteLine(completemosaic);
-
 
         }
 
         private void Collage()
         {
+            Console.Clear();
             List<string> CollageTitle = this.LoadBannerData("collage.txt");
 
             // First, we get the names of the images user wants to add the text
@@ -326,7 +328,7 @@ namespace Entrega2_Equipo1
 
             // We get the images currently in the working area
             List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
-
+            Console.Clear();
             string completestring = "Collage Finished!";
 
             List<Image> collageImages = new List<Image>();
@@ -378,8 +380,11 @@ namespace Entrega2_Equipo1
             }
             else
             {
+                Console.WriteLine("Introduzca el color RGB");
+                string rgb = Console.ReadLine();
+                string[] rgbArray = rgb.Split(new string[] { "," }, StringSplitOptions.None);
                 Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
-                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]));
+                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]),null, Convert.ToInt32(rgbArray[0]), Convert.ToInt32(rgbArray[1]), Convert.ToInt32(rgbArray[2]));
                 Image Final = collageImages[0];
                 Final.BitmapImage = modifiedbitmap;
                 Final.Name = "Collage:" + Final.Name;
@@ -390,8 +395,10 @@ namespace Entrega2_Equipo1
             System.Threading.Thread.Sleep(500);
         }
 
+
         private void Resize()
         {
+            Console.Clear();
             Resizer resizer = new Resizer();
 
             List<string> ResizeTitle = this.LoadBannerData("resize.txt");
@@ -401,7 +408,7 @@ namespace Entrega2_Equipo1
 
             // We get the images currently in the working area
             List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
-
+            Console.Clear();
             foreach (string filename in filenames)
             {
                 string doneon = "Done on ";
@@ -429,9 +436,11 @@ namespace Entrega2_Equipo1
             }
         }
 
+
         private void Merge()
 		{
-			List<string> mergeTitle = this.LoadBannerData("merge.txt");
+            Console.Clear();
+            List<string> mergeTitle = this.LoadBannerData("merge.txt");
 
 			// First, we get the names of the images user wants to add the text
 			List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
@@ -440,8 +449,8 @@ namespace Entrega2_Equipo1
 			List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
 
 			List<Image> MergingImages = new List<Image>();
-
-			string done = "Finish merging Images!";
+            Console.Clear();
+            string done = "Finish merging Images!";
 			string file = "";
 			foreach (string titlestring in mergeTitle)
 			{
@@ -952,7 +961,7 @@ namespace Entrega2_Equipo1
                 foreach (Image image in imagesInWorkingArea)
                 {
                     // We found it
-                    if (pair.Key == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    if (pair.Key == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
                     {
                         // And, depending on the censorship, we apply it
                         // If user wants black censorship
@@ -998,7 +1007,7 @@ namespace Entrega2_Equipo1
                 // We get the width and height of the image
                 foreach (Image image in imagesInWorkingArea)
                 {
-                    if (file == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    if (file == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") 
                     {
                         width = image.BitmapImage.Width;
                         height = image.BitmapImage.Height;
@@ -4230,9 +4239,12 @@ namespace Entrega2_Equipo1
             // Copy an object into files
             foreach (string name in names)
             {
-                string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
-                System.IO.File.Copy(path + name, newpath);
-                newpaths.Add(newpath);
+                if (name != null)
+                {
+                    string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
+                    System.IO.File.Copy(path + name, newpath);
+                    newpaths.Add(newpath);
+                }
             }
 
 
@@ -5971,7 +5983,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the producer.bin file doesnt exist
         private void ShowProducerDoesntExistError()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the producer.bin file");
             Console.WriteLine("[!]          If you added images to the Editing Area, they are gone");
@@ -5984,7 +5996,7 @@ namespace Entrega2_Equipo1
         // Shows an error in case the library.bin file doesnt exist
         private void ShowLibraryDoesntExistError()
         {
-            Console.SetWindowSize(235, 60);
+            Console.SetWindowSize(213, 50);
             Console.Clear();
             Console.WriteLine("\n[!] CAUTION: The program didn't find the library.bin file");
             Console.WriteLine("[!]          If you added images to My Library, they are gone");
