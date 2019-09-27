@@ -376,8 +376,11 @@ namespace Entrega2_Equipo1
             }
             else
             {
+                Console.WriteLine("Introduzca el color RGB");
+                string rgb = Console.ReadLine();
+                string[] rgbArray = rgb.Split(new string[] { "," }, StringSplitOptions.None);
                 Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
-                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]));
+                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]),null, Convert.ToInt32(rgbArray[0]), Convert.ToInt32(rgbArray[1]), Convert.ToInt32(rgbArray[2]));
                 Image Final = collageImages[0];
                 Final.BitmapImage = modifiedbitmap;
                 Final.Name = "Collage:" + Final.Name;
@@ -387,6 +390,7 @@ namespace Entrega2_Equipo1
             Console.WriteLine(completestring);
             System.Threading.Thread.Sleep(500);
         }
+
 
         private void Resize()
         {
@@ -427,6 +431,7 @@ namespace Entrega2_Equipo1
                 }
             }
         }
+
 
         private void Merge()
 		{

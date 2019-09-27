@@ -161,10 +161,10 @@ namespace Entrega2_Equipo1
 			return AI.Mosaic(imagenBase, Imagenes, width, height);
         }
 
-        public System.Drawing.Bitmap Collage(List<Image> images, int baseWidth, int baseHeight, int insertWidth, int insertHeight, System.Drawing.Bitmap backgroundImage = null)
+        public System.Drawing.Bitmap Collage(List<Image> images, int baseWidth, int baseHeight, int insertWidth, int insertHeight, System.Drawing.Bitmap backgroundImage = null, int R=0, int G=0, int B=0)
         {
             AddImage AI = new AddImage();
-            return AI.ImageCollage(images, baseWidth, baseHeight, insertWidth, insertHeight, backgroundImage);
+            return AI.ImageCollage(images, baseWidth, baseHeight, insertWidth, insertHeight, backgroundImage, R,G,B);
         }
 
         public System.Drawing.Bitmap Album(List<string> nombresImagenes, int cantFotosXPagina)
