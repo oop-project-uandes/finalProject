@@ -298,11 +298,8 @@ namespace Entrega2_Equipo1
                     }
                 }
             }
-<<<<<<< HEAD
-            Console.Write("Ingrese ancho la altura de las imágenes que crean el mosaico");
-=======
-            Console.WriteLine("Ingrese ancho y la altura de las imágenes que crean el mosaico");
->>>>>>> bc790221c5bbffc73950cc509462c2bf8252f5e0
+
+            Console.Write("Ingrese ancho y la altura de las imágenes que crean el mosaico");
             string size = Console.ReadLine();
             string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
             width = Convert.ToInt32(sizeArray[0]);
@@ -348,48 +345,44 @@ namespace Entrega2_Equipo1
                 }
             }
 
-            Console.WriteLine("Ingrese ancho la altura de la imagen base y de las imágenes a introducir");
+            Console.WriteLine("Ingrese el ancho y la altura de la imagen base y de las imágenes a introducir");
             string size = Console.ReadLine();
             string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
-            Console.WriteLine("Background Image: Y/N");
-            string choice = Console.ReadLine();
-            int cont = 0;
+            int retorno = this.GenerateMenu(new List<string>() { "Yes","No", "Exit" }, null, "Background Image:", CollageTitle);
             string imageFile;
-            if (choice.ToLower() == "y")
+            switch(retorno)
             {
-                foreach (string filename in filenames)
-                {
-                    Console.WriteLine("{0}) {1}", cont, filename);
-                    cont++;
-                }
-                Console.WriteLine("Choose an image file");
-                imageFile = Console.ReadLine();
-                Bitmap backgroundImage = imagesinworkingarea[0].BitmapImage;
-                foreach (Image image in imagesinworkingarea)
-                {
-                    if (imageFile == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                case 0:
+                    Console.WriteLine("Choose an image file");
+                    int seleccion = this.GenerateMenu(filenames, null, "Choose an image file", CollageTitle);
+                    imageFile = filenames[seleccion];
+                    Bitmap backgroundImage = imagesinworkingarea[0].BitmapImage;
+                    foreach (Image image in imagesinworkingarea)
                     {
-                        backgroundImage = image.BitmapImage;
+                        if (imageFile == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
+                        {
+                            backgroundImage = image.BitmapImage;
+                        }
                     }
-                }
-                Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
-                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]),backgroundImage);
-                Image Final = collageImages[0];
-                Final.BitmapImage = modifiedbitmap;
-                Final.Name = "Collage:" + Final.Name;
+                    Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
+                    Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]), backgroundImage);
+                    Image Final = collageImages[0];
+                    Final.BitmapImage = modifiedbitmap;
+                    Final.Name = "Collage:" + Final.Name;
+                    return;
+
+                case 1:
+                    Console.WriteLine("Introduzca el color RGB");
+                    string rgb = Console.ReadLine();
+                    string[] rgbArray = rgb.Split(new string[] { "," }, StringSplitOptions.None);
+                    Bitmap modifiedbitmaps = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
+                    Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]), null, Convert.ToInt32(rgbArray[0]), Convert.ToInt32(rgbArray[1]), Convert.ToInt32(rgbArray[2]));
+                    Image Finals = collageImages[0];
+                    Finals.BitmapImage = modifiedbitmaps;
+                    Finals.Name = "Collage:" + Finals.Name;
+                    return;
             }
-            else
-            {
-                Console.WriteLine("Introduzca el color RGB");
-                string rgb = Console.ReadLine();
-                string[] rgbArray = rgb.Split(new string[] { "," }, StringSplitOptions.None);
-                Bitmap modifiedbitmap = this.producer.Collage(collageImages, Convert.ToInt32(sizeArray[0]), Convert.ToInt32(sizeArray[1]),
-                Convert.ToInt32(sizeArray[2]), Convert.ToInt32(sizeArray[3]),null, Convert.ToInt32(rgbArray[0]), Convert.ToInt32(rgbArray[1]), Convert.ToInt32(rgbArray[2]));
-                Image Final = collageImages[0];
-                Final.BitmapImage = modifiedbitmap;
-                Final.Name = "Collage:" + Final.Name;
-            }
-            
+           
             Console.SetCursorPosition((Console.WindowWidth - completestring.Length) / 2, Console.CursorTop);
             Console.WriteLine(completestring);
             System.Threading.Thread.Sleep(500);
@@ -6180,7 +6173,7 @@ namespace Entrega2_Equipo1
             int retorno = this.GenerateMenu(new List<string>() { "Import to My Library", "Export from My Library", "Editing Area", "Manage Library", "Search in My Library", "Manage Smart Lists", "Exit" }, null, "", startingStrings);
             return retorno;
         }
-
+        
 
         // Methods that returns the banner data, given the filename
         private List<string> LoadBannerData(string filename)
