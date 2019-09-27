@@ -52,7 +52,7 @@ namespace Entrega2_Equipo1
         }
 
 
-		public Bitmap ReadColors(Image image, List<Image> images, int width =8, int height = 3)
+		public Bitmap Mosaic(Image image, List<Image> images, int width =1, int height = 1)
 		{
 			//Converting loaded image into bitmap
 			Resizer resizer = new Resizer();
@@ -60,8 +60,9 @@ namespace Entrega2_Equipo1
 			Bitmap bmp = (Bitmap)imageBit.Clone();
             Scissors scissors = new Scissors();
 			bmp = resizer.ResizeImage(bmp, width*100, height*100);
-
-            List<Bitmap> list = new List<Bitmap>();
+			
+			List<int[]> coords = new List<int[]>();
+            Dictionary<Bitmap,int[]> dict = new Dictionary<Bitmap,int[]>();
             for (int i = 0; i < (bmp.Width/width); i++)
             {
                 for (int y = 0; y < (bmp.Height/height); y++)
@@ -72,27 +73,68 @@ namespace Entrega2_Equipo1
                                                 bmp.Width / (bmp.Width/width),
                                                 bmp.Height / (bmp.Height/height));
                     double[] coord = { r.X, r.Y, r.Width, r.Height };
-                    list.Add(scissors.Crop(bmp, coord)); 
+					int[] bitCoord = { (i * (bmp.Width / (bmp.Width / width))),
+							(y * (bmp.Height / (bmp.Height/height))),
+							(bmp.Width / (bmp.Width/width)),
+							(bmp.Height / (bmp.Height/height))};
+                    dict.Add(scissors.Crop(bmp, coord),bitCoord);
+					coords.Add(bitCoord);
 
                 }
             }
+			List<Bitmap> list = new List<Bitmap>();
+			foreach(KeyValuePair<Bitmap, int[]> keys in dict)
+			{
+				list.Add(keys.Key);
+			}
+
+
             List<int[]> rgbAVG = avgRGB(list);
-            
-            Console.WriteLine(rgbAVG.Count);
+
 
             List<Bitmap> imagesList = new List<Bitmap>();
-            if (imagesList.Count !=0)
-            {
-                foreach (Image imageInsert in images)
-                {
-                    imagesList.Add(imageInsert.BitmapImage);
-                }
-            }
-
-
-
             
-            return null;
+            foreach (Image imageInsert in images)
+            {
+            imagesList.Add(imageInsert.BitmapImage);
+            }
+			Console.WriteLine("This may take a while...");
+			Bitmap baseImage = new Bitmap(bmp.Width, bmp.Height);
+			int AvgCont = 0;
+			ColorFilter CF = new ColorFilter();
+			while (AvgCont < list.Count) {
+				foreach (Image imagen in images)
+				{
+					if (AvgCont < list.Count)
+					{
+						Bitmap imagenBit = imagen.BitmapImage;
+						Bitmap temp = (Bitmap)imagenBit.Clone();
+						Color color = Color.FromArgb(rgbAVG[AvgCont][0], rgbAVG[AvgCont][1], rgbAVG[AvgCont][2]);
+						temp = CF.ApplyFilter(temp, color);
+						baseImage = InsertImage(baseImage, temp, coords[AvgCont][0], coords[AvgCont][1], coords[AvgCont][2], coords[AvgCont][3]);
+					}
+					AvgCont++;
+				}
+			}
+			/*
+			for (int i = 0; i < (bmp.Width / width); i++)
+			{
+				for (int y = 0; y < (bmp.Height / height); y++)
+				{
+					Graphics gr = Graphics.FromImage(bmp);
+					Rectangle r = new Rectangle(i * (bmp.Width / (bmp.Width / width)),
+												y * (bmp.Height / (bmp.Height / height)),
+												bmp.Width / (bmp.Width / width),
+												bmp.Height / (bmp.Height / height));
+					double[] coord = { r.X, r.Y, r.Width, r.Height };
+					list.Add(scissors.Crop(bmp, coord));
+
+				}
+			}
+			*/
+
+
+			return baseImage;
 		}
 
         private List<int[]> avgRGB  (List<Bitmap> list)

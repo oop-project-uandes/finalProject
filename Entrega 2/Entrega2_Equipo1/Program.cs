@@ -16,6 +16,6 @@ namespace Entrega2_Equipo1
         {
             ProgramManager manager = new ProgramManager();
             manager.Run();
-        }
+		}
     }
 }
