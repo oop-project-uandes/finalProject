@@ -75,8 +75,33 @@ namespace Entrega2_Equipo1
         }
 
 
+        private void BarraCarga(string title, double porcentaje)
+        {
+            Console.Clear();
+            Console.SetCursorPosition((Console.WindowWidth - title.Length) / 2, Console.CursorTop);
+            Console.WriteLine(title);
+            int cantidadLlaves = Convert.ToInt32(porcentaje * 20);
+            int cantidadEspacios = 20 - cantidadLlaves;
+            double porcentajefinal = porcentaje * 100;
+            string barra = "[";
+            for (int i = 0; i < cantidadLlaves; i++)
+            {
+                barra += "#";
+            }
+            for (int b = 0; b < cantidadEspacios; b++)
+            {
+                barra += " ";
+            }
+            barra += $"] {porcentajefinal}%";
+            Console.SetCursorPosition((Console.WindowWidth - barra.Length) / 2, Console.CursorTop);
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(barra);
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.BackgroundColor = ConsoleColor.White;
+        }
 
-        // WORKING ON THIS METHOD
+
         private void EditingArea()
         {
 
@@ -182,7 +207,7 @@ namespace Entrega2_Equipo1
                         this.ApplyFilters();
                         break;
 
-                    // User wants to apply features => WORKING HERE
+                    // User wants to apply features =>  READY
                     case 1:
                         this.UseFeatures();
                         break;
@@ -205,9 +230,6 @@ namespace Entrega2_Equipo1
             }
         }
 
-
-
-        // WORKING HERE
         private void UseFeatures()
         {
             string choosefeature = "Please, choose the Feature you want to use: ";
@@ -251,24 +273,24 @@ namespace Entrega2_Equipo1
                         this.ShowWatsonNotImplemented();
                         break;
 
-                    // Add text feature
+                    // Add text feature => READY
                     case 2:
                         this.AddText();
                         break;
 					case 3:
-						//Merge
+						//Merge => READY
 						this.Merge();
 						break;
 					case 4:
-                        //Resize
+                        //Resize => READY
                         this.Resize();
 						break;
 					case 5:
-                        //Mosaic
+                        //Mosaic => READY
                         this.Mosaic();
 						break;
 					case 6:
-                        //Collage
+                        //Collage => READY
                         this.Collage();
 						break;
 
@@ -302,7 +324,7 @@ namespace Entrega2_Equipo1
                     }
                 }
             }
-            Console.WriteLine("Ingrese ancho la altura de las imágenes que crean el mosaico");
+            Console.WriteLine("Ingrese ancho y la altura de las imágenes que crean el mosaico");
             string size = Console.ReadLine();
             string[] sizeArray = size.Split(new string[] { "," }, StringSplitOptions.None);
             width = Convert.ToInt32(sizeArray[0]);
@@ -313,7 +335,6 @@ namespace Entrega2_Equipo1
             producer.Mosaic(imageBase, mosaicImages, width, height);
             Console.SetCursorPosition((Console.WindowWidth -  completemosaic.Length) / 2, Console.CursorTop);
             Console.WriteLine(completemosaic);
-
 
         }
 
@@ -952,7 +973,7 @@ namespace Entrega2_Equipo1
                 foreach (Image image in imagesInWorkingArea)
                 {
                     // We found it
-                    if (pair.Key == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    if (pair.Key == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n")
                     {
                         // And, depending on the censorship, we apply it
                         // If user wants black censorship
@@ -998,7 +1019,7 @@ namespace Entrega2_Equipo1
                 // We get the width and height of the image
                 foreach (Image image in imagesInWorkingArea)
                 {
-                    if (file == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") ;
+                    if (file == $"Name: {image.Name} - Calification: {image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear}\n") 
                     {
                         width = image.BitmapImage.Width;
                         height = image.BitmapImage.Height;
