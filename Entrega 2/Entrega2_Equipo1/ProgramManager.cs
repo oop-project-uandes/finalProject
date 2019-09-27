@@ -308,7 +308,7 @@ namespace Entrega2_Equipo1
             List<Image> mosaicImages = new List<Image>();
             int width;
             int height;
-
+            Console.Clear();
             foreach (string titlestring in MosaicTitle)
             {
                 Console.SetCursorPosition((Console.WindowWidth - titlestring.Length) / 2, Console.CursorTop);
@@ -332,7 +332,9 @@ namespace Entrega2_Equipo1
             Image imageBase = mosaicImages[0];
             mosaicImages.Remove(imageBase);
 
-            producer.Mosaic(imageBase, mosaicImages, width, height);
+            Bitmap mosaic = producer.Mosaic(imageBase, mosaicImages, width, height);
+            imageBase.BitmapImage = mosaic;
+            imageBase.Name = "Mosaic" + imageBase.Name;
             Console.SetCursorPosition((Console.WindowWidth -  completemosaic.Length) / 2, Console.CursorTop);
             Console.WriteLine(completemosaic);
 
@@ -340,6 +342,7 @@ namespace Entrega2_Equipo1
 
         private void Collage()
         {
+            Console.Clear();
             List<string> CollageTitle = this.LoadBannerData("collage.txt");
 
             // First, we get the names of the images user wants to add the text
@@ -347,7 +350,7 @@ namespace Entrega2_Equipo1
 
             // We get the images currently in the working area
             List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
-
+            Console.Clear();
             string completestring = "Collage Finished!";
 
             List<Image> collageImages = new List<Image>();
@@ -413,6 +416,7 @@ namespace Entrega2_Equipo1
 
         private void Resize()
         {
+            Console.Clear();
             Resizer resizer = new Resizer();
 
             List<string> ResizeTitle = this.LoadBannerData("resize.txt");
@@ -422,7 +426,7 @@ namespace Entrega2_Equipo1
 
             // We get the images currently in the working area
             List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
-
+            Console.Clear();
             foreach (string filename in filenames)
             {
                 string doneon = "Done on ";
@@ -452,7 +456,8 @@ namespace Entrega2_Equipo1
 
         private void Merge()
 		{
-			List<string> mergeTitle = this.LoadBannerData("merge.txt");
+            Console.Clear();
+            List<string> mergeTitle = this.LoadBannerData("merge.txt");
 
 			// First, we get the names of the images user wants to add the text
 			List<string> filenames = this.ChooseWhichImagesWantToApplyFeature();
@@ -461,8 +466,8 @@ namespace Entrega2_Equipo1
 			List<Image> imagesinworkingarea = this.producer.imagesInTheWorkingArea();
 
 			List<Image> MergingImages = new List<Image>();
-
-			string done = "Finish merging Images!";
+            Console.Clear();
+            string done = "Finish merging Images!";
 			string file = "";
 			foreach (string titlestring in mergeTitle)
 			{
@@ -4252,9 +4257,12 @@ namespace Entrega2_Equipo1
             // Copy an object into files
             foreach (string name in names)
             {
-                string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
-                System.IO.File.Copy(path + name, newpath);
-                newpaths.Add(newpath);
+                if (name != null)
+                {
+                    string newpath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Files\" + name;
+                    System.IO.File.Copy(path + name, newpath);
+                    newpaths.Add(newpath);
+                }
             }
 
 
