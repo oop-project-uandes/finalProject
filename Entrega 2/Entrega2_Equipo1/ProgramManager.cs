@@ -1354,7 +1354,7 @@ namespace Entrega2_Equipo1
                 string choosefilter = "Please, choose the Filter you want to apply: ";
                 List<string> ApplyFiltersTitle = this.LoadBannerData("applyfilters.txt");
                 List<string> options = new List<string>() { "BlackNWhiteFilter", "BrightnessFilter", "ColorFilter",
-                                                        "InvertFiler", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
+                                                        "InvertFilter", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
                                                         "SepiaFilter", "WindowsFilter","AutomaticAdjustmentFilter", "Exit"};
 
                 // Ask user what he wants to do, and if he wants to exit, we exit
