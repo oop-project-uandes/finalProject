@@ -15,10 +15,6 @@ namespace Entrega2_Equipo1
         private bool _continue = true;
         private int startingOption;
 
-
-        // TODO: AL FINAL EL USUARIO DEBE SER CAPAZ DE DEJAR PARAMETROS EN LOS LABELS SIN DEFINIR (POR EJEMPLO, 
-        // EN ADD LABEL Y EN EDIT LABEL, SI SE INTRODUCE None EN CUALQUIERA DE LOS PARAMETROS ESTE DEBE QUEDAR SIN DEFINIR
-
         public void Run()
         {
             this.ShowPresentation();
@@ -204,6 +200,7 @@ namespace Entrega2_Equipo1
             }
         }
 
+
         private void UseFeatures()
         {
             string choosefeature = "Please, choose the Feature you want to use: ";
@@ -272,6 +269,7 @@ namespace Entrega2_Equipo1
             }
         }
 
+
         private void Mosaic()
         {
             Console.Clear();
@@ -314,6 +312,7 @@ namespace Entrega2_Equipo1
             Console.WriteLine(completemosaic);
 
         }
+
 
         private void Collage()
         {
@@ -1355,7 +1354,7 @@ namespace Entrega2_Equipo1
                 string choosefilter = "Please, choose the Filter you want to apply: ";
                 List<string> ApplyFiltersTitle = this.LoadBannerData("applyfilters.txt");
                 List<string> options = new List<string>() { "BlackNWhiteFilter", "BrightnessFilter", "ColorFilter",
-                                                        "InvertFiler", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
+                                                        "InvertFilter", "MirrorFilter", "OldFilmFilter", "RotateFlipFilter",
                                                         "SepiaFilter", "WindowsFilter","AutomaticAdjustmentFilter", "Exit"};
 
                 // Ask user what he wants to do, and if he wants to exit, we exit
@@ -3697,7 +3696,7 @@ namespace Entrega2_Equipo1
                         this.Search();
                         break;
 
-                    // User wants to add a search pattern => READY
+                    // User wants to add do a facesearch => NOT IMPLEMENTED YET
                     case 1:
                         this.FaceSearch();
                         break;
@@ -3709,6 +3708,7 @@ namespace Entrega2_Equipo1
 
         private void Search()
         {
+            Console.Clear();
             List<string> ShowSearchTitle = this.LoadBannerData("search.txt");
             string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
             string presskeytocontinue = "Please, press any key to continue...";
@@ -3732,7 +3732,7 @@ namespace Entrega2_Equipo1
                 foreach (Image image in images)
                 {
                     Console.WriteLine(separator);
-                    string patternImage = $"    ~ Pattern:{declaration} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
+                    string patternImage = $"    ~ Pattern: {declaration} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~";
                     Console.WriteLine(patternImage);
                 }
                 Console.WriteLine(separator);
@@ -3749,7 +3749,7 @@ namespace Entrega2_Equipo1
         {
             Console.Clear();
             string presskeytocontinue = "Please, press any key to continue...";
-            string emptylibraryerror = "[!] ERROR: Sorry, this method is not working";
+            string emptylibraryerror = "[!] ERROR: Sorry, not implemented yet";
             Console.SetCursorPosition((Console.WindowWidth - emptylibraryerror.Length) / 2, Console.CursorTop);
             Console.WriteLine(emptylibraryerror);
             Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 2, Console.CursorTop);
@@ -6014,7 +6014,7 @@ namespace Entrega2_Equipo1
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
-            Console.SetWindowSize(60, 28);
+            Console.SetWindowSize(100, 30);
             List<string> presentationStrings = this.LoadBannerData("presentation.txt");
             foreach (string presentationString in presentationStrings)
             {

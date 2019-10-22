@@ -1,9 +1,9 @@
 unununununununununununununununununununununununununununu
-   _____ ____  _      _               _____ ______ 
-  / ____/ __ \| |    | |        /\   / ____|  ____|
- | |   | |  | | |    | |       /  \ | |  __| |__   
- | |   | |  | | |    | |      / /\ \| | |_ |  __|  
- | |___| |__| | |____| |____ / ____ \ |__| | |____ 
-  \_____\____/|______|______/_/    \_\_____|______|
-                                                   
-unununununununununununununununununununununununununununu                                                   
+n   _____ ____  _      _               _____ ______   n
+u  / ____/ __ \| |    | |        /\   / ____|  ____|  u
+n | |   | |  | | |    | |       /  \ | |  __| |__     n
+u | |   | |  | | |    | |      / /\ \| | |_ |  __|    u
+n | |___| |__| | |____| |____ / ____ \ |__| | |____   n
+u  \_____\____/|______|______/_/    \_\_____|______|  u
+n                                                     n
+unununununununununununununununununununununununununununu

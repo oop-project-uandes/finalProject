@@ -19,7 +19,5 @@ namespace Entrega2_Equipo1
         {
             this.workingAreaImages = new List<Image>();
         }
-
-
     }
 }

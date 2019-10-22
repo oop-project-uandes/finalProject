@@ -1,4 +1,5 @@
 ununununununununununununununununununununununununununununununununununununununununununununununununu
+<<<<<<< HEAD
   /\/|  ______ _____ _____ _______ _____ _   _  _____            _____  ______            /\/|
  |/\/  |  ____|  __ \_   _|__   __|_   _| \ | |/ ____|     /\   |  __ \|  ____|   /\     |/\/ 
        | |__  | |  | || |    | |    | | |  \| | |  __     /  \  | |__) | |__     /  \         
@@ -7,3 +8,13 @@ unununununununununununununununununununununununununununununununununununununununun
        |______|_____/_____|  |_|  |_____|_| \_|\_____| /_/    \_\_|  \_\______/_/    \_\      
                                                                                               
 ununununununununununununununununununununununununununununununununununununununununununununununununu                                                                                              
+=======
+n  /\/|  ______ _____ _____ _______ _____ _   _  _____            _____  ______            /\/| n
+u |/\/  |  ____|  __ \_   _|__   __|_   _| \ | |/ ____|     /\   |  __ \|  ____|   /\     |/\/  u
+n       | |__  | |  | || |    | |    | | |  \| | |  __     /  \  | |__) | |__     /  \          n
+u       |  __| | |  | || |    | |    | | | . ` | | |_ |   / /\ \ |  _  /|  __|   / /\ \         u
+n       | |____| |__| || |_   | |   _| |_| |\  | |__| |  / ____ \| | \ \| |____ / ____ \        n
+u       |______|_____/_____|  |_|  |_____|_| \_|\_____| /_/    \_\_|  \_\______/_/    \_\       u
+n                                                                                               n
+ununununununununununununununununununununununununununununununununununununununununununununununununu
+>>>>>>> e074ed9b9fa492a614976754ebe68a69688b44d9
