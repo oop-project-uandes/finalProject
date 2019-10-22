@@ -3762,6 +3762,7 @@ namespace Entrega2_Equipo1
         {
             //Show the title
             Console.Clear();
+            library.UpdateSmartList(library.Images);
             string separator = "\n<<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>><<>>";
             List<string> ShowSmarListTitle = this.LoadBannerData("mysmartList.txt");
             string presskeytocontinue = "Please, press any key to continue...";
@@ -3773,13 +3774,21 @@ namespace Entrega2_Equipo1
             //Show smart list
             foreach (KeyValuePair<string,List<Image>> pattern in this.library.SmartList)
             {
-                foreach(Image image in pattern.Value)
+                if (pattern.Value.Count == 0)
                 {
                     Console.WriteLine(separator);
-                    Console.WriteLine($"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~");
+                    Console.WriteLine($"   There are  not images associated with the search pattern  ~ Pattern:{pattern.Key} - ");
                 }
-                Console.WriteLine(separator);
+                else
+                {
+                    foreach (Image image in pattern.Value)
+                    {
 
+                        Console.WriteLine(separator);
+                        Console.WriteLine($"    ~ Pattern:{pattern.Key} - Name: {image.Name} - Calification{image.Calification} - Resolution: {image.Resolution[0]}x{image.Resolution[1]} - AspectRatio: {image.AspectRatio[0]}x{image.AspectRatio[1]} - Clear: {image.DarkClear} ~");
+                    }
+                    Console.WriteLine(separator);
+                }
             }
             Console.WriteLine("\n");
             Console.SetCursorPosition((Console.WindowWidth - presskeytocontinue.Length) / 4, Console.CursorTop);

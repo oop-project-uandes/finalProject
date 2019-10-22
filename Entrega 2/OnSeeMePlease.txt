@@ -1,10 +1,11 @@
 Welcome to iFruit - Photo editing & organizer can't do miracles
 
---------INDICE
+----------------INDICE----------------
 -Antes de usar(hablar sobre la api key)
 -Import to my library
 -Export to my library
 -Editing Area
+-Pasos para modificar y guardar la imagen
 -Manage Library
 -Search in my library
 -Manage Smart list
@@ -13,7 +14,8 @@ Welcome to iFruit - Photo editing & organizer can't do miracles
 
 
 
-ANTES DE USAR
+----------------ANTES DE USAR----------------
+
 -El programa usa un sistema de api key para funcionar, el cual por Default no esta en el codigo por temas de posible hurto, debido a eso la secuencia alfanumerica
 se encuentra en un archivo zip dentro del repositorio.
 En la carpeta principal del repositorio se encuentra un zip llamado "ClaveToInsert", dentro de el se encuentra un txt llamado "ClaveToInsert", se copia la clave del txt y se pega
@@ -21,7 +23,9 @@ en la linea 13 de la clase "WatsonAnalizer".
 Ya con esto hecho puede  ejecutar su programa.
 
 
-IMPORT TO MY LIBRARY
+
+
+----------------IMPORT TO MY LIBRARY----------------
 
 Al seleccionar import to my library se le pide al usuario ingresar la direccion donde se encuentra la imagen que desea importar, seguido de un "\". 
 Ejemplo: "C:\Users\torre\Pictures\ax\"
@@ -41,7 +45,9 @@ Recordatorio: Simple Label consiste de un tag, recomendado por Watson o ingresad
 Con todo esto se crea una imagen que queda guardada en libreria.
 
 
-EXPORT TO MY LIBRARY
+
+
+----------------EXPORT TO MY LIBRARY----------------
 
 Al seleccionar export to my library se le presenta al usuario el listado de foto dentro de my library, el usuario selecciona 1  y se le pide ingresar la direccion donde se desea guardar, segido de un "\"
 Ejemplo: "C:\Users\torre\Pictures\ax\"
@@ -53,7 +59,9 @@ Y por ultimo se le da a elegir 4 formatos de imagenes(jpg,jpeg,bmp,png)
 La foto se exporta a la direccion dada con el nombre y formado dado.
 
 
-EDITING AREA
+
+
+----------------EDITING AREA----------------
 
 INDICACION: Antes de usar el apply filters o use features debe por lo menos tener una imagen importada en editing area.
 
@@ -86,21 +94,28 @@ LISTA DE FILTROS
 
 LISTA DE  FEATURES
 
-	ADD CENSORSHIP:
-	WATSON FACE RECOGNITION ANALIZER
-	ADD TEXT
-	MERGE IMAGES
-	RESIZE IMAGE
-	MOSAIC
-	COLLAGE
-	//collage y mosaico cambian el nombre de archivo que usan.	
-
-PASOS PARA MODIFICAR Y GUARDAR LA  IMAGEN
+	ADD CENSORSHIP: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar una o mas fotos a censurar. Luego elige el tipo de censura (barra negra o pixelasion). Po ultimo el ususario ingresa el tamaño del area censurar ademas de las cordenadas.
+	WATSON FACE RECOGNITION ANALIZER: Feature still in progress
+	ADD TEXT: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar una o mas fotos a las que quiere agregar el texto. Luego el usuario debe ingresar el texto que desea poner en sus imagenes al igual que las coordenadas de donde cituar el texto, el tamaño de la fuente, el nombre de la fuente y los colores del texto.
+	MERGE IMAGES: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar dos o mas fotos que quiere merger.
+	RESIZE IMAGE: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar una o mas fotos a las que quiere cambiar el tamaño. Luego se ingresa el tamaño en pixeles que quiere que la nueva foto tenga.
+	MOSAIC: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar dos o mas fotos con las que ahra el mosaico (siendo la primera la base del mosaico). Luego el usuario ingresa el tamaño de la imagen que sera su mosaico y tambien el tamaño de las imagenes que lo compondra. ADVERTENCIA : Este metodo toma tiempo, puede que dure bastante timepo em procesar si es que el mosaico esta compuesto por mas de 1000 mini fotos.
+	COLLAGE: Se le presenta al usuario un listado de imagenes que tiene en editing area, el usuario debe seleccionar una o mas fotos que quiere que esten en su collage. Luego el ususario ingresa el tamaño de su fondo, Este puede ser una foto seleccionada o puede ser una imagen de color solido que el usuario ingresa con formato RGB. Por ultimo elige el tamaño de las fotos que compondran su collage. 
 
 
 
 
-MANAGE LIBRARY
+----------------PASOS PARA MODIFICAR Y GUARDAR LA IMAGEN----------------
+
+1) Crear la imagen nueva usando filtros o features.
+2) Ver como se guardo tu nueva imagen. Si usaste un filtro entonces la misma imagen que seleccionaste es ahora tu imagen editada. Si usaste un collage o un mosaico , entonces la imagen base (la primera en ingresar) se le agregara el nombre "collage" o "mosaic".
+3)Luego que identificaste la imagen editada, Seleccionala en "export images from de editingArea"
+4)Vuelve al menu principal y elige "Export from My Library"
+5)Sigues los pasos en pantalla y tu imagen se guardara exitosamente
+
+
+
+----------------MANAGE LIBRARY----------------
 
 Al seleccionar Manage Library, se le presenta al usuario otro menu con diversas opciones:
 
@@ -114,7 +129,9 @@ Al seleccionar Manage Library, se le presenta al usuario otro menu con diversas 
 	DELETE IMAGE : se le presenta al usuario una lista de  imagenes que se encuentra  en su libreria, debe seleccionar una imagen para eliminar de su libreria.
 	RESET LIBRARY : se le pide confirmacion al usuario y si es otorgada, entonces se borran todas las fotos de la libreria
 
-SEARCH MY LIBRARY
+
+
+----------------SEARCH MY LIBRARY----------------
 
 Al seleccionar Search My Library, se le presenta al usuario otro menu con diversas opciones: 
 	
@@ -152,7 +169,8 @@ Al seleccionar Search My Library, se le presenta al usuario otro menu con divers
 		Sentence:lamp or Name:carla or Sentence:lamp or Name:joaquin  --> ES LA BUSQUEDA DE MANERA CORRECTA
 
 
-MANAGE SMART LIST
+
+----------------MANAGE SMART LIST----------------
 
 INDICACION: Las smart list son busquedas pre definidas, con el objetivo de escribir la sentencia 1 vez y en un futuro no tener que escribirla de nuevo
 
